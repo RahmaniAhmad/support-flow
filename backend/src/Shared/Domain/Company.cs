@@ -7,4 +7,7 @@ public sealed class Company
     public string Name { get; set; } = null!;
 
     public DateTime CreatedAtUtc { get; set; }
+
+    public ICollection<User> Users { get; set; } = [];
+
 }
