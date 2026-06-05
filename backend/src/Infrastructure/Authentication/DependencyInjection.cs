@@ -9,6 +9,8 @@ namespace Infrastructure.Authentication
         public static IServiceCollection AddAuthenticationServices(
             this IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+
             services.AddScoped<
                 IPasswordHasher,
                 PasswordHasher>();
@@ -16,6 +18,10 @@ namespace Infrastructure.Authentication
             services.AddScoped<
                 IJwtTokenGenerator,
                 JwtTokenGenerator>();
+
+            services.AddScoped<
+            ICurrentUser,
+            CurrentUser>();
 
             return services;
         }

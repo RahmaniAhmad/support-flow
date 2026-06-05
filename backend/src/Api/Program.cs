@@ -83,5 +83,6 @@ app.UseAuthorization();
 
 // Endpoints
 app.MapEndpoints();
+app.MapTicketEndpoints();
 
 app.Run();
