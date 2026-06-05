@@ -8,9 +8,13 @@ public sealed class Ticket
 
     public Guid CreatedByUserId { get; set; }
 
-    public string Subject { get; set; } = null!;
+    public string Subject { get; set; } = string.Empty;
 
-    public string Description { get; set; } = null!;
+    public string Description { get; set; } = string.Empty;
 
-    public string Status { get; set; } = "Open";
+    public TicketStatus Status { get; set; }
+
+    public DateTime CreatedAtUtc { get; set; }
+
+    public DateTime? UpdatedAtUtc { get; set; }
 }

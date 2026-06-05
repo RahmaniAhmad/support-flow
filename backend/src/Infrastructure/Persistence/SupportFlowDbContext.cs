@@ -20,4 +20,13 @@ public sealed class SupportFlowDbContext : DbContext
     public DbSet<TicketComment> TicketComments => Set<TicketComment>();
 
     public DbSet<KnowledgeArticle> KnowledgeArticles => Set<KnowledgeArticle>();
+
+    protected override void OnModelCreating(
+    ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(
+            typeof(SupportFlowDbContext).Assembly);
+
+        base.OnModelCreating(modelBuilder);
+    }
 }
