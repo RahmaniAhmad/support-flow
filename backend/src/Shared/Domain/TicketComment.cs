@@ -6,7 +6,11 @@ public sealed class TicketComment
 
     public Guid TicketId { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid AuthorUserId { get; set; }
 
-    public string Message { get; set; } = null!;
+    public string Content { get; set; } = string.Empty;
+
+    public DateTime CreatedAtUtc { get; set; }
+
+    public Ticket Ticket { get; set; } = null!;
 }
