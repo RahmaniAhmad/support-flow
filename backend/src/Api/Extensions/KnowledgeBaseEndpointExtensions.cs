@@ -2,6 +2,7 @@ using Api.Features.KnowledgeBase.CreateArticle;
 using Api.Features.KnowledgeBase.DeleteArticle;
 using Api.Features.KnowledgeBase.GetArticle;
 using Api.Features.KnowledgeBase.GetArticles;
+using Api.Features.KnowledgeBase.SearchArticles;
 using Api.Features.KnowledgeBase.UpdateArticle;
 
 namespace Api.Extensions
@@ -16,6 +17,7 @@ namespace Api.Extensions
             app.MapGetArticle();
             app.MapUpdateArticle();
             app.MapDeleteArticle();
+            app.MapSearchArticles();
 
             return app;
         }
