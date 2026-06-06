@@ -7,6 +7,7 @@ public sealed class Ticket
     public Guid CompanyId { get; set; }
 
     public Guid CreatedByUserId { get; set; }
+    public Guid? AssignedToUserId { get; set; }
 
     public string Subject { get; set; } = string.Empty;
 

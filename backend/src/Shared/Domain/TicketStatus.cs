@@ -3,9 +3,9 @@ namespace Shared.Domain
 
     public enum TicketStatus
     {
-        Open = 1,
-        InProgress = 2,
-        Resolved = 3,
-        Closed = 4
+        Open = 0,
+        InProgress = 1,
+        Resolved = 2,
+        Closed = 3
     }
 }

@@ -25,6 +25,10 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.CreatedAtUtc)
                 .IsRequired();
+
+            builder.HasIndex(x => x.CompanyId);
+
+            builder.HasIndex(x => x.AssignedToUserId);
         }
     }
 }
