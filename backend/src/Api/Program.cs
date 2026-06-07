@@ -67,6 +67,11 @@ builder.Services
 // Authorization
 builder.Services.AddAuthorization();
 
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
+
 var app = builder.Build();
 
 // OpenAPI

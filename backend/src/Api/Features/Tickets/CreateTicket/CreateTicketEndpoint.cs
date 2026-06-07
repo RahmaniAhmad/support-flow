@@ -1,6 +1,8 @@
 using Infrastructure.Persistence;
+using MediatR;
 using Shared.Authentication;
 using Shared.Domain;
+using Shared.Events;
 
 namespace Api.Features.Tickets.CreateTicket
 {
@@ -16,6 +18,7 @@ namespace Api.Features.Tickets.CreateTicket
                     CreateTicketRequest request,
                     SupportFlowDbContext db,
                     ICurrentUser currentUser,
+                    IMediator mediator,
                     CancellationToken cancellationToken) =>
                 {
                     var ticket = new Ticket
@@ -32,6 +35,13 @@ namespace Api.Features.Tickets.CreateTicket
                     db.Tickets.Add(ticket);
 
                     await db.SaveChangesAsync(
+                        cancellationToken);
+
+                    await mediator.Publish(
+                        new TicketCreated(
+                            ticket.Id,
+                            ticket.CompanyId,
+                            ticket.Subject),
                         cancellationToken);
 
                     return Results.Created(
