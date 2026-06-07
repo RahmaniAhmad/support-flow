@@ -1,5 +1,7 @@
+using Infrastructure.Notifications;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Authentication;
+using Shared.Notifications;
 
 namespace Infrastructure.Authentication
 {
@@ -22,6 +24,10 @@ namespace Infrastructure.Authentication
             services.AddScoped<
             ICurrentUser,
             CurrentUser>();
+
+            services.AddScoped<
+            INotificationService,
+            LoggingNotificationService>();
 
             return services;
         }
