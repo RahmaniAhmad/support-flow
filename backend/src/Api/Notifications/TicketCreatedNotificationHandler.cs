@@ -1,12 +1,11 @@
 using MediatR;
-using Microsoft.Extensions.Logging;
-using Shared.Events;
+using Shared.DomainEvents;
 using Shared.Notifications;
 
 namespace Api.Notifications
 {
     public sealed class TicketCreatedNotificationHandler
-        : INotificationHandler<TicketCreated>
+        : INotificationHandler<TicketCreatedDomainEvent>
     {
         private readonly INotificationService _notificationService;
 
@@ -17,7 +16,7 @@ namespace Api.Notifications
         }
 
         public async Task Handle(
-            TicketCreated notification,
+            TicketCreatedDomainEvent notification,
             CancellationToken cancellationToken)
         {
             await _notificationService.SendAsync(

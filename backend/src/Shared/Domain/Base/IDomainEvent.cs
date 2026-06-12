@@ -1,6 +1,6 @@
-using MediatR;
+﻿using MediatR;
 
-namespace Shared.Abstractions
+namespace Shared.Domain.Base
 {
     public interface IDomainEvent : INotification
     {
