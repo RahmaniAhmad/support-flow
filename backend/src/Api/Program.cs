@@ -1,10 +1,7 @@
 using System.Text;
-
 using Api.Extensions;
-
 using Infrastructure.Authentication;
 using Infrastructure.Persistence;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

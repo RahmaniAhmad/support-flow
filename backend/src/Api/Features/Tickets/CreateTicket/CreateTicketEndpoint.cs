@@ -2,7 +2,6 @@ using Infrastructure.Persistence;
 using MediatR;
 using Shared.Authentication;
 using Shared.Domain;
-using Shared.Events;
 
 namespace Api.Features.Tickets.CreateTicket
 {
@@ -21,36 +20,22 @@ namespace Api.Features.Tickets.CreateTicket
                     IMediator mediator,
                     CancellationToken cancellationToken) =>
                 {
-                    var ticket = new Ticket
-                    {
-                        Id = Guid.NewGuid(),
-                        CompanyId = currentUser.CompanyId,
-                        CreatedByUserId = currentUser.UserId,
-                        Subject = request.Subject,
-                        Description = request.Description,
-                        Status = TicketStatus.Open,
-                        CreatedAtUtc = DateTime.UtcNow
-                    };
 
-                    db.Tickets.Add(ticket);
+                    var command = new CreateTicketCommand(
+                        currentUser.CompanyId,
+                        currentUser.UserId,
+                        request.Subject,
+                        request.Description);
 
-                    await db.SaveChangesAsync(
-                        cancellationToken);
+                    var ticketId = await mediator.Send(command, cancellationToken);
 
-                    await mediator.Publish(
-                        new TicketCreated(
-                            ticket.Id,
-                            ticket.CompanyId,
-                            ticket.Subject),
-                        cancellationToken);
+                    return Results.Created($"/tickets/{ticketId}", new { Id = ticketId });
 
-                    return Results.Created(
-                        $"/tickets/{ticket.Id}",
-                        ticket);
                 })
                 .RequireAuthorization();
 
             return app;
         }
     }
+
 }
