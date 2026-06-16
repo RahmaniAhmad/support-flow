@@ -1,6 +1,6 @@
 using Api.Features.Authentication.Login;
 using Api.Features.Authentication.RegisterCompany;
-using SupportFlow.Api.Features.Authentication.Me;
+using Api.Features.Authentication.Me;
 
 namespace Api.Extensions;
 

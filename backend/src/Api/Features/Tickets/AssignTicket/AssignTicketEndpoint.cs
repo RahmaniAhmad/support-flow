@@ -1,47 +1,35 @@
 using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+using MediatR;
 using Shared.Authentication;
-using Shared.Domain;
 
-namespace Api.Features.Tickets.AssignTicket
+namespace Api.Features.Tickets.AssignTicket;
+
+public static class AssignTicketEndpoint
 {
-    public static class AssignTicketEndpoint
+    public static IEndpointRouteBuilder MapAssignTicket(
+        this IEndpointRouteBuilder app)
     {
-        public static IEndpointRouteBuilder MapAssignTicket(
-            this IEndpointRouteBuilder app)
-        {
-            app.MapPut(
-                "/tickets/{ticketId:guid}/assign",
-                async (
-                    Guid ticketId,
-                    AssignTicketRequest request,
-                    SupportFlowDbContext db,
-                    ICurrentUser currentUser,
-                    CancellationToken cancellationToken) =>
-                {
-                    var ticket = await db.Tickets
-                        .FirstOrDefaultAsync(
-                            x =>
-                                x.Id == ticketId &&
-                                x.CompanyId == currentUser.CompanyId,
-                            cancellationToken);
+        app.MapPut(
+            "/tickets/{ticketId:guid}/assign",
+            async (
+                Guid ticketId,
+                AssignTicketRequest request,
+                SupportFlowDbContext db,
+                ICurrentUser currentUser,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new AssignTicketCommand(
+                 ticketId,
+                 currentUser.CompanyId,
+                 request.AssignedToUserId);
 
-                    if (ticket is null)
-                    {
-                        return Results.NotFound();
-                    }
+                await sender.Send(command, cancellationToken);
 
-                    ticket.AssignedToUserId = request.AssignedToUserId;
-                    ticket.Status = TicketStatus.InProgress;
-                    ticket.UpdatedAtUtc = DateTime.UtcNow;
+                return Results.Ok();
+            })
+            .RequireAuthorization();
 
-                    await db.SaveChangesAsync(cancellationToken);
-
-                    return Results.Ok(ticket);
-                })
-                .RequireAuthorization();
-
-            return app;
-        }
+        return app;
     }
 }

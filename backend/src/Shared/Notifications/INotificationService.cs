@@ -1,10 +1,9 @@
-namespace Shared.Notifications
+namespace Shared.Notifications;
+
+public interface INotificationService
 {
-    public interface INotificationService
-    {
-        Task SendAsync(
-            string subject,
-            string message,
-            CancellationToken cancellationToken);
-    }
+    Task SendAsync(
+        string subject,
+        string message,
+        CancellationToken cancellationToken);
 }

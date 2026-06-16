@@ -1,5 +1,4 @@
-namespace Api.Features.KnowledgeBase.SearchArticles
-{
-    public sealed record SearchArticlesRequest(
-        string Query);
-}
+namespace Api.Features.KnowledgeBase.SearchArticles;
+
+public sealed record SearchArticlesRequest(
+    string Query);

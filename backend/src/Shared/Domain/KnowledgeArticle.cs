@@ -1,9 +1,9 @@
+using Shared.Domain.Base;
+
 namespace Shared.Domain;
 
-public sealed class KnowledgeArticle
+public sealed class KnowledgeArticle : AggregateRoot
 {
-    public Guid Id { get; set; }
-
     public Guid CompanyId { get; set; }
 
     public string Title { get; set; } = string.Empty;

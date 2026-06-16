@@ -1,49 +1,33 @@
-using Infrastructure.Persistence;
+using MediatR;
 
-using Microsoft.EntityFrameworkCore;
+namespace Api.Features.KnowledgeBase.UpdateArticle;
 
-using Shared.Authentication;
-
-namespace Api.Features.KnowledgeBase.UpdateArticle
+public static class UpdateArticleEndpoint
 {
-    public static class UpdateArticleEndpoint
+    public static IEndpointRouteBuilder MapUpdateArticle(
+        this IEndpointRouteBuilder app)
     {
-        public static IEndpointRouteBuilder MapUpdateArticle(
-            this IEndpointRouteBuilder app)
-        {
-            app.MapPut(
-                "/knowledge-articles/{id:guid}",
-                async (
-                    Guid id,
-                    UpdateArticleRequest request,
-                    SupportFlowDbContext db,
-                    ICurrentUser currentUser,
-                    CancellationToken cancellationToken) =>
-                {
-                    var article = await db.KnowledgeArticles
-                        .FirstOrDefaultAsync(
-                            x =>
-                                x.Id == id &&
-                                x.CompanyId == currentUser.CompanyId,
-                            cancellationToken);
-
-                    if (article is null)
-                    {
-                        return Results.NotFound();
-                    }
-
-                    article.Title = request.Title;
-                    article.Content = request.Content;
-                    article.UpdatedAtUtc = DateTime.UtcNow;
-
-                    await db.SaveChangesAsync(
+        app.MapPut(
+            "/knowledge-articles/{id:guid}",
+            async (
+                Guid id,
+                UpdateArticleRequest request,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var updated = await sender.Send(
+                    new UpdateArticleCommand(
+                        id,
+                        request.Title,
+                        request.Content),
                         cancellationToken);
 
-                    return Results.Ok(article);
-                })
-                .RequireAuthorization();
+                return updated
+                    ? Results.Ok()
+                    : Results.NotFound();
+            })
+            .RequireAuthorization();
 
-            return app;
-        }
+        return app;
     }
 }

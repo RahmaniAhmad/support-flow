@@ -1,0 +1,40 @@
+using Infrastructure.Persistence;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Shared.Authentication;
+
+namespace Api.Features.Tickets.GetMyTickets;
+
+public sealed class GetMyTicketsQueryHandler
+    : IRequestHandler<GetMyTicketsQuery, List<GetMyTicketsResponse>>
+{
+    private readonly SupportFlowDbContext _db;
+    private readonly ICurrentUser _currentUser;
+
+    public GetMyTicketsQueryHandler(
+        SupportFlowDbContext db,
+        ICurrentUser currentUser)
+    {
+        _db = db;
+        _currentUser = currentUser;
+    }
+
+    public async Task<List<GetMyTicketsResponse>> Handle(
+        GetMyTicketsQuery request,
+        CancellationToken cancellationToken)
+    {
+        return await _db.Tickets
+            .Where(x =>
+                x.CompanyId == _currentUser.CompanyId &&
+                x.AssignedToUserId == _currentUser.UserId)
+            .OrderByDescending(x => x.CreatedAtUtc)
+            .Select(x => new GetMyTicketsResponse(
+                x.Id,
+                x.Subject,
+                x.Description,
+                x.Status,
+                x.AssignedToUserId,
+                x.CreatedAtUtc))
+            .ToListAsync(cancellationToken);
+    }
+}
