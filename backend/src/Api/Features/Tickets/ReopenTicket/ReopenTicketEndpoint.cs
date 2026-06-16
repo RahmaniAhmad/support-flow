@@ -1,5 +1,7 @@
+using Api.Authorization;
 using MediatR;
 using Shared.Authentication;
+using Shared.Domain.Users;
 
 namespace Api.Features.Tickets.ReopenTicket;
 
@@ -24,7 +26,8 @@ public static class ReopenTicketEndpoint
 
                 return Results.Ok();
             })
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .RequirePermission(Permissions.TicketsReopen);
 
         return app;
     }

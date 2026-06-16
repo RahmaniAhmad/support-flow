@@ -1,3 +1,5 @@
+using Shared.Domain.Users;
+
 namespace Shared.Authentication;
 
 public interface ICurrentUser
@@ -7,5 +9,6 @@ public interface ICurrentUser
     Guid CompanyId { get; }
 
     string Email { get; }
-    string Role { get; }
+
+    UserRole Role { get; }
 }

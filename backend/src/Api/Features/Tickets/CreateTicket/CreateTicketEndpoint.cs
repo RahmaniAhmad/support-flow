@@ -1,5 +1,7 @@
+using Api.Authorization;
 using MediatR;
 using Shared.Authentication;
+using Shared.Domain.Users;
 
 namespace Api.Features.Tickets.CreateTicket;
 
@@ -29,7 +31,8 @@ public static class CreateTicketEndpoint
                 return Results.Created($"/tickets/{ticketId}", new { Id = ticketId });
 
             })
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .RequirePermission(Permissions.TicketsCreate);
 
         return app;
     }

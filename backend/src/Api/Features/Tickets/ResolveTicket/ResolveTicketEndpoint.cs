@@ -1,6 +1,7 @@
 using Api.Authorization;
 using MediatR;
 using Shared.Authentication;
+using Shared.Domain.Users;
 
 namespace Api.Features.Tickets.ResolveTicket;
 
@@ -25,7 +26,8 @@ public static class ResolveTicketEndpoint
 
                 return Results.Ok();
             })
-            .RequireAuthorization(Policies.CanManageTickets);
+            .RequireAuthorization()
+            .RequirePermission(Permissions.TicketsResolve);
 
         return app;
     }
