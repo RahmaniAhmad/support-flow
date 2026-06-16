@@ -1,4 +1,6 @@
+using Api.Authorization;
 using MediatR;
+using Shared.Domain.Users;
 
 namespace Api.Features.Tickets.GetUnassignedTickets;
 
@@ -19,7 +21,8 @@ public static class GetUnassignedTicketsEndpoint
 
                 return Results.Ok(tickets);
             })
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .RequirePermission(Permissions.TicketsUnassign);
 
         return app;
     }

@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Shared.Authentication;
+using Shared.Domain.Users;
 
 namespace Infrastructure.Authentication;
 
@@ -26,11 +27,22 @@ public sealed class CurrentUser : ICurrentUser
             .User
             .FindFirstValue(ClaimTypes.Email)!;
 
-    public string Role =>
-        _httpContextAccessor
-            .HttpContext!
-            .User
-            .FindFirstValue(ClaimTypes.Role)!;
+    public UserRole Role
+    {
+        get
+        {
+            var roleValue = _httpContextAccessor.HttpContext!
+                .User.FindFirstValue(ClaimTypes.Role);
+
+            if (!Enum.TryParse<UserRole>(roleValue, out var role))
+            {
+                throw new InvalidOperationException(
+                    $"Invalid role claim: {roleValue}");
+            }
+
+            return role;
+        }
+    }
 
     private readonly IHttpContextAccessor _httpContextAccessor;
 

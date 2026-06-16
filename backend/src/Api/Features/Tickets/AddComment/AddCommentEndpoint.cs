@@ -1,6 +1,8 @@
+using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Shared.Authentication;
+using Shared.Domain.Users;
 
 namespace Api.Features.Tickets.AddComment;
 
@@ -29,7 +31,8 @@ public static class AddCommentEndpoint
 
                 return Results.Ok(new { Id = commentId });
             })
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .RequirePermission(Permissions.TicketsComment);
 
         return app;
     }

@@ -1,4 +1,4 @@
-using Shared.Domain.Users;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Authorization;
 
@@ -7,15 +7,12 @@ public static class AuthorizationExtensions
     public static IServiceCollection AddApplicationAuthorization(
         this IServiceCollection services)
     {
-        services.AddAuthorization(options =>
-        {
-            options.AddPolicy(
-                Policies.CanManageTickets,
-                policy => policy.RequireRole(
-                    UserRole.Admin.ToString(),
-                    UserRole.Agent.ToString()));
-        });
+        services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+        services.AddScoped<ITicketAccessService, TicketAccessService>();
+
+        services.AddAuthorization();
 
         return services;
+
     }
 }

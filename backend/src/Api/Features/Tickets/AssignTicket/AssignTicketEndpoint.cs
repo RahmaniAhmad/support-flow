@@ -1,6 +1,8 @@
+using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Shared.Authentication;
+using Shared.Domain.Users;
 
 namespace Api.Features.Tickets.AssignTicket;
 
@@ -28,7 +30,8 @@ public static class AssignTicketEndpoint
 
                 return Results.Ok();
             })
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .RequirePermission(Permissions.TicketsAssign);
 
         return app;
     }
