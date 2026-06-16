@@ -2,6 +2,7 @@ using Infrastructure.Persistence;
 using MediatR;
 using Shared.Authentication;
 using Shared.Domain;
+using Shared.Domain.Users;
 
 namespace Api.Features.Authentication.RegisterCompany;
 
@@ -23,20 +24,15 @@ public class RegisterCompanyCommandHandler
         RegisterCompanyCommand request,
         CancellationToken cancellationToken)
     {
-        var company = new Company
-        {
-            Name = request.CompanyName,
-            CreatedAtUtc = DateTime.UtcNow
-        };
+        var company = Company.Create(request.CompanyName);
 
-        var user = new User
-        {
-            CompanyId = company.Id,
-            Email = request.Email,
-            PasswordHash = _passwordHasher.Hash(request.Password),
-            Role = "Admin",
-            CreatedAtUtc = DateTime.UtcNow
-        };
+        var user = User.Create
+        (
+             company.Id,
+             request.Email,
+             _passwordHasher.Hash(request.Password),
+             UserRole.Admin
+        );
 
         _db.Companies.Add(company);
         _db.Users.Add(user);

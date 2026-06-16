@@ -1,4 +1,5 @@
 using System.Text;
+using Api.Authorization;
 using Api.Extensions;
 using Infrastructure.Authentication;
 using Infrastructure.Persistence;
@@ -62,7 +63,7 @@ builder.Services
     });
 
 // Authorization
-builder.Services.AddAuthorization();
+builder.Services.AddApplicationAuthorization();
 
 builder.Services.AddMediatR(cfg =>
 {
