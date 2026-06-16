@@ -1,40 +1,30 @@
-using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
-using Shared.Authentication;
+using MediatR;
 
-namespace Api.Features.KnowledgeBase.SearchArticles
+namespace Api.Features.KnowledgeBase.SearchArticles;
+
+public static class SearchArticlesEndpoint
 {
-    public static class SearchArticlesEndpoint
+    public static IEndpointRouteBuilder MapSearchArticles(
+        this IEndpointRouteBuilder app)
     {
-        public static IEndpointRouteBuilder MapSearchArticles(
-            this IEndpointRouteBuilder app)
-        {
-            app.MapGet(
-                "/knowledge-articles/search",
-                async (
-                    string query,
-                    SupportFlowDbContext db,
-                    ICurrentUser currentUser,
-                    CancellationToken cancellationToken) =>
-                {
-                    if (string.IsNullOrWhiteSpace(query))
-                    {
-                        return Results.BadRequest("Query cannot be empty.");
-                    }
+        app.MapGet(
+            "/knowledge-articles/search",
+            async (
+                string query,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                if (string.IsNullOrWhiteSpace(query))
+                    return Results.BadRequest("Query cannot be empty.");
 
-                    // PostgreSQL full-text search
-                    var articles = await db.KnowledgeArticles
-                        .Where(x => x.CompanyId == currentUser.CompanyId &&
-                                    (EF.Functions.ILike(x.Title, $"%{query}%") ||
-                                     EF.Functions.ILike(x.Content, $"%{query}%")))
-                        .OrderByDescending(x => x.CreatedAtUtc)
-                        .ToListAsync(cancellationToken);
+                var result = await sender.Send(
+                    new SearchArticlesQuery(query),
+                    cancellationToken);
 
-                    return Results.Ok(articles);
-                })
-                .RequireAuthorization();
+                return Results.Ok(result);
+            })
+            .RequireAuthorization();
 
-            return app;
-        }
+        return app;
     }
 }

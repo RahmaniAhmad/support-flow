@@ -2,37 +2,35 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Shared.Authentication;
 
-namespace Infrastructure.Authentication
+namespace Infrastructure.Authentication;
+
+public sealed class CurrentUser : ICurrentUser
 {
-
-    public sealed class CurrentUser : ICurrentUser
-    {
-        public Guid UserId =>
-            Guid.Parse(
-                _httpContextAccessor
-                    .HttpContext!
-                    .User
-                    .FindFirstValue(ClaimTypes.NameIdentifier)!);
-
-        public Guid CompanyId =>
-            Guid.Parse(
-                _httpContextAccessor
-                    .HttpContext!
-                    .User
-                    .FindFirstValue("company_id")!);
-
-        public string Email =>
+    public Guid UserId =>
+        Guid.Parse(
             _httpContextAccessor
                 .HttpContext!
                 .User
-                .FindFirstValue(ClaimTypes.Email)!;
+                .FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
+    public Guid CompanyId =>
+        Guid.Parse(
+            _httpContextAccessor
+                .HttpContext!
+                .User
+                .FindFirstValue("company_id")!);
 
-        public CurrentUser(
-            IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }
+    public string Email =>
+        _httpContextAccessor
+            .HttpContext!
+            .User
+            .FindFirstValue(ClaimTypes.Email)!;
+
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public CurrentUser(
+        IHttpContextAccessor httpContextAccessor)
+    {
+        _httpContextAccessor = httpContextAccessor;
     }
 }

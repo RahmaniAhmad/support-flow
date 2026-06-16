@@ -1,11 +1,10 @@
-namespace Shared.Authentication
-{
-    public interface IPasswordHasher
-    {
-        string Hash(string password);
+namespace Shared.Authentication;
 
-        bool Verify(
-            string password,
-            string passwordHash);
-    }
+public interface IPasswordHasher
+{
+    string Hash(string password);
+
+    bool Verify(
+        string password,
+        string passwordHash);
 }

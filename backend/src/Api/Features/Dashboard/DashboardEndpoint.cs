@@ -1,59 +1,29 @@
-using Api.Features.Dashboard.Models;
-using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+using MediatR;
 using Shared.Authentication;
-using Shared.Domain;
 
-namespace Api.Features.Dashboard
+namespace Api.Features.Dashboard;
+
+public static class DashboardEndpoint
 {
-    public static class DashboardEndpoint
+    public static IEndpointRouteBuilder MapDashboard(
+        this IEndpointRouteBuilder app)
     {
-        public static IEndpointRouteBuilder MapDashboard(
-            this IEndpointRouteBuilder app)
-        {
-            app.MapGet(
-                "/dashboard",
-                async (
-                    SupportFlowDbContext db,
-                    ICurrentUser currentUser,
-                    CancellationToken cancellationToken) =>
-                {
-                    var companyId = currentUser.CompanyId;
-
-                    var openTickets = await db.Tickets.CountAsync(
-                        x =>
-                            x.CompanyId == companyId &&
-                            x.Status == TicketStatus.Open,
+        app.MapGet(
+            "/dashboard",
+            async (
+                ISender sender,
+                ICurrentUser currentUser,
+                CancellationToken cancellationToken) =>
+            {
+                var response = await sender.Send(
+                    new DashboardQuery(
+                        currentUser.CompanyId),
                         cancellationToken);
 
-                    var inProgressTickets = await db.Tickets.CountAsync(
-                        x =>
-                            x.CompanyId == companyId &&
-                            x.Status == TicketStatus.InProgress,
-                        cancellationToken);
+                return Results.Ok(response);
+            })
+            .RequireAuthorization();
 
-                    var resolvedTickets = await db.Tickets.CountAsync(
-                        x =>
-                            x.CompanyId == companyId &&
-                            x.Status == TicketStatus.Resolved,
-                        cancellationToken);
-
-                    var unassignedTickets = await db.Tickets.CountAsync(
-                        x =>
-                            x.CompanyId == companyId &&
-                            x.AssignedToUserId == null,
-                        cancellationToken);
-
-                    return Results.Ok(
-                        new DashboardResponse(
-                            openTickets,
-                            inProgressTickets,
-                            resolvedTickets,
-                            unassignedTickets));
-                })
-                .RequireAuthorization();
-
-            return app;
-        }
+        return app;
     }
 }

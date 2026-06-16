@@ -1,43 +1,31 @@
-using Infrastructure.Persistence;
-using Shared.Authentication;
-using Shared.Domain;
+using MediatR;
 
-namespace Api.Features.KnowledgeBase.CreateArticle
+namespace Api.Features.KnowledgeBase.CreateArticle;
+
+public static class CreateArticleEndpoint
 {
-    public static class CreateArticleEndpoint
+    public static IEndpointRouteBuilder MapCreateArticle(
+        this IEndpointRouteBuilder app)
     {
-        public static IEndpointRouteBuilder MapCreateArticle(
-            this IEndpointRouteBuilder app)
-        {
-            app.MapPost(
-                "/knowledge-articles",
-                async (
-                    CreateArticleRequest request,
-                    SupportFlowDbContext db,
-                    ICurrentUser currentUser,
-                    CancellationToken cancellationToken) =>
-                {
-                    var article = new KnowledgeArticle
-                    {
-                        Id = Guid.NewGuid(),
-                        CompanyId = currentUser.CompanyId,
-                        Title = request.Title,
-                        Content = request.Content,
-                        CreatedAtUtc = DateTime.UtcNow
-                    };
-
-                    db.KnowledgeArticles.Add(article);
-
-                    await db.SaveChangesAsync(
+        app.MapPost(
+            "/knowledge-articles",
+            async (
+                CreateArticleRequest request,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var articleId = await sender.Send(
+                    new CreateArticleCommand(
+                        request.Title,
+                        request.Content),
                         cancellationToken);
 
-                    return Results.Created(
-                        $"/knowledge-articles/{article.Id}",
-                        article);
-                })
-                .RequireAuthorization();
+                return Results.Created(
+                    $"/knowledge-articles/{articleId}",
+                    new { Id = articleId });
+            })
+            .RequireAuthorization();
 
-            return app;
-        }
+        return app;
     }
 }

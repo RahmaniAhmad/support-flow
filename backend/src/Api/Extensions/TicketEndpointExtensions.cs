@@ -7,28 +7,25 @@ using Api.Features.Tickets.GetMyTickets;
 using Api.Features.Tickets.GetTickets;
 using Api.Features.Tickets.GetTicketsByStatus;
 using Api.Features.Tickets.GetUnassignedTickets;
-using Api.Features.Tickets.UpdateStatus;
 
-namespace Api.Extensions
+namespace Api.Extensions;
+
+
+public static class TicketEndpointExtensions
 {
-
-    public static class TicketEndpointExtensions
+    public static WebApplication MapTicketEndpoints(
+        this WebApplication app)
     {
-        public static WebApplication MapTicketEndpoints(
-            this WebApplication app)
-        {
-            app.MapCreateTicket();
-            app.MapGetTickets();
-            app.MapAddComment();
-            app.MapGetComments();
-            app.MapAssignTicket();
-            app.MapUpdateTicketStatus();
-            app.MapGetMyTickets();
-            app.MapGetUnassignedTickets();
-            app.MapGetTicketsByStatus();
-            app.MapDashboard();
+        app.MapCreateTicket();
+        app.MapGetTickets();
+        app.MapAddComment();
+        app.MapGetComments();
+        app.MapAssignTicket();
+        app.MapGetMyTickets();
+        app.MapGetUnassignedTickets();
+        app.MapGetTicketsByStatus();
+        app.MapDashboard();
 
-            return app;
-        }
+        return app;
     }
 }

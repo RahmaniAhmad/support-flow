@@ -1,12 +1,10 @@
-namespace Shared.Authentication
+namespace Shared.Authentication;
+
+public interface ICurrentUser
 {
+    Guid UserId { get; }
 
-    public interface ICurrentUser
-    {
-        Guid UserId { get; }
+    Guid CompanyId { get; }
 
-        Guid CompanyId { get; }
-
-        string Email { get; }
-    }
+    string Email { get; }
 }

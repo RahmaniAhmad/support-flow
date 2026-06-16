@@ -1,5 +1,4 @@
-namespace Api.Features.Tickets.AddComment
-{
-    public sealed record AddCommentRequest(
-        string Content);
-}
+namespace Api.Features.Tickets.AddComment;
+
+public sealed record AddCommentRequest(
+    string Content);

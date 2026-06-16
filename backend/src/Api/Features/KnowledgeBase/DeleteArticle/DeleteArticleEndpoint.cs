@@ -1,44 +1,29 @@
-using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
-using Shared.Authentication;
+using MediatR;
 
-namespace Api.Features.KnowledgeBase.DeleteArticle
+namespace Api.Features.KnowledgeBase.DeleteArticle;
+
+public static class DeleteArticleEndpoint
 {
-    public static class DeleteArticleEndpoint
+    public static IEndpointRouteBuilder MapDeleteArticle(
+        this IEndpointRouteBuilder app)
     {
-        public static IEndpointRouteBuilder MapDeleteArticle(
-            this IEndpointRouteBuilder app)
-        {
-            app.MapDelete(
-                "/knowledge-articles/{id:guid}",
-                async (
-                    Guid id,
-                    SupportFlowDbContext db,
-                    ICurrentUser currentUser,
-                    CancellationToken cancellationToken) =>
-                {
-                    var article = await db.KnowledgeArticles
-                        .FirstOrDefaultAsync(
-                            x =>
-                                x.Id == id &&
-                                x.CompanyId == currentUser.CompanyId,
-                            cancellationToken);
+        app.MapDelete(
+            "/knowledge-articles/{id:guid}",
+            async (
+                Guid id,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var deleted = await sender.Send(
+                    new DeleteArticleCommand(id),
+                    cancellationToken);
 
-                    if (article is null)
-                    {
-                        return Results.NotFound();
-                    }
+                return deleted
+                    ? Results.NoContent()
+                    : Results.NotFound();
+            })
+            .RequireAuthorization();
 
-                    db.KnowledgeArticles.Remove(article);
-
-                    await db.SaveChangesAsync(
-                        cancellationToken);
-
-                    return Results.NoContent();
-                })
-                .RequireAuthorization();
-
-            return app;
-        }
+        return app;
     }
 }

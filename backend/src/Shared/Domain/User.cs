@@ -1,9 +1,9 @@
+using Shared.Domain.Base;
+
 namespace Shared.Domain;
 
-public sealed class User
+public sealed class User : AggregateRoot
 {
-    public Guid Id { get; set; }
-
     public Guid CompanyId { get; set; }
 
     public Company Company { get; set; } = null!;

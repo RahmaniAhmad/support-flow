@@ -1,16 +1,16 @@
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Domain;
 using Shared.Domain.Base;
+using Shared.Domain.Tickets;
 
 namespace Infrastructure.Persistence;
 
 public sealed class SupportFlowDbContext : DbContext
 {
-    private readonly IMediator _mediator;
+    private readonly IDomainEventDispatcher _dispatcher;
     public SupportFlowDbContext(
-        DbContextOptions<SupportFlowDbContext> options, IMediator mediator)
-        : base(options) => _mediator = mediator;
+        DbContextOptions<SupportFlowDbContext> options, IDomainEventDispatcher dispatcher)
+        : base(options) => _dispatcher = dispatcher;
 
     public DbSet<Company> Companies => Set<Company>();
 
@@ -35,19 +35,28 @@ public sealed class SupportFlowDbContext : DbContext
     {
         var result = await base.SaveChangesAsync(cancellationToken);
 
-        var entitiesWithEvents = ChangeTracker.Entries<Entity>()
-            .Select(e => e.Entity)
-            .Where(e => e.DomainEvents.Any())
-            .ToList();
+        var domainEvents = GetDomainEvents();
 
-        foreach (var entity in entitiesWithEvents)
-        {
-            while (entity.DomainEvents.TryDequeue(out var domainEvent))
-            {
-                await _mediator.Publish(domainEvent, cancellationToken);
-            }
-        }
+        await _dispatcher.DispatchAsync(
+            domainEvents,
+            cancellationToken);
 
         return result;
     }
+    private List<IDomainEvent> GetDomainEvents()
+    {
+        return ChangeTracker
+            .Entries<AggregateRoot>()
+            .Select(x => x.Entity)
+            .SelectMany(x =>
+            {
+                var events = x.DomainEvents.ToList();
+
+                x.ClearDomainEvents();
+
+                return events;
+            })
+            .ToList();
+    }
+
 }

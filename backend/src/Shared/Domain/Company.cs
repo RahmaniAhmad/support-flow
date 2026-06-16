@@ -1,9 +1,9 @@
+using Shared.Domain.Base;
+
 namespace Shared.Domain;
 
-public sealed class Company
+public sealed class Company : AggregateRoot
 {
-    public Guid Id { get; set; }
-
     public string Name { get; set; } = null!;
 
     public DateTime CreatedAtUtc { get; set; }

@@ -1,37 +1,29 @@
-using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
-using Shared.Authentication;
+using MediatR;
 
-namespace Api.Features.KnowledgeBase.GetArticle
+namespace Api.Features.KnowledgeBase.GetArticle;
+
+public static class GetArticleEndpoint
 {
-
-    public static class GetArticleEndpoint
+    public static IEndpointRouteBuilder MapGetArticle(
+        this IEndpointRouteBuilder app)
     {
-        public static IEndpointRouteBuilder MapGetArticle(
-            this IEndpointRouteBuilder app)
-        {
-            app.MapGet(
-                "/knowledge-articles/{id:guid}",
-                async (
-                    Guid id,
-                    SupportFlowDbContext db,
-                    ICurrentUser currentUser,
-                    CancellationToken cancellationToken) =>
-                {
-                    var article = await db.KnowledgeArticles
-                        .FirstOrDefaultAsync(
-                            x =>
-                                x.Id == id &&
-                                x.CompanyId == currentUser.CompanyId,
-                            cancellationToken);
+        app.MapGet(
+            "/knowledge-articles/{id:guid}",
+            async (
+                Guid id,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var article = await sender.Send(
+                    new GetArticleQuery(id),
+                    cancellationToken);
 
-                    return article is null
-                        ? Results.NotFound()
-                        : Results.Ok(article);
-                })
-                .RequireAuthorization();
+                return article is null
+                    ? Results.NotFound()
+                    : Results.Ok(article);
+            })
+            .RequireAuthorization();
 
-            return app;
-        }
+        return app;
     }
 }
