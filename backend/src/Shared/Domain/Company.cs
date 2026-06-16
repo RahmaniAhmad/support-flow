@@ -4,10 +4,20 @@ namespace Shared.Domain;
 
 public sealed class Company : AggregateRoot
 {
-    public string Name { get; set; } = null!;
+    public string Name { get; private set; } = string.Empty;
 
-    public DateTime CreatedAtUtc { get; set; }
+    public DateTime CreatedAtUtc { get; private set; }
 
-    public ICollection<User> Users { get; set; } = [];
+    private Company() { }
+
+    public static Company Create(string name)
+    {
+        return new Company
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            CreatedAtUtc = DateTime.UtcNow
+        };
+    }
 
 }

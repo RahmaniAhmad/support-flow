@@ -26,6 +26,12 @@ public sealed class CurrentUser : ICurrentUser
             .User
             .FindFirstValue(ClaimTypes.Email)!;
 
+    public string Role =>
+        _httpContextAccessor
+            .HttpContext!
+            .User
+            .FindFirstValue(ClaimTypes.Role)!;
+
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public CurrentUser(

@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Authentication;
+using Shared.Domain.Users;
 
 namespace Infrastructure.Authentication;
 
@@ -22,14 +23,33 @@ public sealed class JwtTokenGenerator
         Guid userId,
         Guid companyId,
         string email,
-        string role)
+        UserRole role)
     {
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, email),
-            new Claim("company_id", companyId.ToString()),
-            new Claim(ClaimTypes.Role, role)
+            new Claim(
+                ClaimTypes.NameIdentifier,
+                userId.ToString()),
+
+            new Claim(
+                JwtRegisteredClaimNames.Sub,
+                userId.ToString()),
+
+            new Claim(
+                JwtRegisteredClaimNames.Email,
+                email),
+
+            new Claim(
+                ClaimTypes.Email,
+                email),
+
+            new Claim(
+                "company_id",
+                companyId.ToString()),
+
+            new Claim(
+                ClaimTypes.Role,
+                role.ToString())
         };
 
         var key = new SymmetricSecurityKey(

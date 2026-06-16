@@ -1,3 +1,5 @@
+using Shared.Domain.Users;
+
 namespace Shared.Authentication;
 
 public interface IJwtTokenGenerator
@@ -6,5 +8,5 @@ public interface IJwtTokenGenerator
         Guid userId,
         Guid companyId,
         string email,
-        string role);
+        UserRole role);
 }
