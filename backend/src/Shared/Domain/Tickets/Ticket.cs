@@ -65,7 +65,7 @@ public sealed class Ticket : AggregateRoot
     {
         TransitionTo(
             TicketStatus.Resolved,
-            new TicketResolvedDomainEvent(Id));
+            new TicketResolvedDomainEvent(Id, CompanyId, AssignedToUserId));
 
     }
 

@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Persistence;
 using Shared.Authentication;
+using MediatR;
 
 namespace Api.Features.Authentication.Login;
 
-public sealed class LoginQueryHandler
+public sealed class LoginQueryHandler : IRequestHandler<LoginQuery, LoginResponse?>
 {
     private readonly SupportFlowDbContext _db;
     private readonly IPasswordHasher _passwordHasher;

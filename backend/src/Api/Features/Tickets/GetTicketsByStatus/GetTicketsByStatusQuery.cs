@@ -3,5 +3,5 @@ using Shared.Domain.Tickets;
 
 namespace Api.Features.Tickets.GetTicketsByStatus;
 
-public sealed record GetTicketsByStatusQuery(TicketStatus Status)
+public sealed record GetTicketsByStatusQuery(Guid CompanyId, TicketStatus Status)
     : IRequest<List<GetTicketsByStatusResponse>>;

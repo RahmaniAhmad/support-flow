@@ -1,4 +1,5 @@
 using MediatR;
+using Shared.Authentication;
 
 namespace Api.Features.Tickets.GetTickets;
 
@@ -16,11 +17,12 @@ public static class GetTicketsEndpoint
     }
 
     private static async Task<IResult> GetTicketsAsync(
+        ICurrentUser currentUser,
         ISender sender,
         CancellationToken cancellationToken)
     {
         var tickets = await sender.Send(
-            new GetTicketsQuery(),
+            new GetTicketsQuery(currentUser.CompanyId),
             cancellationToken);
 
         return Results.Ok(tickets);
