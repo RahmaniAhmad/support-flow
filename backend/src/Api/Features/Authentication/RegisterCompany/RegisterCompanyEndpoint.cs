@@ -17,7 +17,7 @@ public static class RegisterCompanyEndpoint
                 (
                     request.CompanyName,
                     request.Email,
-                     request.Password
+                    request.Password
                 );
                 var result = await sender.Send(command, cancellationToken);
 

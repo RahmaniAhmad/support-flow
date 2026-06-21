@@ -9,7 +9,6 @@ public sealed class DashboardQueryHandler
     : IRequestHandler<DashboardQuery, DashboardResponse>
 {
     private readonly SupportFlowDbContext _db;
-
     public DashboardQueryHandler(
         SupportFlowDbContext db)
     {

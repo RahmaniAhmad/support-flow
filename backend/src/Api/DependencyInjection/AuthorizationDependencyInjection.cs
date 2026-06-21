@@ -1,6 +1,7 @@
+using Api.Authorization;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Api.Authorization;
+namespace Api.DependencyInjection;
 
 public static class AuthorizationExtensions
 {

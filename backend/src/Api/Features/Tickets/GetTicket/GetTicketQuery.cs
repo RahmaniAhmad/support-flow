@@ -2,5 +2,5 @@ using MediatR;
 
 namespace Api.Features.Tickets.GetTicket;
 
-public sealed record GetTicketQuery(Guid TicketId)
+public sealed record GetTicketQuery(Guid TicketId, Guid CompanyId)
     : IRequest<GetTicketResponse?>;
