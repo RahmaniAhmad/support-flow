@@ -18,6 +18,7 @@ public static class AuthenticationDependencyInjection
 
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
         services.AddScoped<ICurrentUser, CurrentUser>();
 
         services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));

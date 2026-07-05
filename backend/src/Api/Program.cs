@@ -24,6 +24,18 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
 
+builder.Services.AddCors(options =>
+       {
+           options.AddPolicy("AllowNextJsApp", // This is a named policy
+               builder =>
+               {
+                   builder.WithOrigins(
+                       "http://localhost:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+               });
+       });
 
 var app = builder.Build();
 
@@ -34,6 +46,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowNextJsApp");
+
+app.UseRouting();
 
 // Authentication / Authorization
 app.UseAuthentication();

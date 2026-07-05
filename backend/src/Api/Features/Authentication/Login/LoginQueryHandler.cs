@@ -10,15 +10,18 @@ public sealed class LoginQueryHandler : IRequestHandler<LoginQuery, LoginRespons
     private readonly SupportFlowDbContext _db;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IRefreshTokenGenerator _refreshTokenGenerator;
 
     public LoginQueryHandler(
         SupportFlowDbContext db,
         IPasswordHasher passwordHasher,
-        IJwtTokenGenerator jwtTokenGenerator)
+        IJwtTokenGenerator jwtTokenGenerator,
+        IRefreshTokenGenerator refreshTokenGenerator)
     {
         _db = db;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _refreshTokenGenerator = refreshTokenGenerator;
     }
 
     public async Task<LoginResponse?> Handle(
@@ -31,17 +34,20 @@ public sealed class LoginQueryHandler : IRequestHandler<LoginQuery, LoginRespons
         if (user is null)
             return null;
 
-        var isPasswordValid = _passwordHasher.Verify(query.Password, user.PasswordHash);
-
-        if (!isPasswordValid)
+        if (!_passwordHasher.Verify(query.Password, user.PasswordHash))
             return null;
 
-        var token = _jwtTokenGenerator.Generate(
-            user.Id,
-            user.CompanyId,
-            user.Email,
-            user.Role);
 
-        return new LoginResponse(token);
+        var accessToken = _jwtTokenGenerator.Generate(
+                 user.Id,
+                 user.CompanyId,
+                 user.Email,
+                 user.Role);
+
+        var refreshToken = _refreshTokenGenerator.Generate();
+
+        return new LoginResponse(
+            accessToken,
+            refreshToken);
     }
 }

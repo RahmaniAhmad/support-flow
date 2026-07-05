@@ -17,6 +17,7 @@ public static class LoginEndpoint
     }
 
     private static async Task<IResult> LoginAsync(
+        HttpContext context,
         LoginQuery query,
         ISender sender,
         CancellationToken cancellationToken)
@@ -26,6 +27,30 @@ public static class LoginEndpoint
         if (result is null)
             return Results.Unauthorized();
 
-        return Results.Ok(result);
+        context.Response.Cookies.Append(
+            "access_token",
+            result.AccessToken,
+            new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = context.Request.IsHttps,
+                SameSite = SameSiteMode.Lax,
+                Expires = DateTimeOffset.UtcNow.AddMinutes(15),
+                Path = "/"
+            });
+
+        context.Response.Cookies.Append(
+            "refresh_token",
+            result.RefreshToken,
+            new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = context.Request.IsHttps,
+                SameSite = SameSiteMode.Lax,
+                Expires = DateTimeOffset.UtcNow.AddDays(30),
+                Path = "/auth"
+            });
+
+        return Results.NoContent();
     }
 }
