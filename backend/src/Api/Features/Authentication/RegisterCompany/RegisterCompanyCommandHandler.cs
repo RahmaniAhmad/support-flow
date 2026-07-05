@@ -1,5 +1,6 @@
 using Infrastructure.Persistence;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Shared.Authentication;
 using Shared.Domain;
 using Shared.Domain.Users;
@@ -7,7 +8,7 @@ using Shared.Domain.Users;
 namespace Api.Features.Authentication.RegisterCompany;
 
 public class RegisterCompanyCommandHandler
-    : IRequestHandler<RegisterCompanyCommand, RegisterCompanyResponse>
+    : IRequestHandler<RegisterCompanyCommand>
 {
     private readonly SupportFlowDbContext _db;
     private readonly IPasswordHasher _passwordHasher;
@@ -20,10 +21,18 @@ public class RegisterCompanyCommandHandler
         _passwordHasher = passwordHasher;
     }
 
-    public async Task<RegisterCompanyResponse> Handle(
+    public async Task Handle(
         RegisterCompanyCommand request,
         CancellationToken cancellationToken)
     {
+        var emailExists = await _db.Users
+        .AnyAsync(u => u.Email == request.Email, cancellationToken);
+
+        if (emailExists)
+        {
+            throw new InvalidOperationException("Email is already registered.");
+        }
+
         var company = Company.Create(request.CompanyName);
 
         var user = User.Create
@@ -38,7 +47,5 @@ public class RegisterCompanyCommandHandler
         _db.Users.Add(user);
 
         await _db.SaveChangesAsync(cancellationToken);
-
-        return new RegisterCompanyResponse(company.Id, user.Id);
     }
 }

@@ -19,9 +19,9 @@ public static class RegisterCompanyEndpoint
                     request.Email,
                     request.Password
                 );
-                var result = await sender.Send(command, cancellationToken);
+                await sender.Send(command, cancellationToken);
 
-                return Results.Ok(result);
+                return Results.NoContent();
             });
 
         return app;
