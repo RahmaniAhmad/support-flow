@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function HomePage() {
-  const token = (await cookies()).get("token");
+  const token = (await cookies()).get("access-token");
 
   if (token) {
     redirect("/dashboard");

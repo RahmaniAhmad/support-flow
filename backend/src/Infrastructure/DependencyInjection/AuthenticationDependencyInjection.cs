@@ -50,6 +50,15 @@ public static class AuthenticationDependencyInjection
                         new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
                 };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        context.Token = context.Request.Cookies["access_token"];
+                        return Task.CompletedTask;
+                    }
+                };
+
             });
 
         return services;

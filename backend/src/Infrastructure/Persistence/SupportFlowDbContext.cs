@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Shared.Domain;
 using Shared.Domain.Base;
 using Shared.Domain.Tickets;
+using Shared.Domain.Users;
 
 namespace Infrastructure.Persistence;
 
@@ -16,11 +17,14 @@ public sealed class SupportFlowDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
 
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
     public DbSet<Ticket> Tickets => Set<Ticket>();
 
     public DbSet<TicketComment> TicketComments => Set<TicketComment>();
 
     public DbSet<KnowledgeArticle> KnowledgeArticles => Set<KnowledgeArticle>();
+
 
     protected override void OnModelCreating(
     ModelBuilder modelBuilder)
