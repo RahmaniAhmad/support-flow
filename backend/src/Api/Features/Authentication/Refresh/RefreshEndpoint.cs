@@ -2,29 +2,33 @@ using Infrastructure.Authentication;
 using MediatR;
 using Microsoft.Extensions.Options;
 
-namespace Api.Features.Authentication.Login;
+namespace Api.Features.Authentication.Refresh;
 
-public static class LoginEndpoint
+public static class RefreshEndpoint
 {
-    public static IEndpointRouteBuilder MapLogin(
+    public static IEndpointRouteBuilder MapRefresh(
         this IEndpointRouteBuilder app)
     {
-        app.MapPost(
-            "/auth/login",
-            LoginAsync)
-            .WithName("Login")
-            .WithTags("Authentication");
+        app.MapPost("/auth/refresh", RefreshAsync)
+            .WithTags("Authentication")
+            .WithName("Refresh");
 
         return app;
     }
 
-    private static async Task<IResult> LoginAsync(
+    private static async Task<IResult> RefreshAsync(
         HttpContext context,
-        LoginCommand command,
         ISender sender,
         IOptions<JwtOptions> jwtOptions,
         CancellationToken cancellationToken)
     {
+        var refreshToken = context.Request.Cookies["refresh_token"];
+
+        if (string.IsNullOrWhiteSpace(refreshToken))
+            return Results.Unauthorized();
+
+        var command = new RefreshCommand(refreshToken);
+
         var result = await sender.Send(command, cancellationToken);
 
         if (result is null)

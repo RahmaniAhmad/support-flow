@@ -5,7 +5,7 @@ public abstract class AggregateRoot : Entity
     private readonly Queue<IDomainEvent> _domainEvents = [];
 
     public IReadOnlyCollection<IDomainEvent> DomainEvents =>
-        _domainEvents.ToList();
+        _domainEvents;
 
     protected void AddDomainEvent(
         IDomainEvent domainEvent)
