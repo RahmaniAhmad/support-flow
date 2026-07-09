@@ -1,21 +1,16 @@
-import { forwardRef, InputHTMLAttributes } from "react";
+import { forwardRef } from "react";
 import clsx from "clsx";
+import { Input as AntInput, InputRef, InputProps as AntInputProps } from "antd";
 
-type InputProps = InputHTMLAttributes<HTMLInputElement>;
+type InputProps = AntInputProps;
 
-const Input = forwardRef<HTMLInputElement, InputProps>(
+const Input = forwardRef<InputRef, InputProps>(
   ({ className, ...props }, ref) => {
     return (
-      <input
+      <AntInput
+        size="large"
         ref={ref}
-        className={clsx(
-          "w-full rounded-lg border border-slate-300 bg-white px-3 py-2",
-          "text-slate-900 placeholder:text-slate-400",
-          "transition-colors",
-          "focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200",
-          "disabled:cursor-not-allowed disabled:bg-slate-100 disabled:opacity-70",
-          className,
-        )}
+        className={clsx("rounded-lg", className)}
         {...props}
       />
     );

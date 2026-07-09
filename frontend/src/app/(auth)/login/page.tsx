@@ -8,18 +8,15 @@ import { LoginRequest } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/features/auth/schemas/login.schema";
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
+import FormInput from "@/components/form/FormInput";
+import FormPasswordInput from "@/components/form/FormPasswordInput";
 
 export default function LoginPage() {
   const router = useRouter();
 
   const loginMutation = useLogin();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginRequest>({
+  const { control, handleSubmit } = useForm<LoginRequest>({
     resolver: zodResolver(loginSchema),
   });
 
@@ -49,30 +46,28 @@ export default function LoginPage() {
       >
         <h1 className="mb-6 text-center text-3xl font-bold">Sign In</h1>
 
-        <div className="mb-4">
-          <Input type="email" placeholder="Email" {...register("email")} />
-
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
-          )}
-        </div>
-
-        <div className="mb-6">
-          <Input
-            type="password"
-            placeholder="Password"
-            {...register("password")}
+        <div className="flex flex-col mb-6 gap-y-4">
+          <FormInput
+            control={control}
+            name="email"
+            type="email"
+            placeholder="Email"
           />
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.password.message}
-            </p>
-          )}
+
+          <FormPasswordInput
+            control={control}
+            name="password"
+            placeholder="Password"
+          />
         </div>
 
         {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
 
-        <Button type="submit" isLoading={loginMutation.isPending}>
+        <Button
+          className="w-full"
+          htmlType="submit"
+          isLoading={loginMutation.isPending}
+        >
           Sign In
         </Button>
         <div className="mt-6 text-center text-sm text-slate-600">

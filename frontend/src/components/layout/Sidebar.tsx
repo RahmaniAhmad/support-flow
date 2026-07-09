@@ -1,24 +1,51 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-export default function Sidebar() {
+type Props = {
+  onClose?: () => void;
+};
+
+const menuItems = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+  },
+  {
+    label: "Tickets",
+    href: "/tickets",
+  },
+];
+
+export default function Sidebar({ onClose }: Props) {
+  const pathname = usePathname();
+
   return (
-    <aside className="w-64 border-r bg-white">
-      <div className="border-b p-6 text-xl font-bold">VSA Tickets</div>
+    <aside className="flex h-full w-64 flex-col border-r border-gray-300 bg-white">
+      <div className="border-b border-gray-300 p-6 text-xl h-16 font-bold">
+        VSA Tickets
+      </div>
 
-      <nav className="flex flex-col p-4">
-        <Link href="/dashboard" className="rounded p-3 hover:bg-slate-100">
-          Dashboard
-        </Link>
+      <nav className="flex flex-col gap-1 p-4">
+        {menuItems.map((item) => {
+          const isActive = pathname === item.href;
 
-        <Link href="/tickets" className="rounded p-3 hover:bg-slate-100">
-          Tickets
-        </Link>
-
-        <Link href="/profile" className="rounded p-3 hover:bg-slate-100">
-          Profile
-        </Link>
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={onClose}
+              className={`rounded p-3 transition ${
+                isActive
+                  ? "bg-slate-200 font-semibold text-slate-900"
+                  : "text-slate-600 hover:bg-slate-100"
+              }`}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
       </nav>
     </aside>
   );
