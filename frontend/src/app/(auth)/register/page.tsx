@@ -5,26 +5,21 @@ import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
-
 import { useRegister } from "@/features/auth/hooks/useRegister";
 import {
   registerSchema,
   RegisterForm,
 } from "@/features/auth/schemas/register.schema";
+import FormInput from "@/components/form/FormInput";
+import FormPasswordInput from "@/components/form/FormPasswordInput";
 
 export default function RegisterPage() {
   const router = useRouter();
 
   const registerMutation = useRegister();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RegisterForm>({
+  const { control, handleSubmit } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       companyName: "",
@@ -69,7 +64,7 @@ export default function RegisterPage() {
           Register your company to start managing tickets.
         </p>
 
-        <div className="space-y-5">
+        <div className="flex flex-col mb-6 gap-y-4">
           <div>
             <label
               htmlFor="companyName"
@@ -77,18 +72,12 @@ export default function RegisterPage() {
             >
               Company Name
             </label>
-
-            <Input
-              id="companyName"
+            <FormInput
+              control={control}
+              name="companyName"
+              type="text"
               placeholder="Acme Inc."
-              {...register("companyName")}
             />
-
-            {errors.companyName && (
-              <p className="mt-1 text-sm text-red-600">
-                {errors.companyName.message}
-              </p>
-            )}
           </div>
 
           <div>
@@ -98,19 +87,12 @@ export default function RegisterPage() {
             >
               Email
             </label>
-
-            <Input
-              id="email"
+            <FormInput
+              control={control}
+              name="email"
               type="email"
               placeholder="admin@company.com"
-              {...register("email")}
             />
-
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-600">
-                {errors.email.message}
-              </p>
-            )}
           </div>
 
           <div>
@@ -120,19 +102,11 @@ export default function RegisterPage() {
             >
               Password
             </label>
-
-            <Input
-              id="password"
-              type="password"
+            <FormPasswordInput
+              control={control}
+              name="password"
               placeholder="••••••••"
-              {...register("password")}
             />
-
-            {errors.password && (
-              <p className="mt-1 text-sm text-red-600">
-                {errors.password.message}
-              </p>
-            )}
           </div>
 
           <div>
@@ -143,18 +117,11 @@ export default function RegisterPage() {
               Confirm Password
             </label>
 
-            <Input
-              id="confirmPassword"
-              type="password"
+            <FormPasswordInput
+              control={control}
+              name="confirmPassword"
               placeholder="••••••••"
-              {...register("confirmPassword")}
             />
-
-            {errors.confirmPassword && (
-              <p className="mt-1 text-sm text-red-600">
-                {errors.confirmPassword.message}
-              </p>
-            )}
           </div>
 
           {error && (
@@ -163,7 +130,11 @@ export default function RegisterPage() {
             </div>
           )}
 
-          <Button type="submit" isLoading={registerMutation.isPending}>
+          <Button
+            className="w-full"
+            htmlType="submit"
+            isLoading={registerMutation.isPending}
+          >
             Create Company
           </Button>
         </div>
