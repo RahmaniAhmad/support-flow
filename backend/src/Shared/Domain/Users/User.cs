@@ -7,7 +7,7 @@ public sealed class User : AggregateRoot
 {
     private readonly List<RefreshToken> _refreshTokens = [];
 
-    public Guid CompanyId { get; private set; }
+    public Guid? CompanyId { get; private set; }
 
     public string Email { get; private set; } = string.Empty;
 
@@ -15,14 +15,16 @@ public sealed class User : AggregateRoot
 
     public UserRole Role { get; private set; }
 
+    public Company? Company { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
 
     public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens;
 
+
     private User() { }
 
     public static User Create(
-           Guid companyId,
+           Guid? companyId,
            string email,
            string passwordHash,
            UserRole role)

@@ -19,7 +19,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator
 
     public string Generate(
         Guid userId,
-        Guid companyId,
+        Guid? companyId,
         string email,
         UserRole role)
     {

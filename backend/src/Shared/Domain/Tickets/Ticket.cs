@@ -88,13 +88,12 @@ public sealed class Ticket : AggregateRoot
         if (Status == TicketStatus.Closed)
             throw new InvalidOperationException("Cannot comment on a closed ticket.");
 
-        var comment = new TicketComment
-        {
-            TicketId = Id,
-            AuthorUserId = userId,
-            Content = content,
-            CreatedAtUtc = DateTime.UtcNow
-        };
+        var comment = TicketComment.Create
+        (
+             Id,
+             userId,
+             content
+        );
 
         _comments.Add(comment);
 
