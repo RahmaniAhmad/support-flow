@@ -2,7 +2,8 @@ namespace Shared.Domain.Users;
 
 public enum UserRole
 {
-    Customer,
+    SuperAdmin,
+    Admin,
     Agent,
-    Admin
+    Customer,
 }

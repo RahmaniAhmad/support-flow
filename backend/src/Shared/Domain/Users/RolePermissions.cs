@@ -4,6 +4,11 @@ public static class RolePermissions
 {
     public static readonly Dictionary<UserRole, string[]> Map = new()
     {
+        [UserRole.SuperAdmin] =
+        [
+            Permissions.DashboardView
+        ],
+
         [UserRole.Admin] =
         [
             Permissions.TicketsCreate,

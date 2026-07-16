@@ -7,7 +7,7 @@ public static class RegisterCompanyEndpoint
         this IEndpointRouteBuilder app)
     {
         app.MapPost(
-            "/auth/register",
+            "/auth/register-company",
             async (
                 RegisterCompanyRequest request,
                 ISender sender,

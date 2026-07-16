@@ -2,6 +2,7 @@ using Infrastructure.Authentication;
 using Infrastructure.Caching;
 using Infrastructure.Domain;
 using Infrastructure.Notifications;
+using Infrastructure.Persistence.Seeders;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,10 +14,15 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.Configure<SuperAdminOptions>(
+            configuration.GetSection(SuperAdminOptions.SectionName));
+
         services.AddAuthentication(configuration);
         services.AddCaching(configuration);
         services.AddDomain();
         services.AddNotifications();
+
+        services.AddScoped<SuperAdminSeeder>();
 
         return services;
     }
