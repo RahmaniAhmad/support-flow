@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Shared.Domain.Users;
 
 namespace Api.Features.Authentication.Me;
 
@@ -11,6 +12,23 @@ public static class MeEndpoint
             "/me",
             (ClaimsPrincipal user) =>
             {
+                var roleValue = user.FindFirstValue(
+                  ClaimTypes.Role);
+
+                if (!Enum.TryParse<UserRole>(
+                    roleValue,
+                    out var role))
+                {
+                    return Results.Unauthorized();
+                }
+
+                var permissions =
+                    RolePermissions.Map.TryGetValue(
+                        role,
+                        out var rolePermissions)
+                        ? rolePermissions
+                        : [];
+
                 return Results.Ok(
                     new
                     {
@@ -20,8 +38,13 @@ public static class MeEndpoint
                         Email = user.FindFirstValue(
                             ClaimTypes.Email),
 
+                        Role = user.FindFirstValue(ClaimTypes.Role),
+
                         CompanyId = user.FindFirstValue(
-                            "company_id")
+                            "company_id"),
+
+                        Permissions = permissions
+
                     });
             })
             .RequireAuthorization();

@@ -1,7 +1,9 @@
 using Api.DependencyInjection;
 using Api.Extensions;
 using Infrastructure.DependencyInjection;
+using Infrastructure.Extensions;
 using Infrastructure.Persistence;
+using Infrastructure.Persistence.Seeders;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +40,8 @@ builder.Services.AddCors(options =>
        });
 
 var app = builder.Build();
+
+await app.InitializeDatabaseAsync();
 
 // OpenAPI
 if (app.Environment.IsDevelopment())

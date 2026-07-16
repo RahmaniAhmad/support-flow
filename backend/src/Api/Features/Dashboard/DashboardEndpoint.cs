@@ -1,5 +1,7 @@
+using Api.Authorization;
 using MediatR;
 using Shared.Authentication;
+using Shared.Domain.Users;
 
 namespace Api.Features.Dashboard;
 
@@ -22,7 +24,7 @@ public static class DashboardEndpoint
 
                 return Results.Ok(response);
             })
-            .RequireAuthorization();
+            .RequireAuthorization().RequirePermission(Permissions.DashboardView);
 
         return app;
     }
