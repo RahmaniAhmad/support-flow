@@ -1,4 +1,5 @@
 using Api.Authorization;
+using Api.Filters;
 using MediatR;
 using Shared.Authentication;
 using Shared.Domain.Users;
@@ -31,6 +32,7 @@ public static class CreateTicketEndpoint
                 return Results.Created($"/tickets/{ticketId}", new { Id = ticketId });
 
             })
+            .AddEndpointFilter<SecurityFilter>()
             .RequireAuthorization()
             .RequirePermission(Permissions.TicketsCreate);
 

@@ -1,3 +1,4 @@
+using Api.Filters;
 using MediatR;
 
 namespace Api.Features.KnowledgeBase.CreateArticle;
@@ -24,6 +25,7 @@ public static class CreateArticleEndpoint
                     $"/knowledge-articles/{articleId}",
                     new { Id = articleId });
             })
+            .AddEndpointFilter<SecurityFilter>()
             .RequireAuthorization();
 
         return app;

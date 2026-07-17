@@ -3,10 +3,18 @@ using Api.Extensions;
 using Infrastructure.DependencyInjection;
 using Infrastructure.Extensions;
 using Infrastructure.Persistence;
-using Infrastructure.Persistence.Seeders;
 using Microsoft.EntityFrameworkCore;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<Api.Options.CorsOptions>(
+    builder.Configuration.GetSection(Api.Options.CorsOptions.SectionName));
+
+var allowedOrigins = builder.Configuration
+    .GetSection(Api.Options.CorsOptions.SectionName + ":AllowedOrigins")
+    .Get<string[]>() ?? [];
 
 // OpenAPI / Swagger
 builder.Services.AddOpenApi();
@@ -26,13 +34,24 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
 
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN";
+
+    options.Cookie.Name = "__Host-Antiforgery";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+        ? CookieSecurePolicy.SameAsRequest
+        : CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
+
 builder.Services.AddCors(options =>
        {
-           options.AddPolicy("AllowNextJsApp", // This is a named policy
+           options.AddPolicy("AllowNextJsApp",
                builder =>
                {
-                   builder.WithOrigins(
-                       "http://localhost:3000")
+                   builder.WithOrigins(allowedOrigins)
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();

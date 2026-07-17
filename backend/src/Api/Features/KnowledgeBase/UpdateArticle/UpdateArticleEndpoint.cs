@@ -1,3 +1,4 @@
+using Api.Filters;
 using MediatR;
 
 namespace Api.Features.KnowledgeBase.UpdateArticle;
@@ -26,6 +27,7 @@ public static class UpdateArticleEndpoint
                     ? Results.Ok()
                     : Results.NotFound();
             })
+            .AddEndpointFilter<SecurityFilter>()
             .RequireAuthorization();
 
         return app;

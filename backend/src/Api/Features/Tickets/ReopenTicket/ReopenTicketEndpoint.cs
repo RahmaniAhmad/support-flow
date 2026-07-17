@@ -1,4 +1,5 @@
 using Api.Authorization;
+using Api.Filters;
 using MediatR;
 using Shared.Authentication;
 using Shared.Domain.Users;
@@ -26,6 +27,7 @@ public static class ReopenTicketEndpoint
 
                 return Results.Ok();
             })
+            .AddEndpointFilter<SecurityFilter>()
             .RequireAuthorization()
             .RequirePermission(Permissions.TicketsReopen);
 

@@ -1,5 +1,8 @@
+using Api.Extensions;
+using Api.Filters;
 using Infrastructure.Authentication;
 using MediatR;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.Extensions.Options;
 
 namespace Api.Features.Authentication.Refresh;
@@ -10,6 +13,7 @@ public static class RefreshEndpoint
         this IEndpointRouteBuilder app)
     {
         app.MapPost("/auth/refresh", RefreshAsync)
+            .AddEndpointFilter<SecurityFilter>()
             .WithTags("Authentication")
             .WithName("Refresh");
 
@@ -43,6 +47,9 @@ public static class RefreshEndpoint
             "refresh_token",
             result.RefreshToken,
             AuthenticationCookieOptions.RefreshToken(context, jwtOptions.Value.RefreshTokenLifetime));
+
+        context.IssueXsrfToken(jwtOptions.Value.AccessTokenLifetime);
+
 
         return Results.NoContent();
     }

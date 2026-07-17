@@ -1,4 +1,5 @@
 using Api.Authorization;
+using Api.Filters;
 using Infrastructure.Persistence;
 using MediatR;
 using Shared.Authentication;
@@ -31,6 +32,7 @@ public static class AddCommentEndpoint
 
                 return Results.Ok(new { Id = commentId });
             })
+            .AddEndpointFilter<SecurityFilter>()
             .RequireAuthorization()
             .RequirePermission(Permissions.TicketsComment);
 

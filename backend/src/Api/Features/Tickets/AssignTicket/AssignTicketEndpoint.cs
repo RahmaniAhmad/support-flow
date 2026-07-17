@@ -1,4 +1,5 @@
 using Api.Authorization;
+using Api.Filters;
 using Infrastructure.Persistence;
 using MediatR;
 using Shared.Authentication;
@@ -30,6 +31,7 @@ public static class AssignTicketEndpoint
 
                 return Results.Ok();
             })
+            .AddEndpointFilter<SecurityFilter>()
             .RequireAuthorization()
             .RequirePermission(Permissions.TicketsAssign);
 
