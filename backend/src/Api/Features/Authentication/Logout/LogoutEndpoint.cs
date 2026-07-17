@@ -1,3 +1,5 @@
+using Api.Filters;
+
 namespace Api.Features.Authentication.Logout;
 
 public static class LogoutEndpoint
@@ -6,6 +8,7 @@ public static class LogoutEndpoint
         this IEndpointRouteBuilder app)
     {
         app.MapPost("/auth/logout", Logout)
+            .AddEndpointFilter<SecurityFilter>()
             .WithName("Logout")
             .WithTags("Authentication");
 

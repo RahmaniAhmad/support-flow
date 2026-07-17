@@ -1,3 +1,4 @@
+using Api.Filters;
 using MediatR;
 using Shared.Authentication;
 
@@ -24,6 +25,7 @@ public static class StartTicketProgressEndpoint
 
                 return Results.Ok();
             })
+            .AddEndpointFilter<SecurityFilter>()
             .RequireAuthorization();
 
         return app;

@@ -1,4 +1,8 @@
 import axios from "axios";
+import Cookies from "js-cookie";
+
+const CSRF_HEADER = "X-CSRF-TOKEN";
+const CSRF_COOKIE = "csrf_token";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -9,6 +13,16 @@ const api = axios.create({
 });
 
 let isRefreshing = false;
+
+api.interceptors.request.use((config) => {
+  const csrfToken = Cookies.get(CSRF_COOKIE);
+
+  if (csrfToken) {
+    config.headers[CSRF_HEADER] = csrfToken;
+  }
+
+  return config;
+});
 
 api.interceptors.response.use(
   (response) => response,

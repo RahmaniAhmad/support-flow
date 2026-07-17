@@ -1,3 +1,4 @@
+using Api.Filters;
 using MediatR;
 
 namespace Api.Features.KnowledgeBase.DeleteArticle;
@@ -22,6 +23,7 @@ public static class DeleteArticleEndpoint
                     ? Results.NoContent()
                     : Results.NotFound();
             })
+            .AddEndpointFilter<SecurityFilter>()
             .RequireAuthorization();
 
         return app;
