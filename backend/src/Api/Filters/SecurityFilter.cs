@@ -40,7 +40,14 @@ public sealed class SecurityFilter : IEndpointFilter
         var antiforgery = httpContext.RequestServices
             .GetRequiredService<IAntiforgery>();
 
-        await antiforgery.ValidateRequestAsync(httpContext);
+        try
+        {
+            await antiforgery.ValidateRequestAsync(httpContext);
+        }
+        catch (AntiforgeryValidationException)
+        {
+            return Results.BadRequest("Invalid CSRF token.");
+        }
 
         return await next(context);
     }

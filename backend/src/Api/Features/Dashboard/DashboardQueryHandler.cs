@@ -38,7 +38,7 @@ public sealed class DashboardQueryHandler
         {
             switch (ticket.Status)
             {
-                case TicketStatus.Open:
+                case TicketStatus.Open or TicketStatus.Reopened:
                     openTickets++;
                     break;
 

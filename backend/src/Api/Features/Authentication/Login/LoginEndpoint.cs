@@ -1,7 +1,5 @@
-using Api.Extensions;
 using Infrastructure.Authentication;
 using MediatR;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.Extensions.Options;
 
 namespace Api.Features.Authentication.Login;
@@ -41,8 +39,6 @@ public static class LoginEndpoint
             "refresh_token",
             result.RefreshToken,
             AuthenticationCookieOptions.RefreshToken(context, jwtOptions.Value.RefreshTokenLifetime));
-
-        context.IssueXsrfToken(jwtOptions.Value.AccessTokenLifetime);
 
         return Results.NoContent();
     }

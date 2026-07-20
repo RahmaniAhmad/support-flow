@@ -38,11 +38,19 @@ builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-CSRF-TOKEN";
 
-    options.Cookie.Name = "__Host-Antiforgery";
+    if (builder.Environment.IsDevelopment())
+    {
+        options.Cookie.Name = "Antiforgery";
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    }
+    else
+    {
+        options.Cookie.Name = "__Host-Antiforgery";
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    }
+
     options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
-        ? CookieSecurePolicy.SameAsRequest
-        : CookieSecurePolicy.Always;
+    options.Cookie.Path = "/";
     options.Cookie.SameSite = SameSiteMode.Lax;
 });
 
@@ -57,6 +65,13 @@ builder.Services.AddCors(options =>
                     .AllowCredentials();
                });
        });
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(
+        new System.Text.Json.Serialization.JsonStringEnumConverter()
+    );
+});
 
 var app = builder.Build();
 
@@ -79,8 +94,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Endpoints
-app.MapEndpoints();
-app.MapTicketEndpoints();
-app.MapKnowledgeBaseEndpoints();
+app.MapApplicationEndpoints();
 
 app.Run();

@@ -29,8 +29,8 @@ export default function Sidebar({ onClose }: Props) {
 
       <nav className="flex flex-col gap-1 p-4">
         {menuItems.map((item) => {
-          const isActive = pathname === item.href;
-
+          const isActive =
+            pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
             <Link
               key={item.href}

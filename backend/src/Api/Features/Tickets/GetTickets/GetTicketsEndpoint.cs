@@ -17,13 +17,22 @@ public static class GetTicketsEndpoint
     }
 
     private static async Task<IResult> GetTicketsAsync(
+        [AsParameters] GetTicketsRequest request,
         ICurrentUser currentUser,
         ISender sender,
         CancellationToken cancellationToken)
     {
-        var tickets = await sender.Send(
-            new GetTicketsQuery(currentUser.CompanyId),
-            cancellationToken);
+        var query = new GetTicketsQuery(
+            currentUser.CompanyId,
+            request.Page,
+            request.PageSize,
+            request.Search,
+            request.Status,
+            request.AssignedToUserId,
+            request.SortBy,
+            request.Descending ?? true);
+
+        var tickets = await sender.Send(query, cancellationToken);
 
         return Results.Ok(tickets);
     }
