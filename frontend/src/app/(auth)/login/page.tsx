@@ -10,6 +10,7 @@ import { loginSchema } from "@/features/auth/schemas/login.schema";
 import Button from "@/components/ui/Button";
 import FormInput from "@/components/form/FormInput";
 import FormPasswordInput from "@/components/form/FormPasswordInput";
+import api from "@/lib/axios";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function LoginPage() {
   async function onSubmit(request: LoginRequest) {
     try {
       await loginMutation.mutateAsync(request);
+      await api.get("/auth/csrf");
 
       router.push("/dashboard");
     } catch (error) {

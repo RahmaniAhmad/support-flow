@@ -18,8 +18,13 @@ public static class LogoutEndpoint
     private static IResult Logout(HttpContext context)
     {
         context.Response.Cookies.Delete("access_token");
-
         context.Response.Cookies.Delete("refresh_token");
+        context.Response.Cookies.Delete("XSRF-TOKEN");
+
+        if (context.Request.IsHttps)
+            context.Response.Cookies.Delete("__Host-Antiforgery");
+        else
+            context.Response.Cookies.Delete("Antiforgery");
 
         return Results.NoContent();
     }

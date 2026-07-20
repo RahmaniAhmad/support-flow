@@ -3,12 +3,13 @@ using Api.Features.Authentication.RegisterCompany;
 using Api.Features.Authentication.Me;
 using Api.Features.Authentication.Logout;
 using Api.Features.Authentication.Refresh;
+using Api.Features.Authentication.Csrf;
 
 namespace Api.Extensions;
 
 public static class EndpointExtensions
 {
-    public static WebApplication MapEndpoints(
+    public static WebApplication MapAuthenticationEndpoints(
         this WebApplication app)
     {
         app.MapRegisterCompany();
@@ -18,6 +19,8 @@ public static class EndpointExtensions
         app.MapLogout();
 
         app.MapRefresh();
+
+        app.MapCsrf();
 
         app.MapMe();
 

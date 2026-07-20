@@ -1,5 +1,6 @@
 "use client";
 
+import PageTitle from "@/components/ui/page/PageTitle";
 import StatCard from "@/features/dashboard/components/StatCard";
 import { useDashboard } from "@/features/dashboard/hooks/useDashboard";
 
@@ -16,7 +17,7 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-3xl font-bold">Dashboard</h1>
+      <PageTitle>Dashboard</PageTitle>
 
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-5">
         <StatCard

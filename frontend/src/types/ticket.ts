@@ -1,26 +1,113 @@
-export type TicketStatus = "Open" | "Assigned" | "Resolved" | "Closed";
+// Ticket Status
+
+import { PagedResponse, SortDirection } from "./common";
+
+export type TicketStatus =
+  | "Open"
+  | "Assigned"
+  | "InProgress"
+  | "Resolved"
+  | "Reopened"
+  | "Closed";
+
+// Ticket Priority
+
+export type TicketPriority = "Low" | "Medium" | "High" | "Critical";
+
+// -----------------------------------------------------
+// Query Models (API Responses)
+// -----------------------------------------------------
 
 export interface TicketSummary {
   id: string;
-  title: string;
+
+  subject: string;
+
   status: TicketStatus;
+
+  priority: TicketPriority;
+
+  assigneeId?: string;
+
   assigneeName?: string;
-  createdAt: string;
+
+  createdAtUtc: string;
 }
 
 export interface TicketDetails {
   id: string;
-  title: string;
+
+  companyId: string;
+
+  createdByUserId: string;
+
+  assignedToUserId?: string;
+
+  subject: string;
+
   description: string;
+
   status: TicketStatus;
-  assigneeName?: string;
-  createdAt: string;
+
+  priority: TicketPriority;
+
+  createdAtUtc: string;
+
+  updatedAtUtc?: string;
+
   comments: TicketComment[];
 }
 
 export interface TicketComment {
   id: string;
-  text: string;
+
+  authorUserId: string;
+
   authorName: string;
-  createdAt: string;
+
+  content: string;
+
+  createdAtUtc: string;
+}
+
+// -----------------------------------------------------
+// List Query
+// -----------------------------------------------------
+
+export interface TicketListFilters {
+  page?: number;
+
+  pageSize?: number;
+
+  search?: string;
+
+  status?: TicketStatus;
+
+  priority?: TicketPriority;
+
+  assignedToUserId?: string;
+
+  sortBy?: string;
+
+  sortDirection?: SortDirection;
+}
+
+export type TicketListResponse = PagedResponse<TicketSummary>;
+
+// -----------------------------------------------------
+// Command Models (API Requests)
+// -----------------------------------------------------
+
+export interface CreateTicketRequest {
+  subject: string;
+
+  description: string;
+}
+
+export interface AssignTicketRequest {
+  assignedToUserId: string;
+}
+
+export interface AddCommentRequest {
+  content: string;
 }

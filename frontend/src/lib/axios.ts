@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const CSRF_HEADER = "X-CSRF-TOKEN";
-const CSRF_COOKIE = "csrf_token";
+const CSRF_COOKIE = "XSRF-TOKEN";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -41,6 +41,7 @@ api.interceptors.response.use(
 
       try {
         await api.post("/auth/refresh");
+        await api.get("/auth/csrf");
 
         isRefreshing = false;
 
