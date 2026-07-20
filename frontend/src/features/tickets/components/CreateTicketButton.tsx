@@ -7,7 +7,7 @@ export default function CreateTicketButton() {
   const router = useRouter();
 
   return (
-    <Button type="primary" onClick={() => router.push("/tickets/new")}>
+    <Button type="primary" onClick={() => router.push("/tickets/create")}>
       Create Ticket
     </Button>
   );
