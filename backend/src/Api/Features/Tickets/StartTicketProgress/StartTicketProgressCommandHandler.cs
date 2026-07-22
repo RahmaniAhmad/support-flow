@@ -10,7 +10,6 @@ public sealed class StartTicketProgressCommandHandler
     : IRequestHandler<StartTicketProgressCommand>
 {
     private readonly SupportFlowDbContext _db;
-
     private readonly ICurrentUser _currentUser;
     private readonly ITicketAccessService _accessService;
 
@@ -29,14 +28,13 @@ public sealed class StartTicketProgressCommandHandler
         var ticket = await _db.Tickets
             .FirstOrDefaultAsync(
                 x =>
-                    x.Id == request.TicketId &&
-                    x.CompanyId == request.CompanyId,
+                    x.Id == request.TicketId,
                 cancellationToken);
 
         if (ticket is null)
             throw new InvalidOperationException("Ticket not found.");
 
-        if (!_accessService.CanAccessTicket(_currentUser.UserId, ticket, _currentUser.Role))
+        if (!_accessService.CanStartProgress(ticket))
             throw new UnauthorizedAccessException();
 
         ticket.StartProgress();

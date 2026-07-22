@@ -4,25 +4,33 @@ using Shared.Domain.Tickets.Events;
 
 namespace Infrastructure.Events.Handlers;
 
-public sealed class TicketResolvedEventHandler
-    : INotificationHandler<TicketResolvedDomainEvent>
+public sealed class TicketCommentAddedEventHandler
+    : INotificationHandler<TicketCommentAddedDomainEvent>
 {
     private readonly ICacheService _cache;
 
-    public TicketResolvedEventHandler(ICacheService cache)
+    public TicketCommentAddedEventHandler(
+        ICacheService cache)
     {
         _cache = cache;
     }
 
+
     public async Task Handle(
-        TicketResolvedDomainEvent notification,
+        TicketCommentAddedDomainEvent notification,
         CancellationToken cancellationToken)
     {
         await _cache.IncrementVersionAsync(
             $"tickets:company:{notification.CompanyId}:version");
 
+
         await _cache.IncrementVersionAsync(
             $"tickets:company:{notification.CompanyId}:ticket:{notification.TicketId}:version");
+
+
+        await _cache.IncrementVersionAsync(
+            $"tickets:comments:{notification.TicketId}:version");
+
 
         await _cache.IncrementVersionAsync(
             $"dashboard:{notification.CompanyId}:version");

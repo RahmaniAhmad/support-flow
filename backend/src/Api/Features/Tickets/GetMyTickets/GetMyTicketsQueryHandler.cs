@@ -25,7 +25,6 @@ public sealed class GetMyTicketsQueryHandler
     {
         return await _db.Tickets
             .Where(x =>
-                x.CompanyId == _currentUser.CompanyId &&
                 x.AssignedToUserId == _currentUser.UserId)
             .OrderByDescending(x => x.CreatedAtUtc)
             .Select(x => new GetMyTicketsResponse(

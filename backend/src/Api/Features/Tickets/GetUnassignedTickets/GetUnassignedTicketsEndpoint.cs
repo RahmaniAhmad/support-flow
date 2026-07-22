@@ -17,9 +17,7 @@ public static class GetUnassignedTicketsEndpoint
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
-                var tickets = await sender.Send(
-                    new GetUnassignedTicketsQuery(currentUser.CompanyId),
-                    cancellationToken);
+                var tickets = await sender.Send(new GetUnassignedTicketsQuery(), cancellationToken);
 
                 return Results.Ok(tickets);
             })

@@ -21,11 +21,7 @@ public static class CreateTicketEndpoint
                 CancellationToken cancellationToken) =>
             {
 
-                var command = new CreateTicketCommand(
-                    currentUser.CompanyId,
-                    currentUser.UserId,
-                    request.Subject,
-                    request.Description);
+                var command = new CreateTicketCommand(request.Subject, request.Description);
 
                 var ticketId = await sender.Send(command, cancellationToken);
 

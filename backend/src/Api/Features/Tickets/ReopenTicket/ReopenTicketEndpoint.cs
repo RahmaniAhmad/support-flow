@@ -19,9 +19,7 @@ public static class ReopenTicketEndpoint
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
-                var command = new ReopenTicketCommand(
-                    ticketId,
-                    currentUser.CompanyId);
+                var command = new ReopenTicketCommand(ticketId);
 
                 await sender.Send(command, cancellationToken);
 

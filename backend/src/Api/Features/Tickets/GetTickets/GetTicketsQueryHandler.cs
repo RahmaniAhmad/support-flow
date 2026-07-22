@@ -1,8 +1,9 @@
+using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Shared.Authentication;
 using Shared.Contracts;
+using Shared.Domain.Users;
 
 namespace Api.Features.Tickets.GetTickets;
 
@@ -10,14 +11,14 @@ public sealed class GetTicketsQueryHandler
     : IRequestHandler<GetTicketsQuery, PagedResult<GetTicketsResponse>>
 {
     private readonly SupportFlowDbContext _db;
-    private readonly ICurrentUser _currentUser;
+    private readonly ITicketAccessService _accessService;
 
     public GetTicketsQueryHandler(
-        SupportFlowDbContext db,
-        ICurrentUser currentUser)
+     SupportFlowDbContext db,
+     ITicketAccessService accessService)
     {
         _db = db;
-        _currentUser = currentUser;
+        _accessService = accessService;
     }
 
     public async Task<PagedResult<GetTicketsResponse>> Handle(
@@ -25,9 +26,9 @@ public sealed class GetTicketsQueryHandler
         CancellationToken cancellationToken)
     {
 
-        var query = _db.Tickets
-        .AsNoTracking()
-        .Where(x => x.CompanyId == _currentUser.CompanyId);
+        var query = _accessService
+           .ApplyTicketAccessFilter(
+               _db.Tickets.AsNoTracking());
 
 
         if (!string.IsNullOrWhiteSpace(request.Search))
@@ -41,12 +42,6 @@ public sealed class GetTicketsQueryHandler
         {
             query = query.Where(x =>
                 x.Status == request.Status);
-        }
-
-        if (request.AssignedToUserId is not null)
-        {
-            query = query.Where(x =>
-                x.AssignedToUserId == request.AssignedToUserId);
         }
 
         query = request.SortBy?.ToLowerInvariant() switch

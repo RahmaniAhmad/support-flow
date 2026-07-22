@@ -8,14 +8,14 @@ public sealed class CachingBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
     private readonly ICacheService _cache;
-    private readonly IServiceProvider _provider;
+    private readonly IServiceProvider _serviceProvider;
 
     public CachingBehavior(
         ICacheService cache,
-        IServiceProvider provider)
+        IServiceProvider serviceProvider)
     {
         _cache = cache;
-        _provider = provider;
+        _serviceProvider = serviceProvider;
     }
 
     public async Task<TResponse> Handle(
@@ -23,17 +23,16 @@ public sealed class CachingBehavior<TRequest, TResponse>
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        var keyProvider = GetKeyProvider(request);
+        var keyProvider = GetKeyProvider();
 
         if (keyProvider is null)
             return await next();
 
-        var baseKey = keyProvider.GetBaseKey(request);
-
-        var versionKey = $"{baseKey}:version";
-        var version = await _cache.GetVersionAsync(versionKey);
-
-        var cacheKey = $"{baseKey}:v{version}";
+        var key = keyProvider.GetKey(request);
+        var group = keyProvider.GetGroup(request);
+        var version = await _cache.GetVersionAsync(
+            $"{group}:version");
+        var cacheKey = $"{key}:v{version}";
 
         var cached = await _cache.GetAsync<TResponse>(cacheKey);
         if (cached is not null)
@@ -49,9 +48,9 @@ public sealed class CachingBehavior<TRequest, TResponse>
         return response;
     }
 
-    private ICacheKeyProvider<TRequest>? GetKeyProvider(TRequest request)
+    private ICacheKeyProvider<TRequest>? GetKeyProvider()
     {
-        return _provider.GetService(typeof(ICacheKeyProvider<TRequest>))
+        return _serviceProvider.GetService(typeof(ICacheKeyProvider<TRequest>))
             as ICacheKeyProvider<TRequest>;
     }
 }

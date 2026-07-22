@@ -19,9 +19,7 @@ public static class ResolveTicketEndpoint
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
-                var command = new ResolveTicketCommand(
-                    ticketId,
-                    currentUser.CompanyId);
+                var command = new ResolveTicketCommand(ticketId);
 
                 await sender.Send(command, cancellationToken);
 

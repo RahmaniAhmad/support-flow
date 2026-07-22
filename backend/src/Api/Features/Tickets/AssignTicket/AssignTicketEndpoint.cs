@@ -24,7 +24,6 @@ public static class AssignTicketEndpoint
             {
                 var command = new AssignTicketCommand(
                  ticketId,
-                 currentUser.CompanyId,
                  request.AssignedToUserId);
 
                 await sender.Send(command, cancellationToken);

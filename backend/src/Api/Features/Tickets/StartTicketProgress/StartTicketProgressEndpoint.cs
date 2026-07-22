@@ -17,9 +17,7 @@ public static class StartTicketProgressEndpoint
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
-                var command = new StartTicketProgressCommand(
-                    ticketId,
-                    currentUser.CompanyId);
+                var command = new StartTicketProgressCommand(ticketId);
 
                 await sender.Send(command, cancellationToken);
 

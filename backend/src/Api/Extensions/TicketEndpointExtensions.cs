@@ -4,6 +4,7 @@ using Api.Features.Tickets.CloseTicket;
 using Api.Features.Tickets.CreateTicket;
 using Api.Features.Tickets.GetComments;
 using Api.Features.Tickets.GetMyTickets;
+using Api.Features.Tickets.GetTicket;
 using Api.Features.Tickets.GetTickets;
 using Api.Features.Tickets.GetTicketsByStatus;
 using Api.Features.Tickets.GetUnassignedTickets;
@@ -18,6 +19,7 @@ public static class TicketEndpointExtensions
         this WebApplication app)
     {
         app.MapGetTickets();
+        app.MapGetTicket();
         app.MapAssignTicket();
         app.MapCreateTicket();
         app.MapCloseTicket();

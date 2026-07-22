@@ -18,7 +18,7 @@ public static class GetTicketsByStatusEndpoint
                 CancellationToken cancellationToken) =>
             {
                 var tickets = await sender.Send(
-                    new GetTicketsByStatusQuery(currentUser.CompanyId, status),
+                    new GetTicketsByStatusQuery(status),
                     cancellationToken);
 
                 return Results.Ok(tickets);

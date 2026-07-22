@@ -13,10 +13,14 @@ public sealed class TicketCommentConfiguration
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Content)
-            .HasMaxLength(4000);
+            .HasMaxLength(4000)
+            .IsRequired();
 
-        builder.HasOne(x => x.Ticket)
-            .WithMany()
-            .HasForeignKey(x => x.TicketId);
+        builder.Property(x => x.CreatedAtUtc)
+            .IsRequired();
+
+        builder.HasIndex(x => x.TicketId);
+
+        builder.HasIndex(x => x.AuthorUserId);
     }
 }

@@ -1,15 +1,15 @@
 "use client";
 
-import { Button, Modal, message } from "antd";
-
+import { Modal, message } from "antd";
 import { useReopenTicket } from "../hooks/useReopenTicket";
 
 type Props = {
   ticketId: string;
+  onDone?: () => void;
 };
 
-export default function ReopenTicketButton({ ticketId }: Props) {
-  const { mutate, isPending } = useReopenTicket();
+export default function ReopenTicketAction({ ticketId, onDone }: Props) {
+  const { mutate } = useReopenTicket();
 
   const handleReopen = () => {
     Modal.confirm({
@@ -26,11 +26,14 @@ export default function ReopenTicketButton({ ticketId }: Props) {
           mutate(ticketId, {
             onSuccess: () => {
               message.success("Ticket reopened successfully.");
+
+              onDone?.();
               resolve();
             },
 
             onError: () => {
               message.error("Failed to reopen ticket.");
+
               reject();
             },
           });
@@ -38,9 +41,5 @@ export default function ReopenTicketButton({ ticketId }: Props) {
     });
   };
 
-  return (
-    <Button loading={isPending} onClick={handleReopen}>
-      Reopen
-    </Button>
-  );
+  return <span onClick={handleReopen}>Reopen ticket</span>;
 }

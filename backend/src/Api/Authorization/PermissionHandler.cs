@@ -9,11 +9,9 @@ public sealed class PermissionHandler
         AuthorizationHandlerContext context,
         PermissionRequirement requirement)
     {
-        var hasPermission = context.User.Claims
-            .Where(c => c.Type == "permission")
-            .Any(c => c.Value == requirement.Permission);
-
-        if (hasPermission)
+        if (context.User.HasClaim(
+            "permission",
+            requirement.Permission))
         {
             context.Succeed(requirement);
         }

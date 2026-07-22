@@ -1,3 +1,4 @@
+using Shared.Authentication;
 using Shared.Caching;
 
 namespace Api.Features.Tickets.GetTicket;
@@ -5,8 +6,23 @@ namespace Api.Features.Tickets.GetTicket;
 public sealed class GetTicketCacheKeyProvider
     : ICacheKeyProvider<GetTicketQuery>
 {
-    public string GetBaseKey(GetTicketQuery request)
-        => $"tickets:company:{request.CompanyId}:ticket:{request.TicketId}";
+    private readonly ICurrentUser _currentUser;
 
-    public TimeSpan? Expiration => TimeSpan.FromMinutes(10);
+    public GetTicketCacheKeyProvider(
+        ICurrentUser currentUser)
+    {
+        _currentUser = currentUser;
+    }
+
+    public string GetKey(
+        GetTicketQuery request)
+    {
+        var companyId = _currentUser.CompanyId
+            ?? throw new InvalidOperationException(
+                "Company id is required.");
+
+        return $"tickets:company:{companyId}:ticket:{request.TicketId}";
+    }
+
+    public TimeSpan? Expiration => CacheExpiration.Ticket;
 }

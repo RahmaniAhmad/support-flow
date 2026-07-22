@@ -15,11 +15,31 @@ public sealed class Ticket : AggregateRoot
     public DateTime CreatedAtUtc { get; private set; }
     public DateTime? UpdatedAtUtc { get; private set; }
     private readonly List<TicketComment> _comments = [];
-    public IReadOnlyCollection<TicketComment> Comments => _comments.AsReadOnly();
+    public IReadOnlyCollection<TicketComment> Comments => _comments;
 
     private Ticket() { }
     public static Ticket Create(Guid companyId, Guid userId, string subject, string description)
     {
+        if (companyId == Guid.Empty)
+            throw new ArgumentException(
+                "Company id is required.",
+                nameof(companyId));
+
+        if (userId == Guid.Empty)
+            throw new ArgumentException(
+                "Creator user id is required.",
+                nameof(userId));
+
+        if (string.IsNullOrWhiteSpace(subject))
+            throw new ArgumentException(
+                "Subject is required.",
+                nameof(subject));
+
+        if (string.IsNullOrWhiteSpace(description))
+            throw new ArgumentException(
+                "Description is required.",
+                nameof(description));
+
         var ticket = new Ticket
         {
             CompanyId = companyId,
@@ -37,8 +57,20 @@ public sealed class Ticket : AggregateRoot
 
     public void AssignTo(Guid userId)
     {
+        if (userId == Guid.Empty)
+        {
+            throw new ArgumentException(
+                "Assigned user id is required.",
+                nameof(userId));
+        }
+
         if (Status is TicketStatus.Closed or TicketStatus.Resolved)
-            throw new InvalidOperationException($"Cannot assign a ticket in {Status} status.");
+            throw new InvalidOperationException(
+                $"Cannot assign a ticket in {Status} status.");
+
+        if (AssignedToUserId is not null)
+            throw new InvalidOperationException(
+                "Ticket is already assigned.");
 
         AssignedToUserId = userId;
         UpdatedAtUtc = DateTime.UtcNow;
@@ -46,6 +78,7 @@ public sealed class Ticket : AggregateRoot
         AddDomainEvent(
             new TicketAssignedDomainEvent(
                 Id,
+                CompanyId,
                 userId));
     }
 
@@ -58,34 +91,42 @@ public sealed class Ticket : AggregateRoot
 
         TransitionTo(
             TicketStatus.InProgress,
-            new TicketInProgressDomainEvent(Id));
+            new TicketInProgressDomainEvent(Id, CompanyId, AssignedToUserId.Value));
     }
 
     public void Resolve()
     {
+        if (AssignedToUserId is null)
+            throw new InvalidOperationException(
+                "Only assigned tickets can be resolved.");
+
         TransitionTo(
             TicketStatus.Resolved,
-            new TicketResolvedDomainEvent(Id, CompanyId, AssignedToUserId));
+            new TicketResolvedDomainEvent(Id, CompanyId, AssignedToUserId.Value));
 
     }
 
-    public void Close()
+    public void Close(Guid closedByUserId)
     {
         TransitionTo(
             TicketStatus.Closed,
-            new TicketClosedDomainEvent(Id));
+            new TicketClosedDomainEvent(Id, CompanyId, closedByUserId));
     }
 
-    public void Reopen()
+    public void Reopen(Guid reopenedByUserId)
     {
         TransitionTo(
             TicketStatus.Reopened,
-            new TicketReopenedDomainEvent(Id));
+            new TicketReopenedDomainEvent(Id, CompanyId, reopenedByUserId));
     }
 
     public Guid AddComment(Guid userId, string content)
     {
-        if (Status == TicketStatus.Closed)
+        if (string.IsNullOrWhiteSpace(content))
+            throw new ArgumentException(
+                "Comment cannot be empty.");
+
+        if (Status is TicketStatus.Closed)
             throw new InvalidOperationException("Cannot comment on a closed ticket.");
 
         var comment = TicketComment.Create
@@ -102,6 +143,7 @@ public sealed class Ticket : AggregateRoot
         AddDomainEvent(
             new TicketCommentAddedDomainEvent(
                 Id,
+                CompanyId,
                 userId,
                 content));
 

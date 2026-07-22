@@ -19,9 +19,7 @@ public static class CloseTicketEndpoint
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
-                var command = new CloseTicketCommand(
-                    ticketId,
-                    currentUser.CompanyId);
+                var command = new CloseTicketCommand(ticketId);
 
                 await sender.Send(command, cancellationToken);
 
