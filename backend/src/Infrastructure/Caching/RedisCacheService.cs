@@ -43,7 +43,10 @@ public sealed class RedisCacheService : ICacheService
         var value = await _db.StringGetAsync(key);
 
         if (!value.HasValue)
+        {
+            await _db.StringSetAsync(key, 1);
             return 1;
+        }
 
         return (long)value;
     }

@@ -24,8 +24,6 @@ public static class AddCommentEndpoint
             {
                 var command = new AddCommentCommand(
                     ticketId,
-                    currentUser.UserId,
-                    currentUser.CompanyId,
                     request.Content);
 
                 var commentId = await sender.Send(command, cancellationToken);

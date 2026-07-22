@@ -22,6 +22,12 @@ public static class DependencyInjection
         services.AddDomain();
         services.AddNotifications();
 
+        services.AddMediatR(cfg =>
+             {
+                 cfg.RegisterServicesFromAssembly(
+                     typeof(DependencyInjection).Assembly);
+             });
+
         services.AddScoped<SuperAdminSeeder>();
 
         return services;

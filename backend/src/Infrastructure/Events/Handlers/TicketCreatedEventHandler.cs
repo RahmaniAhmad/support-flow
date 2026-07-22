@@ -4,18 +4,18 @@ using Shared.Domain.Tickets.Events;
 
 namespace Infrastructure.Events.Handlers;
 
-public sealed class TicketResolvedEventHandler
-    : INotificationHandler<TicketResolvedDomainEvent>
+public sealed class TicketCreatedEventHandler
+    : INotificationHandler<TicketCreatedDomainEvent>
 {
     private readonly ICacheService _cache;
 
-    public TicketResolvedEventHandler(ICacheService cache)
+    public TicketCreatedEventHandler(ICacheService cache)
     {
         _cache = cache;
     }
 
     public async Task Handle(
-        TicketResolvedDomainEvent notification,
+        TicketCreatedDomainEvent notification,
         CancellationToken cancellationToken)
     {
         await _cache.IncrementVersionAsync(

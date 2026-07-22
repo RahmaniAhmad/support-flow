@@ -20,10 +20,6 @@ public static class CachingDependencyInjection
             typeof(IPipelineBehavior<,>),
             typeof(CachingBehavior<,>));
 
-        services.AddScoped(
-                 typeof(IPipelineBehavior<,>),
-                 typeof(InvalidateCacheBehavior<,>));
-
         return services;
     }
 }

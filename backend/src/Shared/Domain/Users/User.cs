@@ -29,6 +29,8 @@ public sealed class User : AggregateRoot
            string passwordHash,
            UserRole role)
     {
+        ValidateCompany(role, companyId);
+
         return new User
         {
             CompanyId = companyId,
@@ -65,6 +67,21 @@ public sealed class User : AggregateRoot
         return CreateRefreshToken(
             newTokenHash,
             expiresAtUtc);
+    }
+
+    private static void ValidateCompany(
+           UserRole role,
+           Guid? companyId)
+    {
+        if (role == UserRole.SuperAdmin)
+            return;
+
+
+        if (companyId is null)
+        {
+            throw new InvalidOperationException(
+                "Company is required for this user role.");
+        }
     }
 
     private RefreshToken CreateRefreshToken(

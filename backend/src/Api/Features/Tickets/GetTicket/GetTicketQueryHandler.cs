@@ -1,7 +1,9 @@
+using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Authentication;
+using Shared.Domain.Users;
 
 namespace Api.Features.Tickets.GetTicket;
 
@@ -9,31 +11,53 @@ public sealed class GetTicketQueryHandler
     : IRequestHandler<GetTicketQuery, GetTicketResponse?>
 {
     private readonly SupportFlowDbContext _db;
-    private readonly ICurrentUser _currentUser;
+    private readonly ITicketAccessService _accessService;
+
 
     public GetTicketQueryHandler(
         SupportFlowDbContext db,
-        ICurrentUser currentUser)
+        ITicketAccessService accessService)
     {
         _db = db;
-        _currentUser = currentUser;
+        _accessService = accessService;
     }
 
     public async Task<GetTicketResponse?> Handle(
         GetTicketQuery request,
         CancellationToken cancellationToken)
     {
-        return await _db.Tickets
-            .Where(x =>
-                x.Id == request.TicketId &&
-                x.CompanyId == _currentUser.CompanyId)
-            .Select(x => new GetTicketResponse(
-                x.Id,
-                x.Subject,
-                x.Description,
-                x.Status,
-                x.AssignedToUserId,
-                x.CreatedAtUtc))
-            .FirstOrDefaultAsync(cancellationToken);
+        var ticket = await _accessService
+        .ApplyTicketAccessFilter(_db.Tickets.AsNoTracking())
+        .FirstOrDefaultAsync(
+            x => x.Id == request.TicketId,
+            cancellationToken);
+
+        if (ticket is null)
+            throw new InvalidOperationException("Ticket not found");
+
+        var createdByEmail = await _db.Users
+        .Where(x => x.Id == ticket.CreatedByUserId)
+        .Select(x => x.Email)
+        .FirstAsync(cancellationToken);
+
+
+        var assigneeEmail = ticket.AssignedToUserId is not null
+            ? await _db.Users
+                .Where(x => x.Id == ticket.AssignedToUserId)
+                .Select(x => x.Email)
+                .FirstOrDefaultAsync(cancellationToken)
+            : null;
+
+        return new GetTicketResponse(
+            ticket.Id,
+            ticket.Subject,
+            ticket.Description,
+            ticket.Status,
+            ticket.AssignedToUserId,
+            assigneeEmail,
+            createdByEmail,
+            ticket.CreatedAtUtc,
+            ticket.UpdatedAtUtc
+  );
     }
 }

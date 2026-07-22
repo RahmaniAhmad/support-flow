@@ -1,15 +1,15 @@
 "use client";
 
-import { Button, Modal, message } from "antd";
-
+import { Modal, message } from "antd";
 import { useCloseTicket } from "../hooks/useCloseTicket";
 
 type Props = {
   ticketId: string;
+  onDone?: () => void;
 };
 
-export default function CloseTicketButton({ ticketId }: Props) {
-  const { mutate, isPending } = useCloseTicket();
+export default function CloseTicketAction({ ticketId, onDone }: Props) {
+  const { mutate } = useCloseTicket();
 
   const handleClose = () => {
     Modal.confirm({
@@ -31,11 +31,14 @@ export default function CloseTicketButton({ ticketId }: Props) {
           mutate(ticketId, {
             onSuccess: () => {
               message.success("Ticket closed successfully.");
+
+              onDone?.();
               resolve();
             },
 
             onError: () => {
               message.error("Failed to close ticket.");
+
               reject();
             },
           });
@@ -43,9 +46,5 @@ export default function CloseTicketButton({ ticketId }: Props) {
     });
   };
 
-  return (
-    <Button danger loading={isPending} onClick={handleClose}>
-      Close
-    </Button>
-  );
+  return <span onClick={handleClose}>Close ticket</span>;
 }

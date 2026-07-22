@@ -4,4 +4,5 @@ namespace Shared.Domain.Tickets.Events;
 
 public sealed record TicketAssignedDomainEvent(
     Guid TicketId,
+    Guid CompanyId,
     Guid AssignedToUserId) : IDomainEvent;

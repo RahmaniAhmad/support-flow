@@ -2,6 +2,8 @@ namespace Shared.Caching;
 
 public interface ICacheKeyProvider<in TRequest>
 {
-    string GetBaseKey(TRequest request);
-    TimeSpan? Expiration => TimeSpan.FromMinutes(5);
+    string GetKey(TRequest request);
+    string GetGroup(TRequest request)
+        => GetKey(request);
+    TimeSpan? Expiration => CacheExpiration.Default;
 }
