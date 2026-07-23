@@ -7,7 +7,10 @@ public static class EndpointRegistrationExtensions
     {
         app.MapAuthenticationEndpoints();
 
+        app.MapUserEndpoints();
+
         app.MapDashboardEndpoints();
+
 
         app.MapTicketEndpoints();
 

@@ -13,9 +13,16 @@ public sealed class User : AggregateRoot
 
     public string PasswordHash { get; private set; } = string.Empty;
 
+    public string FirstName { get; private set; } = string.Empty;
+
+    public string LastName { get; private set; } = string.Empty;
+
+    public string? Phone { get; private set; }
+
     public UserRole Role { get; private set; }
 
-    public Company? Company { get; private set; }
+    public bool IsActive { get; private set; }
+
     public DateTime CreatedAtUtc { get; private set; }
 
     public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens;
@@ -30,15 +37,48 @@ public sealed class User : AggregateRoot
            UserRole role)
     {
         ValidateCompany(role, companyId);
-
+        ValidateEmail(email);
         return new User
         {
             CompanyId = companyId,
             Email = email,
             PasswordHash = passwordHash,
             Role = role,
+            IsActive = true,
             CreatedAtUtc = DateTime.UtcNow
         };
+    }
+
+    public void UpdateProfile(
+        string firstName,
+        string lastName,
+        string? phone)
+    {
+        if (string.IsNullOrWhiteSpace(firstName))
+            throw new InvalidOperationException("First name is required.");
+
+        if (string.IsNullOrWhiteSpace(lastName))
+            throw new InvalidOperationException("Last name is required.");
+
+        FirstName = firstName.Trim();
+        LastName = lastName.Trim();
+        Phone = phone?.Trim();
+    }
+
+    public void Deactivate()
+    {
+        IsActive = false;
+
+        foreach (var token in _refreshTokens)
+        {
+            token.Revoke();
+        }
+    }
+
+
+    public void Activate()
+    {
+        IsActive = true;
     }
 
     public RefreshToken IssueRefreshToken(
@@ -69,6 +109,20 @@ public sealed class User : AggregateRoot
             expiresAtUtc);
     }
 
+    public void ChangePassword(string passwordHash)
+    {
+        if (string.IsNullOrWhiteSpace(passwordHash))
+            throw new InvalidOperationException(
+                "Password hash is required.");
+
+        PasswordHash = passwordHash;
+
+        foreach (var token in _refreshTokens)
+        {
+            token.Revoke();
+        }
+    }
+
     private static void ValidateCompany(
            UserRole role,
            Guid? companyId)
@@ -96,5 +150,15 @@ public sealed class User : AggregateRoot
         _refreshTokens.Add(token);
 
         return token;
+    }
+
+    private static void ValidateEmail(string email)
+    {
+
+        if (string.IsNullOrWhiteSpace(email))
+            throw new InvalidOperationException("Email is required.");
+
+        if (!email.Contains('@'))
+            throw new InvalidOperationException("Invalid email.");
     }
 }
