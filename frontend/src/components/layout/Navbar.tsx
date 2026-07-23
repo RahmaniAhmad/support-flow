@@ -6,6 +6,7 @@ import {
   DownOutlined,
   LogoutOutlined,
   MenuOutlined,
+  ProfileOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 
@@ -38,6 +39,17 @@ export default function Navbar({ onMenuClick }: Props) {
           </div>
         </div>
       ),
+    },
+    {
+      type: "divider" as const,
+    },
+    {
+      key: "profile",
+      icon: <ProfileOutlined />,
+      label: "Profile",
+      onClick: () => {
+        router.push("/profile");
+      },
     },
     {
       type: "divider" as const,

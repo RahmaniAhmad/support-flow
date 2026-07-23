@@ -3,5 +3,5 @@ type Props = {
 };
 
 export default function PageHeader({ children }: Props) {
-  return <header className="mb-6">{children}</header>;
+  return <header className="mb-6 flex items-center gap-2">{children}</header>;
 }

@@ -12,7 +12,7 @@ type Props = {
 export default function BackButton({ href, label = "Back" }: Props) {
   return (
     <Link href={href}>
-      <Button type="link" icon={<ArrowLeftOutlined />} className="!px-0">
+      <Button type="link" icon={<ArrowLeftOutlined />} className="px-0!">
         {label}
       </Button>
     </Link>

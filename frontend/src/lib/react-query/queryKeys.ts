@@ -15,4 +15,9 @@ export const queryKeys = {
 
     detail: (id: string) => [...queryKeys.tickets.details(), id] as const,
   },
+
+  users: {
+    all: ["users"] as const,
+    profile: () => [...queryKeys.users.all, "profile"] as const,
+  },
 } as const;
