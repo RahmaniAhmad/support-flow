@@ -24,6 +24,9 @@ public sealed class RefreshToken : Entity
         RevokedAtUtc is null &&
         ExpiresAtUtc > DateTime.UtcNow;
 
+    public bool IsExpired =>
+        ExpiresAtUtc <= DateTime.UtcNow;
+
     public static RefreshToken Create(
         Guid userId,
         string tokenHash,

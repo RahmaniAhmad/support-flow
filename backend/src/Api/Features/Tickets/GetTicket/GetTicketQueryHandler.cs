@@ -2,8 +2,6 @@ using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Shared.Authentication;
-using Shared.Domain.Users;
 
 namespace Api.Features.Tickets.GetTicket;
 
@@ -27,37 +25,35 @@ public sealed class GetTicketQueryHandler
         CancellationToken cancellationToken)
     {
         var ticket = await _accessService
-        .ApplyTicketAccessFilter(_db.Tickets.AsNoTracking())
-        .FirstOrDefaultAsync(
-            x => x.Id == request.TicketId,
-            cancellationToken);
+       .ApplyTicketAccessFilter(_db.Tickets.AsNoTracking())
+       .Where(x => x.Id == request.TicketId)
+       .Select(x => new GetTicketResponse(
+           x.Id,
+           x.Subject,
+           x.Description,
+           x.Status,
+           x.AssignedToUserId,
+
+           x.AssignedToUserId != null
+               ? _db.Users
+                   .Where(u => u.Id == x.AssignedToUserId)
+                   .Select(u => u.Email)
+                   .FirstOrDefault()
+               : null,
+
+           _db.Users
+               .Where(u => u.Id == x.CreatedByUserId)
+               .Select(u => u.Email)
+               .First(),
+
+           x.CreatedAtUtc,
+           x.UpdatedAtUtc
+       ))
+       .FirstOrDefaultAsync(cancellationToken);
 
         if (ticket is null)
             throw new InvalidOperationException("Ticket not found");
 
-        var createdByEmail = await _db.Users
-        .Where(x => x.Id == ticket.CreatedByUserId)
-        .Select(x => x.Email)
-        .FirstAsync(cancellationToken);
-
-
-        var assigneeEmail = ticket.AssignedToUserId is not null
-            ? await _db.Users
-                .Where(x => x.Id == ticket.AssignedToUserId)
-                .Select(x => x.Email)
-                .FirstOrDefaultAsync(cancellationToken)
-            : null;
-
-        return new GetTicketResponse(
-            ticket.Id,
-            ticket.Subject,
-            ticket.Description,
-            ticket.Status,
-            ticket.AssignedToUserId,
-            assigneeEmail,
-            createdByEmail,
-            ticket.CreatedAtUtc,
-            ticket.UpdatedAtUtc
-  );
+        return ticket;
     }
 }

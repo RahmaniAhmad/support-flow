@@ -17,5 +17,16 @@ public sealed class RefreshTokenConfiguration
 
         builder.HasIndex(x => x.TokenHash)
             .IsUnique();
+
+        builder.Property(x => x.CreatedAtUtc)
+            .IsRequired();
+
+        builder.Property(x => x.ExpiresAtUtc)
+            .IsRequired();
+
+        builder.HasOne(x => x.User)
+            .WithMany(x => x.RefreshTokens)
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
