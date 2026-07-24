@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/react-query/queryKeys";
-import { TicketListFilters } from "@/types/ticket";
 
 import { getTickets } from "../services/tickets.service";
+import { TicketListFilters } from "@/types/ticketFilters";
 
 export function useTickets(filters?: TicketListFilters) {
   return useQuery({

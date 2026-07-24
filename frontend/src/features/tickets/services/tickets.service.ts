@@ -1,12 +1,10 @@
 import api from "@/lib/axios";
+import { TicketDetails, TicketListResponse } from "@/types/ticket";
 import {
-  AddCommentRequest,
   AssignTicketRequest,
   CreateTicketRequest,
-  TicketDetails,
   TicketListFilters,
-  TicketListResponse,
-} from "@/types/ticket";
+} from "../types";
 
 export async function getTickets(filters?: TicketListFilters) {
   const { data } = await api.get<TicketListResponse>("/tickets", {
@@ -51,12 +49,6 @@ export async function reopenTicket(ticketId: string) {
 
 export async function closeTicket(ticketId: string) {
   const { data } = await api.post(`/tickets/${ticketId}/close`);
-
-  return data;
-}
-
-export async function addComment(ticketId: string, request: AddCommentRequest) {
-  const { data } = await api.post(`/tickets/${ticketId}/comments`, request);
 
   return data;
 }
