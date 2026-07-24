@@ -27,11 +27,6 @@ public sealed class TicketConfiguration
         builder.Property(x => x.CreatedAtUtc)
             .IsRequired();
 
-        builder.HasMany(x => x.Comments)
-             .WithOne(x => x.Ticket)
-             .HasForeignKey(x => x.TicketId)
-             .OnDelete(DeleteBehavior.Cascade);
-
         builder.HasIndex(x => x.CompanyId);
 
         builder.HasIndex(x => x.AssignedToUserId);

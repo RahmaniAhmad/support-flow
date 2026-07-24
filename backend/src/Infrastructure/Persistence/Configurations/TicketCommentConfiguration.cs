@@ -22,5 +22,10 @@ public sealed class TicketCommentConfiguration
         builder.HasIndex(x => x.TicketId);
 
         builder.HasIndex(x => x.AuthorUserId);
+
+        builder.HasOne<Ticket>()
+           .WithMany(x => x.Comments)
+           .HasForeignKey(x => x.TicketId)
+           .OnDelete(DeleteBehavior.Cascade);
     }
 }

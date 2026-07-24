@@ -12,8 +12,6 @@ public sealed class TicketComment : Entity
 
     public DateTime CreatedAtUtc { get; private set; }
 
-    public Ticket Ticket { get; private set; } = null!;
-
     private TicketComment() { }
 
     public static TicketComment Create(Guid ticketId, Guid authorUserId, string content)
@@ -25,7 +23,7 @@ public sealed class TicketComment : Entity
         {
             TicketId = ticketId,
             AuthorUserId = authorUserId,
-            Content = content,
+            Content = content.Trim(),
             CreatedAtUtc = DateTime.UtcNow
         };
     }

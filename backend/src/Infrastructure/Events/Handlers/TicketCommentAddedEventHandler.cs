@@ -31,8 +31,5 @@ public sealed class TicketCommentAddedEventHandler
         await _cache.IncrementVersionAsync(
             $"tickets:comments:{notification.TicketId}:version");
 
-
-        await _cache.IncrementVersionAsync(
-            $"dashboard:{notification.CompanyId}:version");
     }
 }

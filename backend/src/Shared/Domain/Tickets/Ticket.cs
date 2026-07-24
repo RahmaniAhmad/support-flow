@@ -145,7 +145,7 @@ public sealed class Ticket : AggregateRoot
                 Id,
                 CompanyId,
                 userId,
-                content));
+                comment.Id));
 
         return comment.Id;
     }

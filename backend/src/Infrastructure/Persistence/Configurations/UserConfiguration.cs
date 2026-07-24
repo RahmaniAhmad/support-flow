@@ -43,11 +43,6 @@ public sealed class UserConfiguration
             .HasMaxLength(500)
             .IsRequired();
 
-        builder.HasMany(x => x.RefreshTokens)
-            .WithOne(x => x.User)
-            .HasForeignKey(x => x.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.Navigation(x => x.RefreshTokens)
             .HasField("_refreshTokens")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
