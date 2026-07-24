@@ -20,15 +20,17 @@ public static class TicketEndpointExtensions
     {
         app.MapGetTickets();
         app.MapGetTicket();
+        app.MapGetMyTickets();
+        app.MapGetUnassignedTickets();
+        app.MapGetTicketsByStatus();
+
         app.MapAssignTicket();
         app.MapCreateTicket();
         app.MapCloseTicket();
         app.MapReopenTicket();
+
         app.MapAddComment();
         app.MapGetComments();
-        app.MapGetMyTickets();
-        app.MapGetUnassignedTickets();
-        app.MapGetTicketsByStatus();
 
         return app;
     }

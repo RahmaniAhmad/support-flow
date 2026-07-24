@@ -14,6 +14,8 @@ export const queryKeys = {
     details: () => [...queryKeys.tickets.all, "detail"] as const,
 
     detail: (id: string) => [...queryKeys.tickets.details(), id] as const,
+
+    comments: (ticketId: string) => ["tickets", ticketId, "comments"],
   },
 
   users: {

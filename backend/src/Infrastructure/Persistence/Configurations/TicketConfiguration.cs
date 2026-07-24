@@ -12,6 +12,9 @@ public sealed class TicketConfiguration
     {
         builder.HasKey(x => x.Id);
 
+        builder.Property(x => x.Id)
+            .ValueGeneratedNever();
+
         builder.Property(x => x.Subject)
             .HasMaxLength(200)
             .IsRequired();
@@ -26,11 +29,6 @@ public sealed class TicketConfiguration
 
         builder.Property(x => x.CreatedAtUtc)
             .IsRequired();
-
-        builder.HasMany(x => x.Comments)
-             .WithOne(x => x.Ticket)
-             .HasForeignKey(x => x.TicketId)
-             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(x => x.CompanyId);
 

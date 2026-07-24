@@ -25,22 +25,18 @@ public sealed class AddCommentCommandHandler
         AddCommentCommand request,
         CancellationToken cancellationToken)
     {
-        var ticket = await _db.Tickets
-            .FirstOrDefaultAsync(
-                x =>
-                    x.Id == request.TicketId,
-                cancellationToken);
+        var ticket = await _accessService
+        .ApplyTicketAccessFilter(_db.Tickets)
+        .FirstOrDefaultAsync(
+            x => x.Id == request.TicketId,
+            cancellationToken);
 
         if (ticket is null)
             throw new InvalidOperationException("Ticket not found.");
 
-        if (!_accessService.CanAccessTicket(ticket))
-            throw new UnauthorizedAccessException();
-
         var commentId = ticket.AddComment(
             _currentUser.UserId,
             request.Content);
-
 
         await _db.SaveChangesAsync(cancellationToken);
 

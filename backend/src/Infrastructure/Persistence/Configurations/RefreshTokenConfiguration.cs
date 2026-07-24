@@ -11,6 +11,9 @@ public sealed class RefreshTokenConfiguration
     {
         builder.HasKey(x => x.Id);
 
+        builder.Property(x => x.Id)
+            .ValueGeneratedNever();
+
         builder.Property(x => x.TokenHash)
             .IsRequired()
             .HasMaxLength(128);

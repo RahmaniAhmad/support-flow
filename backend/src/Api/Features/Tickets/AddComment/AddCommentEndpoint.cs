@@ -1,8 +1,6 @@
 using Api.Authorization;
 using Api.Filters;
-using Infrastructure.Persistence;
 using MediatR;
-using Shared.Authentication;
 using Shared.Domain.Users;
 
 namespace Api.Features.Tickets.AddComment;
@@ -17,8 +15,6 @@ public static class AddCommentEndpoint
             async (
                 Guid ticketId,
                 AddCommentRequest request,
-                SupportFlowDbContext db,
-                ICurrentUser currentUser,
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {

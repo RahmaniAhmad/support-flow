@@ -12,6 +12,9 @@ public sealed class UserConfiguration
     {
         builder.HasKey(x => x.Id);
 
+        builder.Property(x => x.Id)
+            .ValueGeneratedNever();
+
         builder.Property(x => x.Email)
             .HasMaxLength(256)
             .IsRequired();
@@ -42,11 +45,6 @@ public sealed class UserConfiguration
         builder.Property(x => x.PasswordHash)
             .HasMaxLength(500)
             .IsRequired();
-
-        builder.HasMany(x => x.RefreshTokens)
-            .WithOne(x => x.User)
-            .HasForeignKey(x => x.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Navigation(x => x.RefreshTokens)
             .HasField("_refreshTokens")
