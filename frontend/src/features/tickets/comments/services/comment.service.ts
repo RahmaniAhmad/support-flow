@@ -1,5 +1,6 @@
 import api from "@/lib/axios";
-import { TicketComment } from "../types";
+import { TicketComment } from "@/types/ticketComment";
+import { AddCommentRequest } from "../type";
 
 export async function getTicketComments(
   ticketId: string,
@@ -11,15 +12,16 @@ export async function getTicketComments(
   return response.data;
 }
 
-export async function addComment(
-  ticketId: string,
-  content: string,
-): Promise<{ id: string }> {
+export async function addComment({
+  ticketId,
+  request,
+}: {
+  ticketId: string;
+  request: AddCommentRequest;
+}): Promise<{ id: string }> {
   const response = await api.post<{ id: string }>(
     `/tickets/${ticketId}/comments`,
-    {
-      content,
-    },
+    request,
   );
 
   return response.data;

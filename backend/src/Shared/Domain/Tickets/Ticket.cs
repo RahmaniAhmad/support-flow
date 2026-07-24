@@ -6,6 +6,7 @@ namespace Shared.Domain.Tickets;
 
 public sealed class Ticket : AggregateRoot
 {
+    public long TicketNumber { get; private set; }
     public Guid CompanyId { get; private set; }
     public Guid CreatedByUserId { get; private set; }
     public Guid? AssignedToUserId { get; private set; }
@@ -53,6 +54,22 @@ public sealed class Ticket : AggregateRoot
         ticket.AddDomainEvent(new TicketCreatedDomainEvent(ticket.Id, ticket.CompanyId, ticket.Subject));
 
         return ticket;
+    }
+
+    public void AssignTicketNumber(long ticketNumber)
+    {
+        if (ticketNumber <= 0)
+            throw new ArgumentException(
+                "Ticket number must be greater than zero.",
+                nameof(ticketNumber));
+
+
+        if (TicketNumber != 0)
+            throw new InvalidOperationException(
+                "Ticket number has already been assigned.");
+
+
+        TicketNumber = ticketNumber;
     }
 
     public void AssignTo(Guid userId)

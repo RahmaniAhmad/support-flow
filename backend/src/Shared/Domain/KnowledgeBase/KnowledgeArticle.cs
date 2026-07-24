@@ -1,6 +1,6 @@
 using Shared.Domain.Base;
 
-namespace Shared.Domain;
+namespace Shared.Domain.KnowledgeBase;
 
 public sealed class KnowledgeArticle : AggregateRoot
 {

@@ -31,7 +31,9 @@ export default function TicketDetailsView({ ticketId }: Props) {
               {ticket.subject}
             </Title>
 
-            <div className="text-sm text-slate-500">Ticket #{ticket.id}</div>
+            <div className="text-sm text-slate-500">
+              Ticket #{ticket.ticketNumber}
+            </div>
           </div>
 
           <Tag color={statusColor(ticket.status)}>{ticket.status}</Tag>

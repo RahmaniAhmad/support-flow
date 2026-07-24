@@ -29,6 +29,7 @@ public sealed class GetTicketQueryHandler
        .Where(x => x.Id == request.TicketId)
        .Select(x => new GetTicketResponse(
            x.Id,
+           x.TicketNumber,
            x.Subject,
            x.Description,
            x.Status,

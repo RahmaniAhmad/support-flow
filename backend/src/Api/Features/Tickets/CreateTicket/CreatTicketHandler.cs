@@ -1,6 +1,8 @@
 using Infrastructure.Persistence;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Shared.Authentication;
+using Shared.Domain.Companies;
 using Shared.Domain.Tickets;
 
 namespace Api.Features.Tickets.CreateTicket;
@@ -29,12 +31,29 @@ public sealed class CreateTicketCommandHandler
             ?? throw new UnauthorizedAccessException(
                 "User must belong to a company to create a ticket.");
 
+        var counter = await _db.CompanyTicketCounters
+          .FirstOrDefaultAsync(
+              x => x.CompanyId == companyId,
+              cancellationToken);
+
+        if (counter is null)
+        {
+            counter = CompanyTicketCounter.Create(companyId);
+
+            _db.CompanyTicketCounters.Add(counter);
+        }
+
+        var ticketNumber = counter.GetNextNumber();
+
 
         var ticket = Ticket.Create(
             companyId,
             _currentUser.UserId,
             request.Subject,
             request.Description);
+
+
+        ticket.AssignTicketNumber(ticketNumber);
 
 
         _db.Tickets.Add(ticket);

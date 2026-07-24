@@ -23,7 +23,7 @@ type Props = {
 export default function AddCommentForm({ ticketId, onSuccess }: Props) {
   const message = useMessage();
 
-  const mutation = useAddComment(ticketId);
+  const mutation = useAddComment();
 
   const { control, handleSubmit, reset } = useForm<AddCommentFormData>({
     resolver: zodResolver(addCommentSchema),
@@ -35,7 +35,12 @@ export default function AddCommentForm({ ticketId, onSuccess }: Props) {
 
   async function onSubmit(data: AddCommentFormData) {
     try {
-      await mutation.mutateAsync(data.content);
+      await mutation.mutateAsync({
+        ticketId,
+        request: {
+          content: data.content,
+        },
+      });
 
       reset();
 

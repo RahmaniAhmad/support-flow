@@ -1,7 +1,7 @@
 using Infrastructure.Persistence;
 using MediatR;
 using Shared.Authentication;
-using Shared.Domain;
+using Shared.Domain.KnowledgeBase;
 
 namespace Api.Features.KnowledgeBase.CreateArticle;
 

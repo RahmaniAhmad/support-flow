@@ -29,6 +29,7 @@ public sealed class GetMyTicketsQueryHandler
             .OrderByDescending(x => x.CreatedAtUtc)
             .Select(x => new GetMyTicketsResponse(
                 x.Id,
+                x.TicketNumber,
                 x.Subject,
                 x.Description,
                 x.Status,

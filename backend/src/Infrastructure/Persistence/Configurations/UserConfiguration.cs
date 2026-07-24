@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shared.Domain;
+using Shared.Domain.Companies;
 
 namespace Infrastructure.Persistence.Configurations;
 

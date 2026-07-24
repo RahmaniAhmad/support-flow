@@ -3,19 +3,19 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addComment } from "../services/comment.service";
 import { queryKeys } from "@/lib/react-query/queryKeys";
 
-export function useAddComment(ticketId: string) {
+export function useAddComment() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (content: string) => addComment(ticketId, content),
+    mutationFn: addComment,
 
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.tickets.comments(ticketId),
+        queryKey: queryKeys.tickets.comments(variables.ticketId),
       });
 
       queryClient.invalidateQueries({
-        queryKey: queryKeys.tickets.detail(ticketId),
+        queryKey: queryKeys.tickets.detail(variables.ticketId),
       });
     },
   });

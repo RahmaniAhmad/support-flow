@@ -15,6 +15,17 @@ public sealed class TicketConfiguration
         builder.Property(x => x.Id)
             .ValueGeneratedNever();
 
+        builder.Property(x => x.TicketNumber)
+            .IsRequired();
+
+
+        builder.HasIndex(x => new
+        {
+            x.CompanyId,
+            x.TicketNumber
+        })
+            .IsUnique();
+
         builder.Property(x => x.Subject)
             .HasMaxLength(200)
             .IsRequired();
@@ -24,7 +35,6 @@ public sealed class TicketConfiguration
             .IsRequired();
 
         builder.Property(x => x.Status)
-            .HasConversion<string>()
             .HasConversion<string>();
 
         builder.Property(x => x.CreatedAtUtc)

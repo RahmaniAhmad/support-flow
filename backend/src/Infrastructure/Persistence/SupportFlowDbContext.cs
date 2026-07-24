@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Shared.Domain;
 using Shared.Domain.Base;
+using Shared.Domain.Companies;
+using Shared.Domain.KnowledgeBase;
 using Shared.Domain.Tickets;
 using Shared.Domain.Users;
 
@@ -14,6 +16,8 @@ public sealed class SupportFlowDbContext : DbContext
         : base(options) => _dispatcher = dispatcher;
 
     public DbSet<Company> Companies => Set<Company>();
+
+    public DbSet<CompanyTicketCounter> CompanyTicketCounters => Set<CompanyTicketCounter>();
 
     public DbSet<User> Users => Set<User>();
 
