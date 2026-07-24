@@ -38,7 +38,6 @@ public sealed class AddCommentCommandHandler
             _currentUser.UserId,
             request.Content);
 
-
         await _db.SaveChangesAsync(cancellationToken);
 
         return commentId;

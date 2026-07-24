@@ -41,7 +41,11 @@ export interface TicketDetails {
 
   createdByUserId: string;
 
+  createdByName: string;
+
   assignedToUserId?: string;
+
+  assigneeName?: string;
 
   subject: string;
 

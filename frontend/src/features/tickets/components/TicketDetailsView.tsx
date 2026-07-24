@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Descriptions, Tag, Typography, Spin } from "antd";
+import { Card, Tag, Typography, Spin } from "antd";
 
 import { useTicket } from "../hooks/useTicket";
 import { statusColor } from "../utils/statusColor";
@@ -23,13 +23,15 @@ export default function TicketDetailsView({ ticketId }: Props) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       <Card>
-        <div className="flex justify-between items-start">
-          <div>
-            <Title level={2}>{ticket.subject}</Title>
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <Title level={2} className="mb-2!">
+              {ticket.subject}
+            </Title>
 
-            <div>Ticket #{ticket.id}</div>
+            <div className="text-sm text-slate-500">Ticket #{ticket.id}</div>
           </div>
 
           <Tag color={statusColor(ticket.status)}>{ticket.status}</Tag>
@@ -37,29 +39,60 @@ export default function TicketDetailsView({ ticketId }: Props) {
       </Card>
 
       <Card title="Description">
-        <Paragraph>{ticket.description}</Paragraph>
+        <Paragraph className="mb-0!">{ticket.description}</Paragraph>
       </Card>
 
-      {/* Information */}
       <Card title="Information">
-        <Descriptions column={2} bordered>
-          <Descriptions.Item label="Created">
-            {new Date(ticket.createdAtUtc).toLocaleString()}
-          </Descriptions.Item>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          <InfoItem
+            label="Created"
+            value={formatDate(ticket.createdAtUtc)}
+            nowrap
+          />
 
-          <Descriptions.Item label="Assignee">
-            {ticket.assigneeName ?? "-"}
-          </Descriptions.Item>
+          <InfoItem label="Assignee" value={ticket.assigneeName ?? "-"} />
 
-          <Descriptions.Item label="Created By">
-            {ticket.createdByName}
-          </Descriptions.Item>
+          <InfoItem label="Created By" value={ticket.createdByName} breakText />
 
-          <Descriptions.Item label="Updated">
-            {new Date(ticket.updatedAtUtc).toLocaleString()}
-          </Descriptions.Item>
-        </Descriptions>
+          <InfoItem
+            label="Updated"
+            value={ticket.updatedAtUtc ? formatDate(ticket.updatedAtUtc) : "-"}
+            nowrap
+          />
+        </div>
       </Card>
     </div>
   );
+}
+
+function InfoItem({
+  label,
+  value,
+  nowrap = false,
+  breakText = false,
+}: {
+  label: string;
+  value: string;
+  nowrap?: boolean;
+  breakText?: boolean;
+}) {
+  return (
+    <div>
+      <div className="mb-1 text-sm text-slate-500">{label}</div>
+
+      <div
+        className={[
+          "font-medium text-slate-800",
+          nowrap ? "whitespace-nowrap" : "",
+          breakText ? "break-all" : "",
+        ].join(" ")}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function formatDate(value: string) {
+  return new Date(value).toLocaleString();
 }

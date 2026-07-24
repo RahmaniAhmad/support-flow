@@ -12,6 +12,9 @@ public sealed class UserConfiguration
     {
         builder.HasKey(x => x.Id);
 
+        builder.Property(x => x.Id)
+            .ValueGeneratedNever();
+
         builder.Property(x => x.Email)
             .HasMaxLength(256)
             .IsRequired();

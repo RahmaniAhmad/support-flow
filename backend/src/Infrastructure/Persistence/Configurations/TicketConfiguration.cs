@@ -12,6 +12,9 @@ public sealed class TicketConfiguration
     {
         builder.HasKey(x => x.Id);
 
+        builder.Property(x => x.Id)
+            .ValueGeneratedNever();
+
         builder.Property(x => x.Subject)
             .HasMaxLength(200)
             .IsRequired();

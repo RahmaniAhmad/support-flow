@@ -7,6 +7,8 @@ import Link from "next/link";
 import { TicketSummary } from "@/types/ticket";
 import CloseTicketAction from "./CloseTicketAction";
 import ReopenTicketAction from "./ReopenTicketAction";
+import AddCommentButton from "../comments/components/AddCommentButton";
+import AddCommentAction from "../comments/components/AddCommentAction";
 
 interface TicketActionsProps {
   ticket: TicketSummary;
@@ -115,7 +117,13 @@ export default function TicketActions({ ticket }: TicketActionsProps) {
         },
         {
           key: "comment",
-          label: "Add comment",
+          label: (
+            <AddCommentButton
+              ticketId={ticket.id}
+              ticketSubject={ticket.subject}
+              variant="action"
+            />
+          ),
         },
       );
     }
