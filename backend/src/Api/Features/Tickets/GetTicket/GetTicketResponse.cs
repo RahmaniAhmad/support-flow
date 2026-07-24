@@ -4,6 +4,7 @@ namespace Api.Features.Tickets.GetTicket;
 
 public sealed record GetTicketResponse(
      Guid Id,
+     long TicketNumber,
      string Subject,
      string Description,
      TicketStatus Status,

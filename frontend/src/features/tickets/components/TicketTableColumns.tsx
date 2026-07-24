@@ -4,6 +4,12 @@ import TicketActions from "./TicketActions";
 
 export const ticketColumns: ColumnsType<TicketSummary> = [
   {
+    title: "Ticket",
+    dataIndex: "ticketNumber",
+    key: "ticketNumber",
+    render: (value: number) => `#${value}`,
+  },
+  {
     title: "Subject",
     dataIndex: "subject",
     sorter: true,

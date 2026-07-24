@@ -20,7 +20,7 @@ export default function CreateTicketPage() {
           ]}
         />
       </PageHeader>
-      <CreateTicketForm />;
+      <CreateTicketForm />
     </div>
   );
 }

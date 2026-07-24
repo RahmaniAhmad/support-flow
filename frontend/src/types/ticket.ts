@@ -20,57 +20,37 @@ export type TicketPriority = "Low" | "Medium" | "High" | "Critical";
 
 export interface TicketSummary {
   id: string;
-
+  ticketNumber: number;
   subject: string;
-
   status: TicketStatus;
-
   priority: TicketPriority;
-
   assigneeId?: string;
-
   assigneeName?: string;
-
   createdAtUtc: string;
 }
 
 export interface TicketDetails {
   id: string;
-
+  ticketNumber: number;
   companyId: string;
-
   createdByUserId: string;
-
   createdByName: string;
-
   assignedToUserId?: string;
-
   assigneeName?: string;
-
   subject: string;
-
   description: string;
-
   status: TicketStatus;
-
   priority: TicketPriority;
-
   createdAtUtc: string;
-
   updatedAtUtc?: string;
-
   comments: TicketComment[];
 }
 
 export interface TicketComment {
   id: string;
-
   authorUserId: string;
-
   authorName: string;
-
   content: string;
-
   createdAtUtc: string;
 }
 
@@ -80,19 +60,12 @@ export interface TicketComment {
 
 export interface TicketListFilters {
   page?: number;
-
   pageSize?: number;
-
   search?: string;
-
   status?: TicketStatus;
-
   priority?: TicketPriority;
-
   assignedToUserId?: string;
-
   sortBy?: string;
-
   sortDirection?: SortDirection;
 }
 
@@ -104,7 +77,6 @@ export type TicketListResponse = PagedResponse<TicketSummary>;
 
 export interface CreateTicketRequest {
   subject: string;
-
   description: string;
 }
 

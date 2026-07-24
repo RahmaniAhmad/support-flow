@@ -65,6 +65,7 @@ public sealed class GetTicketsQueryHandler
             .Take(request.PageSize)
             .Select(x => new GetTicketsResponse(
                 x.Id,
+                x.TicketNumber,
                 x.Subject,
                 x.Description,
                 x.Status,
