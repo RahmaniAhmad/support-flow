@@ -3,10 +3,10 @@
 import { Dropdown, Button } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { User } from "@/types/user";
+import { UserListItem } from "../types";
 
 interface Props {
-  user: User;
+  user: UserListItem;
 }
 
 export default function UserActions({ user }: Props) {

@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import { LoginRequest, RegisterRequest } from "@/types/auth";
+import { LoginRequest, RegisterRequest } from "../types";
 
 export async function login(request: LoginRequest) {
   const response = await api.post("/auth/login", request);

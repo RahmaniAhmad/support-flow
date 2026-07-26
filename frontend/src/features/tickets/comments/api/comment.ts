@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import { TicketComment } from "@/types/ticketComment";
+import { TicketComment } from "../../types";
 import { AddCommentRequest } from "../type";
 
 export async function getTicketComments(

@@ -1,6 +1,10 @@
 import api from "@/lib/axios";
-import { TicketDetails, TicketListResponse } from "@/types/ticket";
-import { CreateTicketRequest, TicketListFilters } from "../types";
+import {
+  CreateTicketRequest,
+  TicketDetails,
+  TicketListFilters,
+  TicketListResponse,
+} from "../types";
 
 export async function getTickets(filters?: TicketListFilters) {
   const { data } = await api.get<TicketListResponse>("/tickets", {

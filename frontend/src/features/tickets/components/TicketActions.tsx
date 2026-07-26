@@ -4,14 +4,14 @@ import { Dropdown, Button } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import Link from "next/link";
-import { TicketSummary } from "@/types/ticket";
 import CloseTicketAction from "./CloseTicketAction";
 import ReopenTicketAction from "./ReopenTicketAction";
 import AddCommentButton from "../comments/components/AddCommentButton";
 import AssignTicketAction from "../assign/components/AssignTicketAction";
+import { TicketListItem } from "../types";
 
 interface TicketActionsProps {
-  ticket: TicketSummary;
+  ticket: TicketListItem;
 }
 
 export default function TicketActions({ ticket }: TicketActionsProps) {

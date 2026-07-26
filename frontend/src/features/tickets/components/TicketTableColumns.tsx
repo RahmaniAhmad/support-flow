@@ -1,8 +1,8 @@
-import { TicketSummary } from "@/types/ticket";
 import { ColumnsType } from "antd/es/table";
 import TicketActions from "./TicketActions";
+import { TicketListItem } from "../types";
 
-export const ticketColumns: ColumnsType<TicketSummary> = [
+export const ticketColumns: ColumnsType<TicketListItem> = [
   {
     title: "Ticket",
     dataIndex: "ticketNumber",

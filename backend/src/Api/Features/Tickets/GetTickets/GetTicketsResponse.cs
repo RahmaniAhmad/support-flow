@@ -8,5 +8,6 @@ public sealed record GetTicketsResponse(
     string Subject,
     string Description,
     TicketStatus Status,
-    Guid? AssignedToUserId,
+    string? AssigneeName,
+    string CompanyName,
     DateTime CreatedAtUtc);

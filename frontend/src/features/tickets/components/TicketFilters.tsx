@@ -1,6 +1,6 @@
 "use client";
 
-import { TicketStatus } from "@/types/ticketEnums";
+import { TicketStatus } from "@/types/ticket";
 import { Input, Select } from "antd";
 import { useEffect, useState } from "react";
 

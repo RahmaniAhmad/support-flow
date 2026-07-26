@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateProfile } from "../services/profile.service";
+import { updateProfile } from "../api/profile";
 import { queryKeys } from "@/lib/react-query/queryKeys";
 
 export function useUpdateProfile() {
@@ -10,7 +10,7 @@ export function useUpdateProfile() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.users.profile(),
+        queryKey: queryKeys.profile.current(),
       });
     },
   });

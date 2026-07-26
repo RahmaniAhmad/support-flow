@@ -1,8 +1,8 @@
-import { User } from "@/types/user";
 import { ColumnsType } from "antd/es/table";
 import UserActions from "./UserActions";
+import { UserListItem } from "../types";
 
-export const userColumns: ColumnsType<User> = [
+export const userColumns: ColumnsType<UserListItem> = [
   {
     title: "Name",
     key: "name",

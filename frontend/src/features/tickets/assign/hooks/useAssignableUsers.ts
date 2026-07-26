@@ -1,11 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
-import { getAssignableUsers } from "../services/assign.service";
+import { useQuery } from "@tanstack/react-query";
+import { getAssignableUsers } from "../api/assign";
 import { queryKeys } from "@/lib/react-query/queryKeys";
 
 export function useAssignableUsers() {
   return useQuery({
-    queryKey: queryKeys.users.assignable(),
+    queryKey: queryKeys.ticketAssignment.assignableUsers(),
     queryFn: getAssignableUsers,
   });
 }

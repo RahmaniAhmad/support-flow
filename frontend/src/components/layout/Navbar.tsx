@@ -11,7 +11,7 @@ import {
 } from "@ant-design/icons";
 
 import Button from "../ui/Button";
-import { logout } from "@/features/auth/services/auth.service";
+import { logout } from "@/features/auth/api/auth";
 import { useUser } from "@/features/auth/providers/UserProvider";
 
 type Props = {

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { addComment } from "../services/comment.service";
+import { addComment } from "../api/comment";
 import { queryKeys } from "@/lib/react-query/queryKeys";
 
 export function useAddComment() {
@@ -11,11 +11,15 @@ export function useAddComment() {
 
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.tickets.comments(variables.ticketId),
+        queryKey: queryKeys.ticketComments.list(variables.ticketId),
       });
 
       queryClient.invalidateQueries({
         queryKey: queryKeys.tickets.detail(variables.ticketId),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.tickets.lists(),
       });
     },
   });

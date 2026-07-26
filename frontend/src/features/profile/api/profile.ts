@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import { UpdateProfileRequest, UserProfile } from "@/types/user";
+import { UpdateProfileRequest, UserProfile } from "../types";
 
 export async function getProfile(): Promise<UserProfile> {
   const response = await api.get<UserProfile>("/users/profile");

@@ -1,4 +1,4 @@
-import { TicketStatus } from "@/types/ticketEnums";
+import { TicketStatus } from "@/types/ticket";
 
 export function statusColor(status: TicketStatus) {
   switch (status) {

@@ -1,3 +1,4 @@
+import { SortDirection } from "@/types/common";
 import { UserRole } from "@/types/user";
 
 export interface UserListItem {
@@ -9,4 +10,13 @@ export interface UserListItem {
   role: UserRole;
   isActive: boolean;
   createdAtUtc: string;
+}
+export interface UserListFilters {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  role?: UserRole;
+  isActive?: boolean;
+  sortBy?: string;
+  sortDirection?: SortDirection;
 }
