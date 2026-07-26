@@ -6,3 +6,9 @@ export async function getUsers(): Promise<UserListItem[]> {
 
   return response.data;
 }
+
+export async function changeUserStatus(id: string, isActive: boolean) {
+  await api.put(`/users/${id}/status`, {
+    isActive,
+  });
+}

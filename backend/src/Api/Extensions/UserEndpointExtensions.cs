@@ -1,3 +1,4 @@
+using Api.Features.Users.ChangeUserStatus;
 using Api.Features.Users.GetAssignableUsers;
 using Api.Features.Users.GetProfile;
 using Api.Features.Users.GetUsers;
@@ -15,6 +16,7 @@ public static class UserEndpointExtensions
         app.MapUpdateProfile();
         app.MapGetAssignableUsers();
         app.MapGetUsers();
+        app.MapChangeUserStatus();
 
         return app;
     }
