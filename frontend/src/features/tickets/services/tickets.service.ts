@@ -1,10 +1,6 @@
 import api from "@/lib/axios";
 import { TicketDetails, TicketListResponse } from "@/types/ticket";
-import {
-  AssignTicketRequest,
-  CreateTicketRequest,
-  TicketListFilters,
-} from "../types";
+import { CreateTicketRequest, TicketListFilters } from "../types";
 
 export async function getTickets(filters?: TicketListFilters) {
   const { data } = await api.get<TicketListResponse>("/tickets", {
@@ -22,15 +18,6 @@ export async function getTicket(id: string) {
 
 export async function createTicket(request: CreateTicketRequest) {
   const { data } = await api.post<TicketDetails>("/tickets", request);
-
-  return data;
-}
-
-export async function assignTicket(
-  ticketId: string,
-  request: AssignTicketRequest,
-) {
-  const { data } = await api.post(`/tickets/${ticketId}/assign`, request);
 
   return data;
 }

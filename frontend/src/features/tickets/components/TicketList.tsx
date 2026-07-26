@@ -8,8 +8,8 @@ import TicketFilters from "./TicketFilters";
 import { useTickets } from "../hooks/useTickets";
 import { ticketColumns } from "./TicketTableColumns";
 import DataTable from "@/components/ui/table/DataTable";
-import { TicketListFilters } from "@/types/ticket";
 import PageTitle from "@/components/ui/page/PageTitle";
+import { TicketListFilters } from "../types";
 
 export default function TicketList() {
   const [filters, setFilters] = useState<TicketListFilters>({

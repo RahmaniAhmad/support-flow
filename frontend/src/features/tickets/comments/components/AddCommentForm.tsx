@@ -11,7 +11,7 @@ import { useMessage } from "@/app/providers/MessageProvider";
 import {
   addCommentSchema,
   AddCommentFormData,
-} from "../schemas/add-comment.schema";
+} from "../schemas/addComment.schema";
 
 import { useAddComment } from "../hooks/useAddComment";
 

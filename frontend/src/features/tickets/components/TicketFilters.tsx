@@ -1,9 +1,8 @@
 "use client";
 
+import { TicketStatus } from "@/types/ticketEnums";
 import { Input, Select } from "antd";
 import { useEffect, useState } from "react";
-
-import type { TicketStatus } from "@/types/ticket";
 
 type Props = {
   search?: string;

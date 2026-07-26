@@ -63,7 +63,7 @@ public sealed class TicketAccessService : ITicketAccessService
         };
     }
 
-    public bool CanAssignTicket(Ticket ticket, User assignedUser)
+    public bool CanAssignTicketTo(Ticket ticket, User assignedUser)
     {
         return _currentUser.Role switch
         {

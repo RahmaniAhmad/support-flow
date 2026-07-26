@@ -16,7 +16,3 @@ export interface CreateTicketRequest {
   subject: string;
   description: string;
 }
-
-export interface AssignTicketRequest {
-  assignedToUserId: string;
-}

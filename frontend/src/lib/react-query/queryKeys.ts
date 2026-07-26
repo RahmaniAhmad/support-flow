@@ -16,10 +16,13 @@ export const queryKeys = {
     detail: (id: string) => [...queryKeys.tickets.details(), id] as const,
 
     comments: (ticketId: string) => ["tickets", ticketId, "comments"],
+
+    assign: (ticketId: string) => ["tickets", ticketId, "assign"],
   },
 
   users: {
     all: ["users"] as const,
     profile: () => [...queryKeys.users.all, "profile"] as const,
+    assignable: () => [...queryKeys.users.all, "assignable"] as const,
   },
 } as const;

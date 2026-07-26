@@ -8,7 +8,7 @@ import { TicketSummary } from "@/types/ticket";
 import CloseTicketAction from "./CloseTicketAction";
 import ReopenTicketAction from "./ReopenTicketAction";
 import AddCommentButton from "../comments/components/AddCommentButton";
-import AddCommentAction from "../comments/components/AddCommentAction";
+import AssignTicketAction from "../assign/components/AssignTicketAction";
 
 interface TicketActionsProps {
   ticket: TicketSummary;
@@ -28,7 +28,12 @@ export default function TicketActions({ ticket }: TicketActionsProps) {
         actions.push(
           {
             key: "assign",
-            label: "Assign ticket",
+            label: (
+              <AssignTicketAction
+                ticketId={ticket.id}
+                ticketSubject={ticket.subject}
+              />
+            ),
           },
           {
             key: "close",
