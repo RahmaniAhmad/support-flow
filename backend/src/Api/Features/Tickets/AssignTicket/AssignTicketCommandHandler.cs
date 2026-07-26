@@ -2,6 +2,7 @@ using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Shared.Domain.Users;
 namespace Api.Features.Tickets.AssignTicket;
 
 public sealed class AssignTicketCommandHandler
@@ -20,30 +21,34 @@ public sealed class AssignTicketCommandHandler
         AssignTicketCommand request,
         CancellationToken cancellationToken)
     {
-        var ticket = await _db.Tickets
-            .FirstOrDefaultAsync(
-                x =>
-                    x.Id == request.TicketId,
-                cancellationToken);
+        var ticket = await _accessService
+        .ApplyTicketAccessFilter(_db.Tickets)
+        .FirstOrDefaultAsync(
+            x => x.Id == request.TicketId,
+            cancellationToken);
 
         if (ticket is null)
             throw new InvalidOperationException("Ticket not found.");
 
         var assignedUser = await _db.Users
-            .FirstOrDefaultAsync(
-                x => x.Id == request.AssignedToUserId,
-                cancellationToken);
+        .Where(x =>
+            x.IsActive &&
+            x.CompanyId == ticket.CompanyId)
+        .FirstOrDefaultAsync(
+            x => x.Id == request.AssignedToUserId,
+            cancellationToken);
 
 
         if (assignedUser is null)
             throw new InvalidOperationException(
                 "Assigned user not found.");
 
-        if (!_accessService.CanAssignTicket(
+        if (!_accessService.CanAssignTicketTo(
                 ticket,
                 assignedUser))
         {
-            throw new UnauthorizedAccessException();
+            throw new UnauthorizedAccessException(
+                "You are not allowed to assign this ticket.");
         }
 
         ticket.AssignTo(request.AssignedToUserId);

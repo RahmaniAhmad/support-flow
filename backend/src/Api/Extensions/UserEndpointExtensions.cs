@@ -1,3 +1,4 @@
+using Api.Features.Users.GetAssignableUsers;
 using Api.Features.Users.GetProfile;
 using Api.Features.Users.UpdateProfile;
 
@@ -11,6 +12,7 @@ public static class UserEndpointExtensions
     {
         app.MapGetProfile();
         app.MapUpdateProfile();
+        app.MapGetAssignableUsers();
 
         return app;
     }
