@@ -19,14 +19,22 @@ public sealed class DashboardQueryHandler
         DashboardQuery request,
         CancellationToken cancellationToken)
     {
-        var tickets = await _db.Tickets
-                 .Where(x => x.CompanyId == request.CompanyId)
-                 .Select(x => new
-                 {
-                     x.Status,
-                     x.AssignedToUserId
-                 })
-                 .ToListAsync(cancellationToken);
+        var query = _db.Tickets.AsQueryable();
+
+        if (request.CompanyId.HasValue)
+        {
+            query = query.Where(x =>
+                x.CompanyId == request.CompanyId.Value);
+        }
+
+
+        var tickets = await query
+        .Select(x => new
+        {
+            x.Status,
+            x.AssignedToUserId
+        })
+        .ToListAsync(cancellationToken);
 
         var openTickets = 0;
         var inProgressTickets = 0;

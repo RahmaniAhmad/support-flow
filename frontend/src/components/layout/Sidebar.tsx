@@ -16,6 +16,10 @@ const menuItems = [
     label: "Tickets",
     href: "/tickets",
   },
+  {
+    label: "Users",
+    href: "/users",
+  },
 ];
 
 export default function Sidebar({ onClose }: Props) {

@@ -6,7 +6,22 @@ public static class RolePermissions
     {
         [UserRole.SuperAdmin] =
         [
-            Permissions.DashboardView
+            Permissions.TicketsCreate,
+            Permissions.TicketsAssign,
+            Permissions.TicketsUnassign,
+            Permissions.TicketsStartProgress,
+            Permissions.TicketsResolve,
+            Permissions.TicketsReopen,
+            Permissions.TicketsClose,
+            Permissions.TicketsComment,
+            Permissions.TicketsRead,
+
+            Permissions.DashboardView,
+
+            Permissions.UsersView,
+            Permissions.UsersCreate,
+            Permissions.UsersUpdate,
+            Permissions.UsersChangeRole
         ],
 
         [UserRole.Admin] =
@@ -14,22 +29,31 @@ public static class RolePermissions
             Permissions.TicketsCreate,
             Permissions.TicketsAssign,
             Permissions.TicketsUnassign,
+            Permissions.TicketsStartProgress,
             Permissions.TicketsResolve,
             Permissions.TicketsReopen,
             Permissions.TicketsClose,
             Permissions.TicketsComment,
             Permissions.TicketsRead,
-            Permissions.DashboardView
+
+            Permissions.DashboardView,
+
+            Permissions.UsersView,
+            Permissions.UsersCreate,
+            Permissions.UsersUpdate,
+            Permissions.UsersChangeRole
         ],
 
         [UserRole.Agent] =
         [
             Permissions.TicketsCreate,
             Permissions.TicketsAssign,
-            Permissions.TicketsUnassign,
+            Permissions.TicketsStartProgress,
             Permissions.TicketsResolve,
             Permissions.TicketsClose,
             Permissions.TicketsComment,
+            Permissions.TicketsRead,
+
             Permissions.DashboardView
         ],
 
@@ -37,7 +61,7 @@ public static class RolePermissions
         [
             Permissions.TicketsCreate,
             Permissions.TicketsComment,
-            Permissions.DashboardView
+            Permissions.TicketsRead
         ]
     };
 }

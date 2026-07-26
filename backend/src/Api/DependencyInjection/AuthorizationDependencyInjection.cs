@@ -10,6 +10,7 @@ public static class AuthorizationExtensions
     {
         services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
         services.AddScoped<ITicketAccessService, TicketAccessService>();
+        services.AddScoped<IUserAccessService, UserAccessService>();
 
         services.AddAuthorization();
 

@@ -24,9 +24,10 @@ public sealed class CurrentUser : ICurrentUser
                     .User
                     .FindFirstValue("company_id");
 
-            return companyId is null
-                ? null
-                : Guid.Parse(companyId);
+            if (string.IsNullOrWhiteSpace(companyId))
+                return null;
+
+            return Guid.Parse(companyId);
         }
 
     }

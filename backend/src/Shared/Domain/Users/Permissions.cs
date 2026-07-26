@@ -10,8 +10,12 @@ public static class Permissions
     public const string TicketsReopen = "tickets:reopen";
     public const string TicketsClose = "tickets:close";
     public const string TicketsComment = "tickets:comment";
-
     public const string TicketsRead = "tickets:read";
 
     public const string DashboardView = "dashboard:view";
+
+    public const string UsersView = "users.view";
+    public const string UsersCreate = "users.create";
+    public const string UsersUpdate = "users.update";
+    public const string UsersChangeRole = "users.change-role";
 }

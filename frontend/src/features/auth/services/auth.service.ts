@@ -8,7 +8,7 @@ export async function login(request: LoginRequest) {
 }
 
 export async function register(request: RegisterRequest): Promise<void> {
-  const response = await api.post("/auth/register", request);
+  const response = await api.post("/auth/register-company", request);
 
   return response.data;
 }

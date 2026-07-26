@@ -1,9 +1,14 @@
+export type UserRole = "Admin" | "Agent" | "Customer";
+
 export interface User {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
+  phone?: string | null;
   role: UserRole;
+  isActive: boolean;
+  createdAtUtc: string;
 }
 
 export interface UserProfile {
@@ -20,5 +25,3 @@ export interface UpdateProfileRequest {
   lastName: string;
   phone?: string | null;
 }
-
-export type UserRole = "Admin" | "Agent" | "Customer";
