@@ -12,6 +12,19 @@ export interface UserListItem {
   isActive: boolean;
   createdAtUtc: string;
 }
+
+export interface UserDetails {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone?: string | null;
+  role: UserRole;
+  isActive: boolean;
+  companyName?: string | null;
+  createdAtUtc: string;
+}
+
 export interface UserListFilters {
   page?: number;
   pageSize?: number;

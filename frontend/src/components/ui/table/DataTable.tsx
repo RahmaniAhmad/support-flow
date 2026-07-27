@@ -11,6 +11,7 @@ export default function DataTable<T extends object>({
   rowKey,
   pagination,
   onChange,
+  onRow,
 }: DataTableProps<T>) {
   return (
     <Table<T>
@@ -20,6 +21,7 @@ export default function DataTable<T extends object>({
       rowKey={rowKey}
       pagination={pagination}
       onChange={onChange}
+      onRow={onRow}
       size="medium"
       scroll={{
         x: "max-content",

@@ -5,6 +5,7 @@ import { MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { UserListItem } from "../types";
 import { useChangeUserStatus } from "../hooks/useChangeUserStatus";
+import Link from "next/link";
 
 interface Props {
   user: UserListItem;
@@ -36,6 +37,10 @@ export default function UserActions({ user }: Props) {
   };
 
   const items: MenuProps["items"] = [
+    {
+      key: "details",
+      label: <Link href={`/users/${user.id}`}>View details</Link>,
+    },
     {
       key: "edit",
       label: "Edit user",
