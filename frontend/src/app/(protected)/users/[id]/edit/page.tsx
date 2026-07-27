@@ -2,9 +2,15 @@ import BackButton from "@/components/ui/navigation/BackButton";
 import PageBreadcrumbs from "@/components/ui/page/PageBreadcrumbs";
 import PageContent from "@/components/ui/page/PageContent";
 import PageHeader from "@/components/ui/page/PageHeader";
-import CreateUserForm from "@/features/users/components/CreateUserForm";
+import UpdateUserForm from "@/features/users/components/UpdateUserForm";
 
-export default function Page() {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
   return (
     <PageContent>
       <PageHeader>
@@ -16,12 +22,12 @@ export default function Page() {
               title: "Users",
             },
             {
-              title: "Create",
+              title: "Edit",
             },
           ]}
         />
       </PageHeader>
-      <CreateUserForm />
+      <UpdateUserForm userId={id} />
     </PageContent>
   );
 }

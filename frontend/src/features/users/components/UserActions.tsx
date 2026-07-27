@@ -43,7 +43,7 @@ export default function UserActions({ user }: Props) {
     },
     {
       key: "edit",
-      label: "Edit user",
+      label: <Link href={`/users/${user.id}/edit`}>Edit user</Link>,
     },
 
     {
@@ -56,10 +56,6 @@ export default function UserActions({ user }: Props) {
     switch (key) {
       case "change-status":
         handleChangeStatus();
-        break;
-
-      case "edit":
-        // navigate to edit page
         break;
     }
   };

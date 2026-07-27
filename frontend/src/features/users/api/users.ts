@@ -1,5 +1,10 @@
 import api from "@/lib/axios";
-import { CreateUserRequest, UserDetails, UserListItem } from "../types";
+import {
+  CreateUserRequest,
+  UpdateUserRequest,
+  UserDetails,
+  UserListItem,
+} from "../types";
 
 export async function getUsers(): Promise<UserListItem[]> {
   const response = await api.get<UserListItem[]>("/users");
@@ -23,4 +28,8 @@ export async function createUser(data: CreateUserRequest) {
   const response = await api.post("/users", data);
 
   return response.data;
+}
+
+export async function updateUser(id: string, data: UpdateUserRequest) {
+  await api.put(`/users/${id}`, data);
 }

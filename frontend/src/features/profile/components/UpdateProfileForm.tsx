@@ -7,8 +7,6 @@ import { useForm } from "react-hook-form";
 import Button from "@/components/ui/Button";
 import FormInput from "@/components/form/FormInput";
 import { useMessage } from "@/app/providers/MessageProvider";
-import PageTitle from "@/components/ui/page/PageTitle";
-import PageDescription from "@/components/ui/page/PageDescription";
 
 import { useUpdateProfile } from "../hooks/useUpdateProfile";
 import {
@@ -18,6 +16,7 @@ import {
 import { useProfile } from "../hooks/useProfile";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import FormCard from "@/components/form/FormCard";
 
 export default function UpdateProfileForm() {
   const router = useRouter();
@@ -75,69 +74,61 @@ export default function UpdateProfileForm() {
   }
 
   return (
-    <form
-      noValidate
+    <FormCard
+      title="Edit Profile"
+      description="Update your personal information."
       onSubmit={handleSubmit(onSubmit)}
-      className="max-w-2xl rounded-xl bg-white p-6 shadow"
     >
-      <div className="mt-3 mb-6">
-        <PageTitle>Edit Profile</PageTitle>
-
-        <PageDescription>Update your personal information.</PageDescription>
-      </div>
-
-      <div className="flex flex-col gap-y-4">
-        <div>
-          <label
-            htmlFor="firstName"
-            className="mb-2 block text-sm font-medium text-slate-700"
-          >
-            First Name
-          </label>
-
-          <FormInput control={control} name="firstName" placeholder="Ahmad" />
-        </div>
-
-        <div>
-          <label
-            htmlFor="lastName"
-            className="mb-2 block text-sm font-medium text-slate-700"
-          >
-            Last Name
-          </label>
-
-          <FormInput control={control} name="lastName" placeholder="Rahmani" />
-        </div>
-
-        <div>
-          <label
-            htmlFor="phone"
-            className="mb-2 block text-sm font-medium text-slate-700"
-          >
-            Phone
-          </label>
-
-          <FormInput
-            control={control}
-            name="phone"
-            placeholder="+98 912 000 0000"
-          />
-        </div>
-
-        {error && (
-          <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {error}
-          </div>
-        )}
-
-        <Button
-          htmlType="submit"
-          className="w-full"
-          isLoading={mutation.isPending}
+      <div>
+        <label
+          htmlFor="firstName"
+          className="mb-2 block text-sm font-medium text-slate-700"
         >
-          Update Profile
-        </Button>
+          First Name
+        </label>
+
+        <FormInput control={control} name="firstName" placeholder="Ahmad" />
       </div>
-    </form>
+
+      <div>
+        <label
+          htmlFor="lastName"
+          className="mb-2 block text-sm font-medium text-slate-700"
+        >
+          Last Name
+        </label>
+
+        <FormInput control={control} name="lastName" placeholder="Rahmani" />
+      </div>
+
+      <div>
+        <label
+          htmlFor="phone"
+          className="mb-2 block text-sm font-medium text-slate-700"
+        >
+          Phone
+        </label>
+
+        <FormInput
+          control={control}
+          name="phone"
+          placeholder="+98 912 000 0000"
+        />
+      </div>
+
+      {error && (
+        <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
+      <Button
+        htmlType="submit"
+        className="w-full"
+        isLoading={mutation.isPending}
+      >
+        Update Profile
+      </Button>
+    </FormCard>
   );
 }

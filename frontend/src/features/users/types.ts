@@ -43,3 +43,9 @@ export interface CreateUserRequest {
   phone?: string;
   role: UserRole;
 }
+
+export interface UpdateUserRequest {
+  firstName: string;
+  lastName: string;
+  phone?: string;
+}

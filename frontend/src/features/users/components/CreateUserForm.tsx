@@ -7,8 +7,6 @@ import { useForm } from "react-hook-form";
 
 import Button from "@/components/ui/Button";
 import FormInput from "@/components/form/FormInput";
-import PageTitle from "@/components/ui/page/PageTitle";
-import PageDescription from "@/components/ui/page/PageDescription";
 import { useMessage } from "@/app/providers/MessageProvider";
 
 import { useCreateUser } from "../hooks/useCreateUser";
@@ -16,6 +14,7 @@ import {
   createUserSchema,
   CreateUserFormData,
 } from "../schemas/create-user.schema";
+import FormCard from "@/components/form/FormCard";
 
 export default function CreateUserForm() {
   const router = useRouter();
@@ -57,135 +56,122 @@ export default function CreateUserForm() {
         : null;
 
   return (
-    <form
-      noValidate
+    <FormCard
+      title="Create User"
+      description="Add a new user to your company."
       onSubmit={handleSubmit(onSubmit)}
-      className="
-        max-w-2xl
-        rounded-xl
-        bg-white
-        p-6
-        shadow
-      "
     >
-      <div className="mt-3 mb-6">
-        <PageTitle>Create User</PageTitle>
+      <div>
+        <label
+          htmlFor="firstName"
+          className="
+              mb-2
+              block
+              text-sm
+              font-medium
+              text-slate-700
+            "
+        >
+          First Name
+        </label>
 
-        <PageDescription>Add a new user to your company.</PageDescription>
+        <FormInput control={control} name="firstName" placeholder="John" />
       </div>
 
-      <div className="flex flex-col gap-y-4">
-        <div>
-          <label
-            htmlFor="firstName"
-            className="
+      <div>
+        <label
+          htmlFor="lastName"
+          className="
               mb-2
               block
               text-sm
               font-medium
               text-slate-700
             "
-          >
-            First Name
-          </label>
+        >
+          Last Name
+        </label>
 
-          <FormInput control={control} name="firstName" placeholder="John" />
-        </div>
+        <FormInput control={control} name="lastName" placeholder="Smith" />
+      </div>
 
-        <div>
-          <label
-            htmlFor="lastName"
-            className="
+      <div>
+        <label
+          htmlFor="email"
+          className="
               mb-2
               block
               text-sm
               font-medium
               text-slate-700
             "
-          >
-            Last Name
-          </label>
+        >
+          Email
+        </label>
 
-          <FormInput control={control} name="lastName" placeholder="Smith" />
-        </div>
+        <FormInput
+          control={control}
+          name="email"
+          placeholder="john@example.com"
+        />
+      </div>
 
-        <div>
-          <label
-            htmlFor="email"
-            className="
+      <div>
+        <label
+          htmlFor="password"
+          className="
               mb-2
               block
               text-sm
               font-medium
               text-slate-700
             "
-          >
-            Email
-          </label>
+        >
+          Password
+        </label>
 
-          <FormInput
-            control={control}
-            name="email"
-            placeholder="john@example.com"
-          />
-        </div>
+        <FormInput
+          control={control}
+          name="password"
+          type="password"
+          placeholder="********"
+        />
+      </div>
 
-        <div>
-          <label
-            htmlFor="password"
-            className="
+      <div>
+        <label
+          htmlFor="phone"
+          className="
               mb-2
               block
               text-sm
               font-medium
               text-slate-700
             "
-          >
-            Password
-          </label>
+        >
+          Phone
+        </label>
 
-          <FormInput
-            control={control}
-            name="password"
-            type="password"
-            placeholder="********"
-          />
-        </div>
+        <FormInput control={control} name="phone" placeholder="+123456789" />
+      </div>
 
-        <div>
-          <label
-            htmlFor="phone"
-            className="
+      <div>
+        <label
+          htmlFor="role"
+          className="
               mb-2
               block
               text-sm
               font-medium
               text-slate-700
             "
-          >
-            Phone
-          </label>
+        >
+          Role
+        </label>
 
-          <FormInput control={control} name="phone" placeholder="+123456789" />
-        </div>
-
-        <div>
-          <label
-            htmlFor="role"
-            className="
-              mb-2
-              block
-              text-sm
-              font-medium
-              text-slate-700
-            "
-          >
-            Role
-          </label>
-
-          <select
-            {...control.register("role")}
-            className="
+        <select
+          {...control.register("role")}
+          className="
               h-10
               w-full
               rounded-md
@@ -194,16 +180,16 @@ export default function CreateUserForm() {
               px-3
               text-sm
             "
-          >
-            <option value="Agent">Agent</option>
+        >
+          <option value="Agent">Agent</option>
 
-            <option value="Customer">Customer</option>
-          </select>
-        </div>
+          <option value="Customer">Customer</option>
+        </select>
+      </div>
 
-        {error && (
-          <div
-            className="
+      {error && (
+        <div
+          className="
               rounded-md
               border
               border-red-200
@@ -213,19 +199,18 @@ export default function CreateUserForm() {
               text-sm
               text-red-700
             "
-          >
-            {error}
-          </div>
-        )}
-
-        <Button
-          htmlType="submit"
-          className="w-full"
-          isLoading={mutation.isPending}
         >
-          Create User
-        </Button>
-      </div>
-    </form>
+          {error}
+        </div>
+      )}
+
+      <Button
+        htmlType="submit"
+        className="w-full"
+        isLoading={mutation.isPending}
+      >
+        Create User
+      </Button>
+    </FormCard>
   );
 }
