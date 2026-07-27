@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import { UserDetails, UserListItem } from "../types";
+import { CreateUserRequest, UserDetails, UserListItem } from "../types";
 
 export async function getUsers(): Promise<UserListItem[]> {
   const response = await api.get<UserListItem[]>("/users");
@@ -17,4 +17,10 @@ export async function changeUserStatus(id: string, isActive: boolean) {
   await api.put(`/users/${id}/status`, {
     isActive,
   });
+}
+
+export async function createUser(data: CreateUserRequest) {
+  const response = await api.post("/users", data);
+
+  return response.data;
 }

@@ -34,3 +34,12 @@ export interface UserListFilters {
   sortBy?: string;
   sortDirection?: SortDirection;
 }
+
+export interface CreateUserRequest {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  role: UserRole;
+}

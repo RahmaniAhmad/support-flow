@@ -6,6 +6,7 @@ import PageTitle from "@/components/ui/page/PageTitle";
 import { useUsers } from "../hooks/useUsers";
 import { getUserColumns } from "./UserTableColumns";
 import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
+import CreateUserButton from "./CreateUserButton";
 
 export default function UserList() {
   const currentUser = useCurrentUser();
@@ -24,6 +25,7 @@ export default function UserList() {
         sm:items-center"
       >
         <PageTitle>Users</PageTitle>
+        <CreateUserButton />
       </div>
 
       <DataTable

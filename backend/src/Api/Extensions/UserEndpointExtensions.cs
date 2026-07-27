@@ -1,4 +1,5 @@
 using Api.Features.Users.ChangeUserStatus;
+using Api.Features.Users.CreateUser;
 using Api.Features.Users.GetAssignableUsers;
 using Api.Features.Users.GetProfile;
 using Api.Features.Users.GetUser;
@@ -19,6 +20,7 @@ public static class UserEndpointExtensions
         app.MapGetUsers();
         app.MapChangeUserStatus();
         app.MapGetUser();
+        app.MapCreateUser();
 
         return app;
     }
