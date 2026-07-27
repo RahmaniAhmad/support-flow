@@ -1,9 +1,8 @@
-using Shared.Domain.Users;
-
 namespace Api.Features.Users.GetUsers;
 
 public sealed record GetUsersResponse(
     Guid Id,
+    string? CompanyName,
     string Email,
     string FirstName,
     string LastName,

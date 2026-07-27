@@ -30,6 +30,10 @@ public sealed class GetUsersQueryHandler
            .ApplyUserAccessFilter(_db.Users)
            .Select(x => new GetUsersResponse(
                x.Id,
+               _db.Companies
+                .Where(c => c.Id == x.CompanyId)
+                .Select(c => c.Name)
+                .First(),
                x.Email,
                x.FirstName,
                x.LastName,

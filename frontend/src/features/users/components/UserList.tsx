@@ -4,9 +4,11 @@ import DataTable from "@/components/ui/table/DataTable";
 import PageTitle from "@/components/ui/page/PageTitle";
 
 import { useUsers } from "../hooks/useUsers";
-import { userColumns } from "./UserTableColumns";
+import { getUserColumns } from "./UserTableColumns";
+import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
 
 export default function UserList() {
+  const currentUser = useCurrentUser();
   const { data, isLoading } = useUsers();
 
   return (
@@ -25,7 +27,7 @@ export default function UserList() {
       </div>
 
       <DataTable
-        columns={userColumns}
+        columns={getUserColumns(currentUser)}
         dataSource={data ?? []}
         loading={isLoading}
         rowKey="id"

@@ -42,11 +42,6 @@ export default function UserActions({ user }: Props) {
     },
 
     {
-      key: "change-role",
-      label: "Change role",
-    },
-
-    {
       key: "change-status",
       label: user.isActive ? "Deactivate" : "Activate",
     },
@@ -60,10 +55,6 @@ export default function UserActions({ user }: Props) {
 
       case "edit":
         // navigate to edit page
-        break;
-
-      case "change-role":
-        // open role modal
         break;
     }
   };

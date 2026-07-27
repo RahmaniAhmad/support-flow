@@ -3,6 +3,7 @@ import { UserRole } from "@/types/user";
 
 export interface UserListItem {
   id: string;
+  companyName?: string;
   firstName: string;
   lastName: string;
   email: string;
