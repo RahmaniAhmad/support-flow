@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/react-query/queryKeys";
-import { getTicket } from "../services/tickets.service";
+import { getTicket } from "../api/tickets";
 
 export function useTicket(id: string) {
   return useQuery({

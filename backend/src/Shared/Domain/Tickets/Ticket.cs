@@ -85,9 +85,10 @@ public sealed class Ticket : AggregateRoot
             throw new InvalidOperationException(
                 $"Cannot assign a ticket in {Status} status.");
 
-        if (AssignedToUserId is not null)
+        if (AssignedToUserId == userId)
             throw new InvalidOperationException(
-                "Ticket is already assigned.");
+                "Ticket is already assigned to this user.");
+
 
         AssignedToUserId = userId;
         UpdatedAtUtc = DateTime.UtcNow;

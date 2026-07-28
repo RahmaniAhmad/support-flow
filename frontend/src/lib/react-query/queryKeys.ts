@@ -14,15 +14,36 @@ export const queryKeys = {
     details: () => [...queryKeys.tickets.all, "detail"] as const,
 
     detail: (id: string) => [...queryKeys.tickets.details(), id] as const,
+  },
 
-    comments: (ticketId: string) => ["tickets", ticketId, "comments"],
+  ticketComments: {
+    all: ["ticket-comments"] as const,
 
-    assign: (ticketId: string) => ["tickets", ticketId, "assign"],
+    list: (ticketId: string) =>
+      [...queryKeys.ticketComments.all, ticketId] as const,
+  },
+
+  ticketAssignment: {
+    all: ["ticket-assignment"] as const,
+
+    assignableUsers: () =>
+      [...queryKeys.ticketAssignment.all, "assignable-users"] as const,
   },
 
   users: {
     all: ["users"] as const,
-    profile: () => [...queryKeys.users.all, "profile"] as const,
-    assignable: () => [...queryKeys.users.all, "assignable"] as const,
+
+    lists: () => [...queryKeys.users.all, "list"] as const,
+
+    list: (filters?: unknown) => [...queryKeys.users.lists(), filters] as const,
+
+    details: () => [...queryKeys.users.all, "detail"] as const,
+
+    detail: (id: string) => [...queryKeys.users.details(), id] as const,
+  },
+  profile: {
+    all: ["profile"] as const,
+
+    current: () => [...queryKeys.profile.all, "current"] as const,
   },
 } as const;

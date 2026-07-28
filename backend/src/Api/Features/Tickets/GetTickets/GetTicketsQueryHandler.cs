@@ -69,7 +69,16 @@ public sealed class GetTicketsQueryHandler
                 x.Subject,
                 x.Description,
                 x.Status,
-                x.AssignedToUserId,
+                x.AssignedToUserId != null
+                ? _db.Users
+                .Where(u => u.Id == x.AssignedToUserId)
+                .Select(u => u.FirstName + " " + u.LastName)
+                .FirstOrDefault()
+                : null,
+                _db.Companies
+                .Where(c => c.Id == x.CompanyId)
+                .Select(c => c.Name)
+                .First(),
                 x.CreatedAtUtc
                 ))
                 .ToListAsync(cancellationToken);

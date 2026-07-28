@@ -1,41 +1,53 @@
-import { TicketSummary } from "@/types/ticket";
 import { ColumnsType } from "antd/es/table";
+import { TicketListItem } from "../types";
 import TicketActions from "./TicketActions";
+import { CurrentUser } from "@/types/user";
 
-export const ticketColumns: ColumnsType<TicketSummary> = [
-  {
-    title: "Ticket",
-    dataIndex: "ticketNumber",
-    key: "ticketNumber",
-    render: (value: number) => `#${value}`,
-  },
-  {
-    title: "Subject",
-    dataIndex: "subject",
-    sorter: true,
-  },
+export function getTicketColumns(
+  currentUser: CurrentUser,
+): ColumnsType<TicketListItem> {
+  const columns: ColumnsType<TicketListItem> = [];
 
-  {
-    title: "Status",
-    dataIndex: "status",
-    sorter: true,
-  },
+  if (currentUser.role === "SuperAdmin") {
+    columns.push({
+      title: "Company",
+      dataIndex: "companyName",
+    });
+  }
 
-  {
-    title: "Assignee",
-    dataIndex: "assigneeName",
-    render: (value) => value ?? "-",
-  },
+  columns.push(
+    {
+      title: "Ticket",
+      dataIndex: "ticketNumber",
+      render: (value: number) => `#${value}`,
+    },
+    {
+      title: "Subject",
+      dataIndex: "subject",
+      sorter: true,
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      sorter: true,
+    },
+    {
+      title: "Assignee",
+      dataIndex: "assigneeName",
+      render: (value) => value ?? "-",
+    },
+    {
+      title: "Created",
+      dataIndex: "createdAtUtc",
+      render: (value) => new Date(value).toLocaleString(),
+      sorter: true,
+      responsive: ["md"],
+    },
+    {
+      title: "Actions",
+      render: (_, record) => <TicketActions ticket={record} />,
+    },
+  );
 
-  {
-    title: "Created",
-    dataIndex: "createdAtUtc",
-    render: (value) => new Date(value).toLocaleString(),
-    sorter: true,
-    responsive: ["md"],
-  },
-  {
-    title: "Actions",
-    render: (_, record) => <TicketActions ticket={record} />,
-  },
-];
+  return columns;
+}

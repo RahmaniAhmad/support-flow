@@ -4,17 +4,28 @@ import { Dropdown, Button } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import Link from "next/link";
-import { TicketSummary } from "@/types/ticket";
+
 import CloseTicketAction from "./CloseTicketAction";
 import ReopenTicketAction from "./ReopenTicketAction";
 import AddCommentButton from "../comments/components/AddCommentButton";
 import AssignTicketAction from "../assign/components/AssignTicketAction";
 
+import { TicketListItem } from "../types";
+
+import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
+import { AppPermissions, Permission } from "@/features/auth/Permissions";
+import { hasPermission } from "@/features/auth/authorization";
+
 interface TicketActionsProps {
-  ticket: TicketSummary;
+  ticket: TicketListItem;
 }
 
 export default function TicketActions({ ticket }: TicketActionsProps) {
+  const currentUser = useCurrentUser();
+
+  const can = (permission: Permission) =>
+    hasPermission(currentUser, permission);
+
   const getActions = (): MenuProps["items"] => {
     const actions: MenuProps["items"] = [
       {
@@ -25,8 +36,8 @@ export default function TicketActions({ ticket }: TicketActionsProps) {
 
     switch (ticket.status) {
       case "Open":
-        actions.push(
-          {
+        if (can(AppPermissions.TicketsAssign)) {
+          actions.push({
             key: "assign",
             label: (
               <AssignTicketAction
@@ -34,88 +45,117 @@ export default function TicketActions({ ticket }: TicketActionsProps) {
                 ticketSubject={ticket.subject}
               />
             ),
-          },
-          {
+          });
+        }
+
+        if (can(AppPermissions.TicketsClose)) {
+          actions.push({
             key: "close",
             label: <CloseTicketAction ticketId={ticket.id} />,
-          },
-        );
+          });
+        }
+
         break;
 
       case "Assigned":
-        actions.push(
-          {
+        if (can(AppPermissions.TicketsStartProgress)) {
+          actions.push({
             key: "start",
             label: "Start progress",
-          },
-          {
+          });
+        }
+
+        if (can(AppPermissions.TicketsUnassign)) {
+          actions.push({
             key: "unassign",
             label: "Unassign ticket",
-          },
-          {
+          });
+        }
+
+        if (can(AppPermissions.TicketsClose)) {
+          actions.push({
             key: "close",
             label: <CloseTicketAction ticketId={ticket.id} />,
-          },
-        );
+          });
+        }
+
         break;
 
       case "InProgress":
-        actions.push(
-          {
+        if (can(AppPermissions.TicketsResolve)) {
+          actions.push({
             key: "resolve",
             label: "Resolve ticket",
-          },
-          {
+          });
+        }
+
+        if (can(AppPermissions.TicketsClose)) {
+          actions.push({
             key: "close",
             label: <CloseTicketAction ticketId={ticket.id} />,
-          },
-        );
+          });
+        }
+
         break;
 
       case "Resolved":
-        actions.push(
-          {
+        if (can(AppPermissions.TicketsReopen)) {
+          actions.push({
             key: "reopen",
             label: <ReopenTicketAction ticketId={ticket.id} />,
-          },
-          {
+          });
+        }
+
+        if (can(AppPermissions.TicketsClose)) {
+          actions.push({
             key: "close",
             label: <CloseTicketAction ticketId={ticket.id} />,
-          },
-        );
+          });
+        }
+
         break;
 
       case "Reopened":
-        actions.push(
-          {
+        if (can(AppPermissions.TicketsAssign)) {
+          actions.push({
             key: "assign",
             label: "Assign ticket",
-          },
-          {
+          });
+        }
+
+        if (can(AppPermissions.TicketsStartProgress)) {
+          actions.push({
             key: "start",
             label: "Start progress",
-          },
-          {
+          });
+        }
+
+        if (can(AppPermissions.TicketsClose)) {
+          actions.push({
             key: "close",
             label: <CloseTicketAction ticketId={ticket.id} />,
-          },
-        );
+          });
+        }
+
         break;
 
       case "Closed":
-        actions.push(
-          {
+        if (can(AppPermissions.TicketsReopen)) {
+          actions.push({
             key: "reopen",
             label: <ReopenTicketAction ticketId={ticket.id} />,
-          },
-          {
-            key: "history",
-            label: "View history",
-          },
-        );
+          });
+        }
+
+        actions.push({
+          key: "history",
+          label: "View history",
+        });
+
         break;
     }
-    if (ticket.status !== "Closed") {
+
+    if (ticket.status !== "Closed" && can(AppPermissions.TicketsComment)) {
       actions.push(
         {
           type: "divider",

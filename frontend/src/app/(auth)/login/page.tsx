@@ -4,9 +4,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { AxiosError } from "axios";
 import { useLogin } from "@/features/auth/hooks/useLogin";
-import { LoginRequest } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "@/features/auth/schemas/login.schema";
+import { LoginForm, loginSchema } from "@/features/auth/schemas/login.schema";
 import Button from "@/components/ui/Button";
 import FormInput from "@/components/form/FormInput";
 import FormPasswordInput from "@/components/form/FormPasswordInput";
@@ -17,11 +16,11 @@ export default function LoginPage() {
 
   const loginMutation = useLogin();
 
-  const { control, handleSubmit } = useForm<LoginRequest>({
+  const { control, handleSubmit } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   });
 
-  async function onSubmit(request: LoginRequest) {
+  async function onSubmit(request: LoginForm) {
     try {
       await loginMutation.mutateAsync(request);
       await api.get("/auth/csrf");

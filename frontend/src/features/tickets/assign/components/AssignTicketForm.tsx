@@ -14,6 +14,7 @@ import {
   assignTicketSchema,
 } from "../schemas/assignTicket.schema";
 import FormSelect from "@/components/form/FormSelect";
+import FormCard from "@/components/form/FormCard";
 
 type Props = {
   ticketId: string;
@@ -60,10 +61,7 @@ export default function AssignTicketForm({ ticketId, onSuccess }: Props) {
         : null;
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="rounded-xl bg-white p-5 shadow"
-    >
+    <FormCard onSubmit={handleSubmit(onSubmit)}>
       <FormSelect
         control={control}
         name="assignedToUserId"
@@ -92,6 +90,6 @@ export default function AssignTicketForm({ ticketId, onSuccess }: Props) {
       <Button htmlType="submit" className="mt-4" isLoading={mutation.isPending}>
         Assign Ticket
       </Button>
-    </form>
+    </FormCard>
   );
 }

@@ -6,12 +6,15 @@ import CreateTicketButton from "./CreateTicketButton";
 import TicketFilters from "./TicketFilters";
 
 import { useTickets } from "../hooks/useTickets";
-import { ticketColumns } from "./TicketTableColumns";
+import { getTicketColumns } from "./TicketTableColumns";
 import DataTable from "@/components/ui/table/DataTable";
 import PageTitle from "@/components/ui/page/PageTitle";
 import { TicketListFilters } from "../types";
+import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
 
 export default function TicketList() {
+  const currentUser = useCurrentUser();
+
   const [filters, setFilters] = useState<TicketListFilters>({
     page: 1,
     pageSize: 10,
@@ -58,7 +61,7 @@ export default function TicketList() {
       />
 
       <DataTable
-        columns={ticketColumns}
+        columns={getTicketColumns(currentUser)}
         dataSource={data?.items ?? []}
         loading={isLoading}
         rowKey="id"

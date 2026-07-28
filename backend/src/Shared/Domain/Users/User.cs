@@ -67,6 +67,9 @@ public sealed class User : AggregateRoot
 
     public void Deactivate()
     {
+        if (!IsActive)
+            return;
+
         IsActive = false;
 
         foreach (var token in _refreshTokens)
@@ -78,6 +81,9 @@ public sealed class User : AggregateRoot
 
     public void Activate()
     {
+        if (IsActive)
+            return;
+
         IsActive = true;
     }
 

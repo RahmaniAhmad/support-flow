@@ -1,9 +1,13 @@
 import BackButton from "@/components/ui/navigation/BackButton";
 import PageBreadcrumbs from "@/components/ui/page/PageBreadcrumbs";
 import PageHeader from "@/components/ui/page/PageHeader";
+import { AppPermissions } from "@/features/auth/Permissions";
+import { requirePermission } from "@/features/auth/server/requirePermission";
 import CreateTicketForm from "@/features/tickets/components/CreateTicketForm";
 
-export default function CreateTicketPage() {
+export default async function CreateTicketPage() {
+  await requirePermission(AppPermissions.TicketsView);
+
   return (
     <div>
       <PageHeader>

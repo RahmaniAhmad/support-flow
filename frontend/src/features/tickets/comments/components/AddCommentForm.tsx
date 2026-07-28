@@ -14,6 +14,7 @@ import {
 } from "../schemas/addComment.schema";
 
 import { useAddComment } from "../hooks/useAddComment";
+import FormCard from "@/components/form/FormCard";
 
 type Props = {
   ticketId: string;
@@ -60,10 +61,7 @@ export default function AddCommentForm({ ticketId, onSuccess }: Props) {
         : null;
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="rounded-xl bg-white p-5 shadow"
-    >
+    <FormCard onSubmit={handleSubmit(onSubmit)}>
       <FormTextArea
         control={control}
         name="content"
@@ -87,6 +85,6 @@ export default function AddCommentForm({ ticketId, onSuccess }: Props) {
       <Button htmlType="submit" className="mt-4" isLoading={mutation.isPending}>
         Add Comment
       </Button>
-    </form>
+    </FormCard>
   );
 }

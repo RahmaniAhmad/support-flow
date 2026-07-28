@@ -23,20 +23,25 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator
         string email,
         UserRole role)
     {
-        var baseClaims = new List<Claim>
+        var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, userId.ToString()),
             new(JwtRegisteredClaimNames.Email, email),
-            new("company_id", companyId.ToString()),
             new(ClaimTypes.Role, role.ToString())
         };
+
+        if (companyId.HasValue)
+        {
+            claims.Add(
+                new Claim(
+                    "company_id",
+                    companyId.Value.ToString()));
+        }
 
         var permissionClaims = RolePermissions.Map[role]
             .Select(p => new Claim("permission", p));
 
-        var claims = baseClaims
-            .Concat(permissionClaims)
-            .ToList();
+        claims.AddRange(permissionClaims);
 
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_options.SecretKey));

@@ -1,24 +1,9 @@
-export interface User {
+export type UserRole = "SuperAdmin" | "Admin" | "Agent" | "Customer";
+
+export interface CurrentUser {
   id: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
   role: UserRole;
+  permissions: string[];
 }
-
-export interface UserProfile {
-  email: string;
-  firstName: string;
-  lastName: string;
-  phone?: string | null;
-  role: UserRole;
-  companyName?: string | null;
-}
-
-export interface UpdateProfileRequest {
-  firstName: string;
-  lastName: string;
-  phone?: string | null;
-}
-
-export type UserRole = "Admin" | "Agent" | "Customer";

@@ -12,4 +12,6 @@ export type DataTableProps<T extends object> = {
   pagination?: TableProps<T>["pagination"];
 
   onChange?: TableProps<T>["onChange"];
+
+  onRow?: TableProps<T>["onRow"];
 };

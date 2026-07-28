@@ -11,8 +11,8 @@ import {
 } from "@ant-design/icons";
 
 import Button from "../ui/Button";
-import { logout } from "@/features/auth/services/auth.service";
-import { useUser } from "@/features/auth/providers/UserProvider";
+import { logout } from "@/features/auth/api/auth";
+import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
 
 type Props = {
   onMenuClick: () => void;
@@ -20,7 +20,7 @@ type Props = {
 
 export default function Navbar({ onMenuClick }: Props) {
   const router = useRouter();
-  const user = useUser();
+  const currentUser = useCurrentUser();
 
   const handleLogout = async () => {
     await logout();
@@ -35,7 +35,7 @@ export default function Navbar({ onMenuClick }: Props) {
         <div className="py-1">
           <div className="text-xs text-gray-500">Signed in as</div>
           <div className="max-w-56 truncate font-medium">
-            {user?.email ?? "Unknown user"}
+            {currentUser?.email ?? "Unknown user"}
           </div>
         </div>
       ),
