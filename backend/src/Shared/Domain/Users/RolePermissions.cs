@@ -21,7 +21,8 @@ public static class RolePermissions
             Permissions.UsersView,
             Permissions.UsersCreate,
             Permissions.UsersUpdate,
-            Permissions.UsersChangeRole
+            Permissions.UsersChangeRole,
+            Permissions.UsersResetPassword
         ],
 
         [UserRole.Admin] =
@@ -41,7 +42,8 @@ public static class RolePermissions
             Permissions.UsersView,
             Permissions.UsersCreate,
             Permissions.UsersUpdate,
-            Permissions.UsersChangeRole
+            Permissions.UsersChangeRole,
+            Permissions.UsersResetPassword
         ],
 
         [UserRole.Agent] =

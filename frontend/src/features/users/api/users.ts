@@ -33,3 +33,9 @@ export async function createUser(data: CreateUserRequest) {
 export async function updateUser(id: string, data: UpdateUserRequest) {
   await api.put(`/users/${id}`, data);
 }
+
+export async function resetUserPassword(id: string, password: string) {
+  await api.put(`/users/${id}/password`, {
+    password,
+  });
+}

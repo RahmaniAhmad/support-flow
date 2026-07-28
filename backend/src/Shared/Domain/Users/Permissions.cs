@@ -14,8 +14,9 @@ public static class Permissions
 
     public const string DashboardView = "dashboard:view";
 
-    public const string UsersView = "users.view";
-    public const string UsersCreate = "users.create";
-    public const string UsersUpdate = "users.update";
-    public const string UsersChangeRole = "users.change-role";
+    public const string UsersView = "users:view";
+    public const string UsersCreate = "users:create";
+    public const string UsersUpdate = "users:update";
+    public const string UsersChangeRole = "users:change-role";
+    public const string UsersResetPassword = "users:reset-password";
 }

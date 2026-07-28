@@ -3,6 +3,10 @@
 import { Card, Tag, Typography, Spin } from "antd";
 
 import { useUser } from "../hooks/useUser";
+import ResetPasswordButton from "./ResetPasswordButton";
+import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
+import { hasPermission } from "@/lib/auth/authorization";
+import { AppPermissions } from "@/lib/auth/Permissions";
 
 const { Title } = Typography;
 
@@ -11,6 +15,8 @@ type Props = {
 };
 
 export default function UserDetailsView({ userId }: Props) {
+  const currentUser = useCurrentUser();
+
   const { data: user, isLoading } = useUser(userId);
 
   if (isLoading) {
@@ -33,9 +39,15 @@ export default function UserDetailsView({ userId }: Props) {
             <div className="text-sm text-slate-500">{user.email}</div>
           </div>
 
-          <Tag color={user.isActive ? "green" : "red"}>
-            {user.isActive ? "Active" : "Inactive"}
-          </Tag>
+          <div className="flex items-center gap-3">
+            {hasPermission(currentUser, AppPermissions.UsersResetPassword) && (
+              <ResetPasswordButton userId={user.id} />
+            )}
+
+            <Tag color={user.isActive ? "green" : "red"}>
+              {user.isActive ? "Active" : "Inactive"}
+            </Tag>
+          </div>
         </div>
       </Card>
 

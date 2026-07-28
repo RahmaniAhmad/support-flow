@@ -5,4 +5,5 @@ export interface CurrentUser {
   name: string;
   email: string;
   role: UserRole;
+  permissions: string[];
 }

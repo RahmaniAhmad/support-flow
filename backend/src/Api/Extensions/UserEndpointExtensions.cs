@@ -4,6 +4,7 @@ using Api.Features.Users.GetAssignableUsers;
 using Api.Features.Users.GetProfile;
 using Api.Features.Users.GetUser;
 using Api.Features.Users.GetUsers;
+using Api.Features.Users.ResetUserPassword;
 using Api.Features.Users.UpdateProfile;
 using Api.Features.Users.UpdateUser;
 
@@ -23,6 +24,7 @@ public static class UserEndpointExtensions
         app.MapGetUser();
         app.MapCreateUser();
         app.MapUpdateUser();
+        app.MapResetUserPassword();
         return app;
     }
 }
