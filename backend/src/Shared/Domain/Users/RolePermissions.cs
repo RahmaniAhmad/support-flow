@@ -1,69 +1,73 @@
+using System.Collections.Immutable;
+
 namespace Shared.Domain.Users;
 
 public static class RolePermissions
 {
-    public static readonly Dictionary<UserRole, string[]> Map = new()
-    {
-        [UserRole.SuperAdmin] =
-        [
-            Permissions.TicketsCreate,
-            Permissions.TicketsAssign,
-            Permissions.TicketsUnassign,
-            Permissions.TicketsStartProgress,
-            Permissions.TicketsResolve,
-            Permissions.TicketsReopen,
-            Permissions.TicketsClose,
-            Permissions.TicketsComment,
-            Permissions.TicketsRead,
+    public static readonly ImmutableDictionary<UserRole, ImmutableArray<string>> Map =
+         new Dictionary<UserRole, string[]>
+         {
+             [UserRole.SuperAdmin] =
+             [
+                Permissions.DashboardView,
 
-            Permissions.DashboardView,
+                Permissions.TicketsView,
+                Permissions.TicketsCreate,
+                Permissions.TicketsAssign,
+                Permissions.TicketsUnassign,
+                Permissions.TicketsStartProgress,
+                Permissions.TicketsResolve,
+                Permissions.TicketsReopen,
+                Permissions.TicketsClose,
+                Permissions.TicketsComment,
 
-            Permissions.UsersView,
-            Permissions.UsersCreate,
-            Permissions.UsersUpdate,
-            Permissions.UsersChangeRole,
-            Permissions.UsersResetPassword
-        ],
+                Permissions.UsersView,
+                Permissions.UsersCreate,
+                Permissions.UsersUpdate,
+                Permissions.UsersResetPassword,
+                Permissions.UsersChangeStatus
+            ],
 
-        [UserRole.Admin] =
-        [
-            Permissions.TicketsCreate,
-            Permissions.TicketsAssign,
-            Permissions.TicketsUnassign,
-            Permissions.TicketsStartProgress,
-            Permissions.TicketsResolve,
-            Permissions.TicketsReopen,
-            Permissions.TicketsClose,
-            Permissions.TicketsComment,
-            Permissions.TicketsRead,
+             [UserRole.Admin] =
+             [
+                Permissions.DashboardView,
 
-            Permissions.DashboardView,
+                Permissions.TicketsView,
+                Permissions.TicketsCreate,
+                Permissions.TicketsAssign,
+                Permissions.TicketsUnassign,
+                Permissions.TicketsStartProgress,
+                Permissions.TicketsResolve,
+                Permissions.TicketsReopen,
+                Permissions.TicketsClose,
+                Permissions.TicketsComment,
 
-            Permissions.UsersView,
-            Permissions.UsersCreate,
-            Permissions.UsersUpdate,
-            Permissions.UsersChangeRole,
-            Permissions.UsersResetPassword
-        ],
+                Permissions.UsersView,
+                Permissions.UsersCreate,
+                Permissions.UsersUpdate,
+                Permissions.UsersResetPassword,
+                Permissions.UsersChangeStatus,
+                ],
 
-        [UserRole.Agent] =
-        [
-            Permissions.TicketsCreate,
-            Permissions.TicketsAssign,
-            Permissions.TicketsStartProgress,
-            Permissions.TicketsResolve,
-            Permissions.TicketsClose,
-            Permissions.TicketsComment,
-            Permissions.TicketsRead,
+             [UserRole.Agent] =
+             [
+                Permissions.DashboardView,
 
-            Permissions.DashboardView
-        ],
+                Permissions.TicketsView,
+                Permissions.TicketsCreate,
+                Permissions.TicketsAssign,
+                Permissions.TicketsStartProgress,
+                Permissions.TicketsResolve,
+                Permissions.TicketsClose,
+                Permissions.TicketsComment,
+                ],
 
-        [UserRole.Customer] =
-        [
-            Permissions.TicketsCreate,
-            Permissions.TicketsComment,
-            Permissions.TicketsRead
-        ]
-    };
+             [UserRole.Customer] =
+             [
+                Permissions.TicketsView,
+                Permissions.TicketsCreate,
+                Permissions.TicketsComment,
+                ]
+         }
+         .ToImmutableDictionary(x => x.Key, x => x.Value.ToImmutableArray());
 }

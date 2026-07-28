@@ -5,8 +5,8 @@ import { Card, Tag, Typography, Spin } from "antd";
 import { useUser } from "../hooks/useUser";
 import ResetPasswordButton from "./ResetPasswordButton";
 import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
-import { hasPermission } from "@/lib/auth/authorization";
-import { AppPermissions } from "@/lib/auth/Permissions";
+import { hasPermission } from "@/features/auth/authorization";
+import { AppPermissions } from "@/features/auth/Permissions";
 
 const { Title } = Typography;
 

@@ -1,4 +1,9 @@
 export const AppPermissions = {
+  // Dashboard
+  DashboardView: "dashboard:view",
+
+  // Tickets
+  TicketsView: "tickets:view",
   TicketsCreate: "tickets:create",
   TicketsAssign: "tickets:assign",
   TicketsUnassign: "tickets:unassign",
@@ -7,14 +12,12 @@ export const AppPermissions = {
   TicketsReopen: "tickets:reopen",
   TicketsClose: "tickets:close",
   TicketsComment: "tickets:comment",
-  TicketsRead: "tickets:read",
 
-  DashboardView: "dashboard:view",
-
+  // Users
   UsersView: "users:view",
   UsersCreate: "users:create",
   UsersUpdate: "users:update",
-  UsersChangeRole: "users:change-role",
+  UsersChangeStatus: "users:change-status",
   UsersResetPassword: "users:reset-password",
 } as const;
 
