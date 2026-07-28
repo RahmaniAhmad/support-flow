@@ -41,8 +41,7 @@ public sealed class UserAccessService : IUserAccessService
         return _currentUser.Role switch
         {
             UserRole.SuperAdmin =>
-                true,
-
+                user.Role != UserRole.SuperAdmin,
 
             UserRole.Admin =>
                 user.CompanyId == _currentUser.CompanyId
@@ -57,25 +56,42 @@ public sealed class UserAccessService : IUserAccessService
         };
     }
 
-
-    public bool CanChangeRole(User user)
+    public bool CanResetPassword(User user)
     {
         return _currentUser.Role switch
         {
             UserRole.SuperAdmin =>
-                true,
-
+                user.Role != UserRole.SuperAdmin,
 
             UserRole.Admin =>
                 user.CompanyId == _currentUser.CompanyId
                 &&
-                user.Role != UserRole.SuperAdmin
+                user.Role != UserRole.Admin
                 &&
-                user.Role != UserRole.Admin,
-
+                user.Role != UserRole.SuperAdmin,
 
             _ =>
                 false
         };
     }
+
+    public bool CanChangeStatus(User user)
+    {
+        return _currentUser.Role switch
+        {
+            UserRole.SuperAdmin =>
+                user.Role != UserRole.SuperAdmin,
+
+            UserRole.Admin =>
+                user.CompanyId == _currentUser.CompanyId
+                &&
+                user.Role != UserRole.Admin
+                &&
+                user.Role != UserRole.SuperAdmin,
+
+            _ =>
+                false
+        };
+    }
+
 }

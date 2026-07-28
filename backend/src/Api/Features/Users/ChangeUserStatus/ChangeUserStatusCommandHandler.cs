@@ -31,7 +31,7 @@ public sealed class ChangeUserStatusCommandHandler
         if (user is null)
             throw new InvalidOperationException("User not found");
 
-        if (!_accessService.CanManageUser(user))
+        if (!_accessService.CanChangeStatus(user))
             throw new UnauthorizedAccessException(
                 "You cannot manage this user.");
 

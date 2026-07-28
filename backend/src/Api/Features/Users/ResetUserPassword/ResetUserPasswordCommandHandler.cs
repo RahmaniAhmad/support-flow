@@ -1,3 +1,4 @@
+using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,14 +11,16 @@ public sealed class ResetUserPasswordCommandHandler
 {
     private readonly SupportFlowDbContext _db;
     private readonly IPasswordHasher _passwordHasher;
-
+    private readonly IUserAccessService _accessService;
 
     public ResetUserPasswordCommandHandler(
         SupportFlowDbContext db,
-        IPasswordHasher passwordHasher)
+        IPasswordHasher passwordHasher,
+        IUserAccessService accessService)
     {
         _db = db;
         _passwordHasher = passwordHasher;
+        _accessService = accessService;
     }
 
 
@@ -49,6 +52,11 @@ public sealed class ResetUserPasswordCommandHandler
                 "User not found.");
         }
 
+        if (!_accessService.CanResetPassword(user))
+        {
+            throw new UnauthorizedAccessException(
+                "You cannot reset this user's password.");
+        }
 
         var passwordHash =
             _passwordHasher.Hash(request.Password);

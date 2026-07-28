@@ -8,6 +8,6 @@ public interface IUserAccessService
         IQueryable<User> users);
 
     bool CanManageUser(User user);
-
-    bool CanChangeRole(User user);
+    bool CanResetPassword(User user);
+    bool CanChangeStatus(User user);
 }
