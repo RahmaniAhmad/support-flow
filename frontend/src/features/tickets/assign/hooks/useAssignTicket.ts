@@ -11,7 +11,7 @@ export function useAssignTicket() {
 
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.tickets.list(),
+        queryKey: queryKeys.tickets.lists(),
       });
 
       queryClient.invalidateQueries({

@@ -2,38 +2,20 @@
 
 import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
 import { hasPermission } from "@/features/auth/authorization";
-import { AppPermissions } from "@/features/auth/Permissions";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { MENU_ITEMS } from "./sidebarMenu";
 
 type Props = {
   onClose?: () => void;
 };
-
-const menuItems = [
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-    permission: AppPermissions.DashboardView,
-  },
-  {
-    label: "Tickets",
-    href: "/tickets",
-    permission: AppPermissions.TicketsView,
-  },
-  {
-    label: "Users",
-    href: "/users",
-    permission: AppPermissions.UsersView,
-  },
-];
 
 export default function Sidebar({ onClose }: Props) {
   const pathname = usePathname();
 
   const currentUser = useCurrentUser();
 
-  const visibleItems = menuItems.filter(
+  const visibleItems = MENU_ITEMS.filter(
     (item) => !item.permission || hasPermission(currentUser, item.permission),
   );
 
@@ -45,8 +27,8 @@ export default function Sidebar({ onClose }: Props) {
 
       <nav className="flex flex-col gap-1 p-4">
         {visibleItems.map((item) => {
-          const isActive =
-            pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const isActive = item.isActive?.(pathname) ?? false;
+
           return (
             <Link
               key={item.href}

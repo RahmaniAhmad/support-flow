@@ -67,12 +67,17 @@ public sealed class TicketAccessService : ITicketAccessService
     {
         return _currentUser.Role switch
         {
-            UserRole.SuperAdmin => true,
+            UserRole.SuperAdmin =>
+            assignedUser.Role == UserRole.Admin
+            ||
+            assignedUser.Role == UserRole.Agent,
 
             UserRole.Admin =>
                 IsSameCompany(ticket)
                 &&
-                assignedUser.CompanyId == _currentUser.CompanyId,
+                assignedUser.CompanyId == _currentUser.CompanyId
+                &&
+                assignedUser.Role == UserRole.Agent,
 
             UserRole.Agent =>
                 IsSameCompany(ticket)

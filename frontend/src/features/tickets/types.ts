@@ -10,6 +10,7 @@ export interface TicketListItem {
   priority: TicketPriority;
   companyName?: string;
   assigneeName?: string;
+  createdName?: string;
   createdAtUtc: string;
 }
 
@@ -48,12 +49,14 @@ export interface TicketComment {
 
 export type TicketListResponse = PagedResponse<TicketListItem>;
 
+export type TicketView = "All" | "AssignedToMe" | "CreatedByMe";
+
 export interface TicketListFilters {
   page?: number;
   pageSize?: number;
   search?: string;
   status?: TicketStatus;
-  priority?: TicketPriority;
+  view: TicketView;
   assignedToUserId?: string;
   sortBy?: string;
   sortDirection?: SortDirection;

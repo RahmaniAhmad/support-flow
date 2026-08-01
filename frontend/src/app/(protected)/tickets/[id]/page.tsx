@@ -19,7 +19,7 @@ export default async function TicketDetailsPage({ params }: Props) {
   return (
     <div>
       <PageHeader>
-        <BackButton href="/tickets" label="Back to tickets" />
+        <BackButton fallbackHref="/tickets" label="Back" />
 
         <PageBreadcrumbs
           items={[

@@ -1,3 +1,5 @@
+import { TicketListFilters } from "@/features/tickets/types";
+
 export const queryKeys = {
   dashboard: {
     all: ["dashboard"] as const,
@@ -8,8 +10,10 @@ export const queryKeys = {
 
     lists: () => [...queryKeys.tickets.all, "list"] as const,
 
-    list: (filters?: unknown) =>
+    list: (filters?: TicketListFilters) =>
       [...queryKeys.tickets.lists(), filters] as const,
+
+    my: (filters?: TicketListFilters) => ["tickets", "my", filters] as const,
 
     details: () => [...queryKeys.tickets.all, "detail"] as const,
 

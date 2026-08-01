@@ -1,20 +1,32 @@
 "use client";
 
-import Link from "next/link";
 import { Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { useRouter } from "next/navigation";
 
 type Props = {
-  href: string;
+  fallbackHref: string;
   label?: string;
 };
 
-export default function BackButton({ href, label = "Back" }: Props) {
+export default function BackButton({ fallbackHref, label = "Back" }: Props) {
+  const router = useRouter();
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push(fallbackHref);
+    }
+  };
   return (
-    <Link href={href}>
-      <Button type="link" icon={<ArrowLeftOutlined />} className="px-0!">
-        {label}
-      </Button>
-    </Link>
+    <Button
+      type="link"
+      icon={<ArrowLeftOutlined />}
+      className="px-0!"
+      onClick={handleBack}
+    >
+      {label}
+    </Button>
   );
 }
