@@ -3,20 +3,25 @@
 import { TicketStatus } from "@/types/ticket";
 import { Input, Select } from "antd";
 import { useEffect, useState } from "react";
+import { TicketView } from "../types";
 
 type Props = {
   search?: string;
   status?: TicketStatus;
+  view: TicketView;
 
   onSearch(value: string): void;
   onStatusChange(value?: TicketStatus): void;
+  onViewChange(view: TicketView): void;
 };
 
 export default function TicketFilters({
   search = "",
   status,
+  view,
   onSearch,
   onStatusChange,
+  onViewChange,
 }: Props) {
   const [searchValue, setSearchValue] = useState(search);
 
@@ -70,6 +75,25 @@ export default function TicketFilters({
           {
             label: "Closed",
             value: "Closed",
+          },
+        ]}
+      />
+      <Select<TicketView>
+        className="min-w-44"
+        value={view}
+        onChange={onViewChange}
+        options={[
+          {
+            label: "All",
+            value: "All",
+          },
+          {
+            label: "Assigned to Me",
+            value: "AssignedToMe",
+          },
+          {
+            label: "Created by Me",
+            value: "CreatedByMe",
           },
         ]}
       />

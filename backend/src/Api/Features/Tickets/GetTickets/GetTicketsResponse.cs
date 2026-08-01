@@ -10,4 +10,5 @@ public sealed record GetTicketsResponse(
     TicketStatus Status,
     string? AssigneeName,
     string CompanyName,
+    string CreatedBy,
     DateTime CreatedAtUtc);

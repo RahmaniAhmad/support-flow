@@ -52,9 +52,6 @@ public sealed class GetTicketQueryHandler
        ))
        .FirstOrDefaultAsync(cancellationToken);
 
-        if (ticket is null)
-            throw new InvalidOperationException("Ticket not found");
-
-        return ticket;
+        return ticket ?? throw new InvalidOperationException("Ticket not found");
     }
 }

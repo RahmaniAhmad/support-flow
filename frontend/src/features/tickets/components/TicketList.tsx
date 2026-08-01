@@ -20,6 +20,7 @@ export default function TicketList() {
     pageSize: 10,
     search: "",
     status: undefined,
+    view: "All",
     sortBy: "CreatedAtUtc",
     sortDirection: "desc",
   });
@@ -44,6 +45,7 @@ export default function TicketList() {
       <TicketFilters
         search={filters.search}
         status={filters.status}
+        view={filters.view}
         onSearch={(value) =>
           setFilters({
             ...filters,
@@ -57,6 +59,13 @@ export default function TicketList() {
             status: value,
             page: 1,
           })
+        }
+        onViewChange={(view) =>
+          setFilters((prev) => ({
+            ...prev,
+            view,
+            page: 1,
+          }))
         }
       />
 

@@ -8,19 +8,33 @@ export function getTicketColumns(
 ): ColumnsType<TicketListItem> {
   const columns: ColumnsType<TicketListItem> = [];
 
+  columns.push({
+    title: "Ticket",
+    dataIndex: "ticketNumber",
+    render: (value: number) => `#${value}`,
+  });
+
   if (currentUser.role === "SuperAdmin") {
+    columns.push(
+      {
+        title: "Company",
+        dataIndex: "companyName",
+      },
+      {
+        title: "Created By",
+        dataIndex: "createdName",
+      },
+    );
+  }
+
+  if (currentUser.role === "Admin" || currentUser.role === "Agent") {
     columns.push({
-      title: "Company",
-      dataIndex: "companyName",
+      title: "Created By",
+      dataIndex: "createdName",
     });
   }
 
   columns.push(
-    {
-      title: "Ticket",
-      dataIndex: "ticketNumber",
-      render: (value: number) => `#${value}`,
-    },
     {
       title: "Subject",
       dataIndex: "subject",

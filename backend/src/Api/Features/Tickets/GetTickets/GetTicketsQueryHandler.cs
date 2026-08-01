@@ -2,8 +2,9 @@ using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Shared.Authentication;
 using Shared.Contracts;
-using Shared.Domain.Users;
+using Shared.Domain.Tickets;
 
 namespace Api.Features.Tickets.GetTickets;
 
@@ -11,13 +12,15 @@ public sealed class GetTicketsQueryHandler
     : IRequestHandler<GetTicketsQuery, PagedResult<GetTicketsResponse>>
 {
     private readonly SupportFlowDbContext _db;
+    private readonly ICurrentUser _currentUser;
     private readonly ITicketAccessService _accessService;
-
     public GetTicketsQueryHandler(
      SupportFlowDbContext db,
+     ICurrentUser currentUser,
      ITicketAccessService accessService)
     {
         _db = db;
+        _currentUser = currentUser;
         _accessService = accessService;
     }
 
@@ -29,6 +32,17 @@ public sealed class GetTicketsQueryHandler
         var query = _accessService
            .ApplyTicketAccessFilter(
                _db.Tickets.AsNoTracking());
+
+        query = request.View switch
+        {
+            TicketView.AssignedToMe =>
+                query.Where(x => x.AssignedToUserId == _currentUser.UserId),
+
+            TicketView.CreatedByMe =>
+                query.Where(x => x.CreatedByUserId == _currentUser.UserId),
+
+            _ => query
+        };
 
 
         if (!string.IsNullOrWhiteSpace(request.Search))
@@ -78,6 +92,10 @@ public sealed class GetTicketsQueryHandler
                 _db.Companies
                 .Where(c => c.Id == x.CompanyId)
                 .Select(c => c.Name)
+                .First(),
+                 _db.Users
+                .Where(u => u.Id == x.CreatedByUserId)
+                .Select(u => u.FirstName + " " + u.LastName)
                 .First(),
                 x.CreatedAtUtc
                 ))

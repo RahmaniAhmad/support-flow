@@ -24,22 +24,40 @@ public sealed class GetAssignableUsersQueryHandler
         GetAssignableUsersQuery request,
         CancellationToken cancellationToken)
     {
-        if (_currentUser.CompanyId is null)
-            return [];
+        var query = _db.Users
+        .Where(x => x.IsActive);
 
-        return await _db.Users
-            .Where(x =>
-                x.CompanyId == _currentUser.CompanyId &&
-                x.IsActive &&
-                (
+        query = _currentUser.Role switch
+        {
+            UserRole.SuperAdmin =>
+                query.Where(x =>
                     x.Role == UserRole.Admin ||
-                    x.Role == UserRole.Agent
-                ))
-            .OrderBy(x => x.FirstName)
-            .ThenBy(x => x.LastName)
-            .Select(x => new GetAssignableUsersResponse(
-                x.Id,
-                $"{x.FirstName} {x.LastName}".Trim()))
-            .ToListAsync(cancellationToken);
+                    x.Role == UserRole.Agent),
+
+
+            UserRole.Admin =>
+             query.Where(x =>
+                 x.CompanyId == _currentUser.CompanyId
+                 &&
+                 x.Role == UserRole.Agent),
+
+
+            UserRole.Agent =>
+                query.Where(x =>
+                    x.Id == _currentUser.UserId),
+
+
+            _ =>
+                query.Where(x => false)
+        };
+
+        return await query
+                    .OrderBy(x => x.FirstName)
+                    .ThenBy(x => x.LastName)
+                    .Select(x => new GetAssignableUsersResponse(
+                        x.Id,
+                        $"{x.FirstName} {x.LastName}".Trim()))
+                    .ToListAsync(cancellationToken);
+
     }
 }

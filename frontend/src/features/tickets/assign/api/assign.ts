@@ -14,7 +14,7 @@ export async function assignTicket({
   ticketId: string;
   request: AssignTicketRequest;
 }): Promise<{ id: string }> {
-  const response = await api.post<{ id: string }>(
+  const response = await api.put<{ id: string }>(
     `/tickets/${ticketId}/assign`,
     request,
   );
