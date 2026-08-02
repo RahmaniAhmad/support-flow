@@ -115,8 +115,9 @@ app.MapGet(
 });
 ```
 
-Domain Rules
-Ticket Entity
+# Domain Rules
+
+## Ticket Entity
 
 Main fields:
 
@@ -131,7 +132,8 @@ AssignedToUserId
 CreatedAtUtc
 UpdatedAtUtc
 
-Ticket Status
+## Ticket Status
+
 Open
 Assigned
 InProgress
@@ -149,7 +151,8 @@ CloseTicketCommand
 ReopenTicketCommand
 AddCommentCommand
 
-Authorization
+# Authorization
+
 The system uses permission-based authorization.
 
 Do not rely only on roles.
@@ -178,6 +181,24 @@ Can only access tickets they created.
 
 Always check permissions before adding features.
 
+# Access Control
+
+Use existing access services:
+
+- ICurrentUser
+- ITicketAccessService
+
+Do not manually read claims or duplicate authorization logic.
+
+Ticket visibility rules:
+
+- SuperAdmin: all tickets.
+- Admin: company tickets.
+- Agent: company tickets based on permissions.
+- Customer: tickets created by the customer.
+
+Apply access filtering before additional query filters.
+
 Example permissions:
 
 DashboardView
@@ -189,7 +210,7 @@ UsersCreate
 UsersUpdate
 UsersChangeRole
 
-Ticket Listing Design
+# Ticket Listing Design
 
 Tickets are a single resource.
 
@@ -219,7 +240,7 @@ View
 SortBy
 Descending
 
-Frontend Architecture
+# Frontend Architecture
 
 Use feature-based organization.
 
@@ -240,11 +261,77 @@ features
 │ └── tickets.ts
 │
 └── types.ts
-Frontend Rules
+
+# Frontend Architecture
+
+Use feature-based organization.
+
+Example:
+
+features
+└── tickets
+├── components
+│ ├── TicketList.tsx
+│ ├── TicketFilters.tsx
+│ ├── TicketActions.tsx
+│ ├── TicketTable.tsx
+│ └── TicketTableColumns.tsx
+│
+├── hooks
+│ └── useTickets.ts
+│
+├── api
+│ └── tickets.ts
+│
+└── types.ts
+
+Responsibilities:
+
+api:
+
+- Contains API endpoint functions only.
+- Handles HTTP requests.
+- Does not contain React logic.
+
+hooks:
+
+- Contains React Query logic.
+- Handles fetching, loading, errors, mutations, and cache invalidation.
+
+components:
+
+- Contains UI components.
+- Should not call APIs directly.
+- Should use hooks for server data.
+
+Next.js pages:
+
+- Handle routing and page composition only.
+- Keep business logic out of page components.
+
+# Routing Rules
+
+Tickets:
+
+- /tickets -> all tickets with filters
+- /tickets/[id] -> ticket details
+- /tickets/create -> create ticket
+
+Users:
+
+- /users -> users list
+- /users/[id] -> user details
+
+Route pages should compose existing components and hooks.
+Avoid putting API calls directly inside page components.
+
+# Frontend Rules
 
 Follow these rules:
 
-API calls belong in service files.
+API calls belong in api files.
+React Query hooks consume API functions.
+Components and pages should not call API functions directly.
 React Query logic belongs in hooks.
 Components should focus on UI.
 Reuse existing components.
@@ -284,7 +371,7 @@ Do not store authentication tokens in localStorage.
 
 Use existing authentication providers and hooks.
 
-Caching
+# Caching
 
 Redis is used for caching.
 
@@ -301,7 +388,8 @@ Do not manually clear cache inside handlers.
 
 Use the existing cache invalidation behavior.
 
-Naming Conventions
+# Naming Conventions
+
 Backend
 CreateTicketCommand
 CreateTicketCommandHandler
@@ -341,7 +429,3 @@ Bypassing authorization.
 Creating separate pages when a filter is enough.
 Mixing API calls with UI components.
 Ignoring existing project conventions.
-
-```
-
-```
