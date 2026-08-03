@@ -3,20 +3,23 @@ import PageBreadcrumbs from "@/components/ui/page/PageBreadcrumbs";
 import PageHeader from "@/components/ui/page/PageHeader";
 import { AppPermissions } from "@/features/auth/Permissions";
 import { requirePermission } from "@/features/auth/server/requirePermission";
-import CreateTicketForm from "@/features/tickets/components/CreateTicketForm";
+import KnowledgeArticleForm from "@/features/knowledge-articles/components/KnowledgeArticleForm";
 
-export default async function CreateTicketPage() {
-  await requirePermission(AppPermissions.TicketsView);
+export default async function KnowledgeArticleCreatePage() {
+  await requirePermission(AppPermissions.KnowledgeArticlesCreate);
 
   return (
     <div>
       <PageHeader>
-        <BackButton fallbackHref="/tickets" label="Back to tickets" />
+        <BackButton
+          fallbackHref="/knowledge-articles"
+          label="Back to articles"
+        />
 
         <PageBreadcrumbs
           items={[
             {
-              title: "Tickets",
+              title: "Knowledge Articles",
             },
             {
               title: "Create",
@@ -24,7 +27,7 @@ export default async function CreateTicketPage() {
           ]}
         />
       </PageHeader>
-      <CreateTicketForm />
+      <KnowledgeArticleForm />
     </div>
   );
 }

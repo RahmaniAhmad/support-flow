@@ -1,5 +1,7 @@
 using Api.Filters;
+using Api.Authorization;
 using MediatR;
+using Shared.Domain.Users;
 
 namespace Api.Features.KnowledgeBase.DeleteArticle;
 
@@ -24,7 +26,7 @@ public static class DeleteArticleEndpoint
                     : Results.NotFound();
             })
             .AddEndpointFilter<SecurityFilter>()
-            .RequireAuthorization();
+            .RequireAuthorization().RequirePermission(Permissions.KnowledgeArticlesDelete);
 
         return app;
     }

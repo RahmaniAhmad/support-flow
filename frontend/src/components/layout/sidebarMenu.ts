@@ -33,4 +33,12 @@ export const MENU_ITEMS: readonly MenuItem[] = [
     isActive: (pathname) =>
       pathname === "/users" || pathname.startsWith("/users/"),
   },
+  {
+    label: "Knowledge Articles",
+    href: "/knowledge-articles",
+    permission: AppPermissions.KnowledgeArticlesView,
+    isActive: (pathname) =>
+      pathname === "/knowledge-articles" ||
+      pathname.startsWith("/knowledge-articles/"),
+  },
 ];

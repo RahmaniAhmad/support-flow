@@ -13,4 +13,7 @@ public static class CacheExpiration
 
     public static readonly TimeSpan Comments =
         TimeSpan.FromMinutes(5);
+
+    public static readonly TimeSpan KnowledgeArticle =
+   TimeSpan.FromMinutes(30);
 }

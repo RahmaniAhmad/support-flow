@@ -23,13 +23,10 @@ public sealed class CreateArticleCommandHandler
         CreateArticleCommand request,
         CancellationToken cancellationToken)
     {
-        var article = new KnowledgeArticle
-        {
-            CompanyId = _currentUser.CompanyId,
-            Title = request.Title,
-            Content = request.Content,
-            CreatedAtUtc = DateTime.UtcNow
-        };
+        var article = KnowledgeArticle.Create(
+             _currentUser.CompanyId,
+             request.Title,
+             request.Content);
 
         _db.KnowledgeArticles.Add(article);
 

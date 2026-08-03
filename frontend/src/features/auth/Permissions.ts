@@ -19,6 +19,12 @@ export const AppPermissions = {
   UsersUpdate: "users:update",
   UsersChangeStatus: "users:change-status",
   UsersResetPassword: "users:reset-password",
+
+  // Knowledge Articles
+  KnowledgeArticlesView: "knowledge-articles:view",
+  KnowledgeArticlesCreate: "knowledge-articles:create",
+  KnowledgeArticlesUpdate: "knowledge-articles:update",
+  KnowledgeArticlesDelete: "knowledge-articles:delete",
 } as const;
 
 export type Permission = (typeof AppPermissions)[keyof typeof AppPermissions];

@@ -24,4 +24,10 @@ public static class Permissions
     public const string UsersUpdate = "users:update";
     public const string UsersChangeStatus = "users:change-status";
     public const string UsersResetPassword = "users:reset-password";
+
+    // Knowledge Articles
+    public const string KnowledgeArticlesView = "knowledge-articles:view";
+    public const string KnowledgeArticlesCreate = "knowledge-articles:create";
+    public const string KnowledgeArticlesUpdate = "knowledge-articles:update";
+    public const string KnowledgeArticlesDelete = "knowledge-articles:delete";
 }

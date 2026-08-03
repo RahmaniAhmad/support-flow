@@ -1,5 +1,7 @@
 using Api.Filters;
+using Api.Authorization;
 using MediatR;
+using Shared.Domain.Users;
 
 namespace Api.Features.KnowledgeBase.CreateArticle;
 
@@ -26,7 +28,7 @@ public static class CreateArticleEndpoint
                     new { Id = articleId });
             })
             .AddEndpointFilter<SecurityFilter>()
-            .RequireAuthorization();
+            .RequireAuthorization().RequirePermission(Permissions.KnowledgeArticlesCreate);
 
         return app;
     }

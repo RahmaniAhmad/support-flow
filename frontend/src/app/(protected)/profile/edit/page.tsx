@@ -7,7 +7,7 @@ export default function ProfilePage() {
   return (
     <div>
       <PageHeader>
-        <BackButton href="/profile" label="Back to profile" />
+        <BackButton fallbackHref="/profile" label="Back to profile" />
 
         <PageBreadcrumbs
           items={[

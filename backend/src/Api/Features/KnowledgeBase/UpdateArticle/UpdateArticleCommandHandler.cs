@@ -35,9 +35,9 @@ public sealed class UpdateArticleCommandHandler
             return false;
         }
 
-        article.Title = request.Title;
-        article.Content = request.Content;
-        article.UpdatedAtUtc = DateTime.UtcNow;
+        article.Update(
+                request.Title,
+                request.Content);
 
         await _db.SaveChangesAsync(cancellationToken);
 

@@ -18,7 +18,7 @@ export default async function UserDetailsPage({ params }: Props) {
   return (
     <div>
       <PageHeader>
-        <BackButton href="/users" label="Back to users" />
+        <BackButton fallbackHref="/users" label="Back to users" />
 
         <PageBreadcrumbs
           items={[
