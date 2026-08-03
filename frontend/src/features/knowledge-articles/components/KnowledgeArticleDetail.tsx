@@ -8,6 +8,7 @@ import { hasPermission } from "@/features/auth/authorization";
 import { AppPermissions } from "@/features/auth/Permissions";
 import Button from "@/components/ui/Button";
 import { KnowledgeArticleDetails } from "../types";
+import { DeleteOutlined } from "@ant-design/icons";
 
 type Props = {
   article: KnowledgeArticleDetails;
@@ -56,9 +57,12 @@ export default function KnowledgeArticleDetail({ article }: Props) {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{article.title}</h1>
         {canDelete && (
-          <Button type="text" danger onClick={handleDelete}>
-            Delete
-          </Button>
+          <Button
+            icon={<DeleteOutlined />}
+            type="text"
+            danger
+            onClick={handleDelete}
+          ></Button>
         )}
       </div>
 

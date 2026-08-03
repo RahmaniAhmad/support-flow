@@ -11,6 +11,7 @@ import { hasPermission } from "@/features/auth/authorization";
 import { AppPermissions } from "@/features/auth/Permissions";
 import Button from "@/components/ui/Button";
 import KnowledgeArticleSkeleton from "./KnowledgeArticleSkeleton";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 export default function KnowledgeArticleList() {
   const { data, isLoading } = useKnowledgeArticles();
@@ -100,14 +101,18 @@ function ActionButtons({ articleId }: { articleId: string }) {
           href={`/knowledge-articles/${articleId}/edit`}
           className="text-sm text-blue-600"
         >
-          Edit
+          <EditOutlined />
         </Link>
       )}
 
       {canDelete && (
-        <Button type="text" danger onClick={handleDelete} className="text-sm">
-          Delete
-        </Button>
+        <Button
+          icon={<DeleteOutlined />}
+          type="text"
+          danger
+          onClick={handleDelete}
+          className="text-sm"
+        ></Button>
       )}
     </div>
   );
