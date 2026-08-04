@@ -19,11 +19,11 @@ import { useUpdateUser } from "../hooks/useUpdateUser";
 import FormCard from "@/components/form/FormCard";
 
 type Props = {
-  initialValues: UpdateUserFormData;
+  user: UpdateUserFormData;
   userId: string;
 };
 
-export default function UpdateUserForm({ initialValues, userId }: Props) {
+export default function UpdateUserForm({ user, userId }: Props) {
   const router = useRouter();
 
   const message = useMessage();
@@ -33,7 +33,7 @@ export default function UpdateUserForm({ initialValues, userId }: Props) {
   const { control, handleSubmit } = useForm<UpdateUserFormData>({
     resolver: zodResolver(updateUserSchema),
 
-    defaultValues: initialValues ?? {
+    defaultValues: user ?? {
       firstName: "",
       lastName: "",
       phone: "",

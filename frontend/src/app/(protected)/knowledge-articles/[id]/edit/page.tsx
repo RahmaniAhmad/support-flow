@@ -41,7 +41,7 @@ export default async function KnowledgeArticleEditPage({
           ]}
         />
       </PageHeader>
-      <KnowledgeArticleForm initialValues={article} articleId={id} />
+      <KnowledgeArticleForm article={article} articleId={id} />
     </div>
   );
 }

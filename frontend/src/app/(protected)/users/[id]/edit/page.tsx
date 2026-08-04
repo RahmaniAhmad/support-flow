@@ -39,7 +39,7 @@ export default async function Page({
           ]}
         />
       </PageHeader>
-      <UpdateUserForm initialValues={user} userId={user.id} />
+      <UpdateUserForm user={user} userId={user.id} />
     </PageContent>
   );
 }

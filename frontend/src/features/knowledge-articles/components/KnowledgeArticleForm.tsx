@@ -16,14 +16,11 @@ import { useUpdateKnowledgeArticle } from "../hooks/useUpdateKnowledgeArticle";
 import { useMessage } from "@/app/providers/MessageProvider";
 
 type Props = {
-  initialValues?: CreateArticleFormData;
+  article?: CreateArticleFormData;
   articleId?: string;
 };
 
-export default function KnowledgeArticleForm({
-  initialValues,
-  articleId,
-}: Props) {
+export default function KnowledgeArticleForm({ article, articleId }: Props) {
   const router = useRouter();
   const message = useMessage();
 
@@ -32,7 +29,7 @@ export default function KnowledgeArticleForm({
 
   const { control, handleSubmit } = useForm<CreateArticleFormData>({
     resolver: zodResolver(createArticleSchema),
-    defaultValues: initialValues ?? { title: "", content: "" },
+    defaultValues: article ?? { title: "", content: "" },
   });
 
   async function onSubmit(data: CreateArticleFormData) {
