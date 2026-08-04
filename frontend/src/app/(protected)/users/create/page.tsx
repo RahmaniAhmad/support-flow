@@ -11,7 +11,7 @@ export default async function Page() {
   return (
     <PageContent>
       <PageHeader>
-        <BackButton href="/users" label="Back to users" />
+        <BackButton fallbackHref="/users" label="Back to users" />
 
         <PageBreadcrumbs
           items={[

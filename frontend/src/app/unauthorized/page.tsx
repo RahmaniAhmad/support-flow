@@ -14,7 +14,7 @@ export default async function UnauthorizedPage() {
       <p className="mb-6 text-slate-500">
         You do not have permission to access this page.
       </p>
-      <BackButton href={href} label="Go Back" />
+      <BackButton fallbackHref={href} label="Go Back" />
     </div>
   );
 }

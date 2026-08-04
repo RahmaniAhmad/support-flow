@@ -4,6 +4,8 @@ import PageHeader from "@/components/ui/page/PageHeader";
 import { AppPermissions } from "@/features/auth/Permissions";
 import { requirePermission } from "@/features/auth/server/requirePermission";
 import UserDetailsView from "@/features/users/components/UserDetailsView";
+import { getUser } from "@/features/users/server/getUser";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{
@@ -12,13 +14,20 @@ type Props = {
 };
 
 export default async function UserDetailsPage({ params }: Props) {
-  const { id } = await params;
   await requirePermission(AppPermissions.UsersView);
+
+  const { id } = await params;
+
+  const user = await getUser(id);
+
+  if (!user) {
+    notFound();
+  }
 
   return (
     <div>
       <PageHeader>
-        <BackButton href="/users" label="Back to users" />
+        <BackButton fallbackHref="/users" label="Back to users" />
 
         <PageBreadcrumbs
           items={[
@@ -32,7 +41,7 @@ export default async function UserDetailsPage({ params }: Props) {
         />
       </PageHeader>
       <div className="space-y-6">
-        <UserDetailsView userId={id} />
+        <UserDetailsView user={user} />
       </div>
     </div>
   );

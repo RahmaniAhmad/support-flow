@@ -1,5 +1,7 @@
 using Api.Filters;
+using Api.Authorization;
 using MediatR;
+using Shared.Domain.Users;
 
 namespace Api.Features.KnowledgeBase.UpdateArticle;
 
@@ -28,7 +30,7 @@ public static class UpdateArticleEndpoint
                     : Results.NotFound();
             })
             .AddEndpointFilter<SecurityFilter>()
-            .RequireAuthorization();
+            .RequireAuthorization().RequirePermission(Permissions.KnowledgeArticlesUpdate);
 
         return app;
     }

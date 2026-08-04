@@ -1,32 +1,18 @@
 "use client";
 
-import { Card, Tag, Typography, Spin } from "antd";
+import { Card, Typography } from "antd";
 
-import { useUser } from "../hooks/useUser";
-import ResetPasswordButton from "./ResetPasswordButton";
-import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
-import { hasPermission } from "@/features/auth/authorization";
-import { AppPermissions } from "@/features/auth/Permissions";
+import UserDetailsActions from "./UserDetailsActions";
+import { UserDetails } from "../types";
+import { formatDate } from "@/shared/utils/date";
 
 const { Title } = Typography;
 
 type Props = {
-  userId: string;
+  user: UserDetails;
 };
 
-export default function UserDetailsView({ userId }: Props) {
-  const currentUser = useCurrentUser();
-
-  const { data: user, isLoading } = useUser(userId);
-
-  if (isLoading) {
-    return <Spin />;
-  }
-
-  if (!user) {
-    return <Card>User not found</Card>;
-  }
-
+export default function UserDetailsView({ user }: Props) {
   return (
     <div className="flex flex-col gap-6">
       <Card>
@@ -39,15 +25,7 @@ export default function UserDetailsView({ userId }: Props) {
             <div className="text-sm text-slate-500">{user.email}</div>
           </div>
 
-          <div className="flex items-center gap-3">
-            {hasPermission(currentUser, AppPermissions.UsersResetPassword) && (
-              <ResetPasswordButton userId={user.id} />
-            )}
-
-            <Tag color={user.isActive ? "green" : "red"}>
-              {user.isActive ? "Active" : "Inactive"}
-            </Tag>
-          </div>
+          <UserDetailsActions user={user} />
         </div>
       </Card>
 
@@ -97,14 +75,12 @@ function InfoItem({
           "font-medium text-slate-800",
           nowrap ? "whitespace-nowrap" : "",
           breakText ? "break-all" : "",
-        ].join(" ")}
+        ]
+          .filter(Boolean)
+          .join(" ")}
       >
         {value}
       </div>
     </div>
   );
-}
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleString();
 }

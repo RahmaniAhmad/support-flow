@@ -16,51 +16,29 @@ import {
 } from "../schemas/update-user.schema";
 
 import { useUpdateUser } from "../hooks/useUpdateUser";
-import { useUser } from "../hooks/useUser";
-import { Card, Spin } from "antd";
-import { useEffect } from "react";
 import FormCard from "@/components/form/FormCard";
 
 type Props = {
+  user: UpdateUserFormData;
   userId: string;
 };
 
-export default function UpdateUserForm({ userId }: Props) {
+export default function UpdateUserForm({ user, userId }: Props) {
   const router = useRouter();
 
   const message = useMessage();
 
-  const { data: user, isLoading } = useUser(userId);
-
   const mutation = useUpdateUser(userId);
 
-  const { control, handleSubmit, reset } = useForm<UpdateUserFormData>({
+  const { control, handleSubmit } = useForm<UpdateUserFormData>({
     resolver: zodResolver(updateUserSchema),
 
-    defaultValues: {
+    defaultValues: user ?? {
       firstName: "",
       lastName: "",
       phone: "",
     },
   });
-
-  useEffect(() => {
-    if (user) {
-      reset({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        phone: user.phone ?? "",
-      });
-    }
-  }, [user, reset]);
-
-  if (isLoading) {
-    return <Spin />;
-  }
-
-  if (!user) {
-    return <Card>User not found</Card>;
-  }
 
   async function onSubmit(data: UpdateUserFormData) {
     try {

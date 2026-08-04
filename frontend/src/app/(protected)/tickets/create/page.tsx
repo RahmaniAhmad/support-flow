@@ -11,7 +11,7 @@ export default async function CreateTicketPage() {
   return (
     <div>
       <PageHeader>
-        <BackButton href="/tickets" label="Back to tickets" />
+        <BackButton fallbackHref="/tickets" label="Back to tickets" />
 
         <PageBreadcrumbs
           items={[

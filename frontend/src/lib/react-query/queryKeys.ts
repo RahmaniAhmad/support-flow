@@ -45,6 +45,18 @@ export const queryKeys = {
 
     detail: (id: string) => [...queryKeys.users.details(), id] as const,
   },
+  knowledgeArticles: {
+    all: ["knowledge-articles"] as const,
+
+    lists: () => [...queryKeys.knowledgeArticles.all, "list"] as const,
+
+    list: () => [...queryKeys.knowledgeArticles.lists()] as const,
+
+    details: () => [...queryKeys.knowledgeArticles.all, "detail"] as const,
+
+    detail: (id: string) =>
+      [...queryKeys.knowledgeArticles.details(), id] as const,
+  },
   profile: {
     all: ["profile"] as const,
 

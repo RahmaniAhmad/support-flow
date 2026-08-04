@@ -1,7 +1,8 @@
 import type { TableProps } from "antd";
+import { ColumnsType } from "antd/es/table";
 
 export type DataTableProps<T extends object> = {
-  columns: TableProps<T>["columns"];
+  columns: ColumnsType<T>;
 
   dataSource: T[];
 
@@ -10,6 +11,8 @@ export type DataTableProps<T extends object> = {
   rowKey: string | ((record: T) => string);
 
   pagination?: TableProps<T>["pagination"];
+
+  skeletonRows?: number;
 
   onChange?: TableProps<T>["onChange"];
 

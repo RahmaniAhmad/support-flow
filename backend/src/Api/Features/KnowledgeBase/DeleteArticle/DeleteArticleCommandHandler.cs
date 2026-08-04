@@ -35,8 +35,9 @@ public sealed class DeleteArticleCommandHandler
             return false;
         }
 
-        _db.KnowledgeArticles.Remove(article);
+        article.Delete();
 
+        _db.KnowledgeArticles.Remove(article);
         await _db.SaveChangesAsync(cancellationToken);
 
         return true;

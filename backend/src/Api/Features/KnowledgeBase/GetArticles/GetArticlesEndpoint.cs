@@ -1,4 +1,6 @@
 using MediatR;
+using Api.Authorization;
+using Shared.Domain.Users;
 
 namespace Api.Features.KnowledgeBase.GetArticles;
 
@@ -18,7 +20,7 @@ public static class GetArticlesEndpoint
 
                 return Results.Ok(articles);
             })
-            .RequireAuthorization();
+            .RequireAuthorization().RequirePermission(Permissions.KnowledgeArticlesView);
 
         return app;
     }

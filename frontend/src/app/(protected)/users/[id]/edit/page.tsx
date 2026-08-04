@@ -5,19 +5,28 @@ import PageHeader from "@/components/ui/page/PageHeader";
 import { AppPermissions } from "@/features/auth/Permissions";
 import { requirePermission } from "@/features/auth/server/requirePermission";
 import UpdateUserForm from "@/features/users/components/UpdateUserForm";
+import { getUser } from "@/features/users/server/getUser";
+import { notFound } from "next/navigation";
 
 export default async function Page({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
   await requirePermission(AppPermissions.UsersUpdate);
+
+  const { id } = await params;
+
+  const user = await getUser(id);
+
+  if (!user) {
+    notFound();
+  }
 
   return (
     <PageContent>
       <PageHeader>
-        <BackButton href="/users" label="Back to users" />
+        <BackButton fallbackHref="/users" label="Back to users" />
 
         <PageBreadcrumbs
           items={[
@@ -30,7 +39,7 @@ export default async function Page({
           ]}
         />
       </PageHeader>
-      <UpdateUserForm userId={id} />
+      <UpdateUserForm user={user} userId={user.id} />
     </PageContent>
   );
 }

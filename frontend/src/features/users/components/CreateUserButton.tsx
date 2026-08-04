@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "antd";
+import Button from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
 
 export default function CreateUserButton() {
