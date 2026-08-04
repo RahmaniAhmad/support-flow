@@ -5,6 +5,8 @@ import { AppPermissions } from "@/features/auth/Permissions";
 import { requirePermission } from "@/features/auth/server/requirePermission";
 import TicketComments from "@/features/tickets/comments/components/TicketComments";
 import TicketDetailsView from "@/features/tickets/components/TicketDetailsView";
+import { getTicket } from "@/features/tickets/server/getTicket";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{
@@ -13,8 +15,15 @@ type Props = {
 };
 
 export default async function TicketDetailsPage({ params }: Props) {
-  const { id } = await params;
   await requirePermission(AppPermissions.TicketsView);
+
+  const { id } = await params;
+
+  const ticket = await getTicket(id);
+
+  if (!ticket) {
+    notFound();
+  }
 
   return (
     <div>
@@ -33,7 +42,7 @@ export default async function TicketDetailsPage({ params }: Props) {
         />
       </PageHeader>
       <div className="space-y-6">
-        <TicketDetailsView ticketId={id} />
+        <TicketDetailsView ticket={ticket} />
 
         <TicketComments ticketId={id} />
       </div>

@@ -1,27 +1,18 @@
 "use client";
 
-import { Card, Tag, Typography, Spin } from "antd";
+import { Card, Tag, Typography } from "antd";
 
-import { useTicket } from "../hooks/useTicket";
 import { statusColor } from "../utils/statusColor";
+import { TicketDetails } from "../types";
+import { formatDate } from "@/shared/utils/date";
 
 const { Title, Paragraph } = Typography;
 
 type Props = {
-  ticketId: string;
+  ticket: TicketDetails;
 };
 
-export default function TicketDetailsView({ ticketId }: Props) {
-  const { data: ticket, isLoading } = useTicket(ticketId);
-
-  if (isLoading) {
-    return <Spin />;
-  }
-
-  if (!ticket) {
-    return <Card>Ticket not found</Card>;
-  }
-
+export default function TicketDetailsView({ ticket }: Props) {
   return (
     <div className="flex flex-col gap-6">
       <Card>
@@ -93,8 +84,4 @@ function InfoItem({
       </div>
     </div>
   );
-}
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleString();
 }
