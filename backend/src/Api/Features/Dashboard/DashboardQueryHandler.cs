@@ -37,8 +37,11 @@ public sealed class DashboardQueryHandler
         .ToListAsync(cancellationToken);
 
         var openTickets = 0;
+        var assignedTickets = 0;
         var inProgressTickets = 0;
+        var pendingTickets = 0;
         var resolvedTickets = 0;
+        var reopenedTickets = 0;
         var closedTickets = 0;
         var unassignedTickets = 0;
 
@@ -46,16 +49,28 @@ public sealed class DashboardQueryHandler
         {
             switch (ticket.Status)
             {
-                case TicketStatus.Open or TicketStatus.Reopened:
+                case TicketStatus.Open:
                     openTickets++;
+                    break;
+
+                case TicketStatus.Assigned:
+                    assignedTickets++;
                     break;
 
                 case TicketStatus.InProgress:
                     inProgressTickets++;
                     break;
 
+                case TicketStatus.Pending:
+                    pendingTickets++;
+                    break;
+
                 case TicketStatus.Resolved:
                     resolvedTickets++;
+                    break;
+
+                case TicketStatus.Reopened:
+                    reopenedTickets++;
                     break;
 
                 case TicketStatus.Closed:
@@ -68,10 +83,13 @@ public sealed class DashboardQueryHandler
         }
 
         return new DashboardResponse(
-                 openTickets,
-                 inProgressTickets,
-                 resolvedTickets,
-                 closedTickets,
-                 unassignedTickets);
+            openTickets,
+            assignedTickets,
+            inProgressTickets,
+            pendingTickets,
+            resolvedTickets,
+            reopenedTickets,
+            closedTickets,
+            unassignedTickets);
     }
 }

@@ -2,7 +2,10 @@ namespace Api.Features.Dashboard;
 
 public sealed record DashboardResponse(
     int OpenTickets,
+    int AssignedTickets,
     int InProgressTickets,
+    int PendingTickets,
     int ResolvedTickets,
-    int closedTickets,
+    int ReopenedTickets,
+    int ClosedTickets,
     int UnassignedTickets);

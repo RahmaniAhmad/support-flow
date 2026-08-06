@@ -37,7 +37,7 @@ public sealed class StartTicketProgressCommandHandler
         if (!_accessService.CanStartProgress(ticket))
             throw new UnauthorizedAccessException();
 
-        ticket.StartProgress();
+        ticket.StartProgress(_currentUser.UserId);
 
         await _db.SaveChangesAsync(cancellationToken);
     }

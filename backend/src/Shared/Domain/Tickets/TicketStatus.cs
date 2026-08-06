@@ -3,8 +3,10 @@ namespace Shared.Domain.Tickets;
 public enum TicketStatus
 {
     Open = 0,
-    InProgress = 1,
-    Resolved = 2,
-    Closed = 3,
-    Reopened = 4
+    Assigned = 1,
+    InProgress = 2,
+    Pending = 3,
+    Resolved = 4,
+    Closed = 5,
+    Reopened = 6
 }

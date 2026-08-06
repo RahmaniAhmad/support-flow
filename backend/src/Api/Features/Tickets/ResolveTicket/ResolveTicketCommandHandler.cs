@@ -35,7 +35,7 @@ public sealed class ResolveTicketCommandHandler
         if (!_accessService.CanResolveTicket(ticket))
             throw new UnauthorizedAccessException();
 
-        ticket.Resolve();
+        ticket.Resolve(_currentUser.UserId);
 
         await _db.SaveChangesAsync(cancellationToken);
     }

@@ -7,12 +7,26 @@ public static class TicketWorkflow
         {
             [TicketStatus.Open] =
             [
+                TicketStatus.Assigned,
+                TicketStatus.Closed
+            ],
+
+            [TicketStatus.Assigned] =
+            [
                 TicketStatus.InProgress,
                 TicketStatus.Closed
             ],
 
             [TicketStatus.InProgress] =
             [
+                TicketStatus.Pending,
+                TicketStatus.Resolved,
+                TicketStatus.Closed
+            ],
+
+            [TicketStatus.Pending] =
+            [
+                TicketStatus.InProgress,
                 TicketStatus.Resolved,
                 TicketStatus.Closed
             ],
@@ -22,13 +36,15 @@ public static class TicketWorkflow
                 TicketStatus.Closed,
                 TicketStatus.Reopened
             ],
+
             [TicketStatus.Closed] =
             [
                 TicketStatus.Reopened
             ],
+
             [TicketStatus.Reopened] =
             [
-                TicketStatus.InProgress,
+                TicketStatus.Assigned,
                 TicketStatus.Closed
             ]
         };

@@ -22,7 +22,7 @@ export default function DashboardPage() {
         <PageTitle>Dashboard</PageTitle>
       </PageHeader>
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
         <StatCard
           title="Open"
           value={data.openTickets}
@@ -30,15 +30,33 @@ export default function DashboardPage() {
         />
 
         <StatCard
+          title="Assigned"
+          value={data.assignedTickets}
+          className="bg-cyan-100 text-cyan-600"
+        />
+
+        <StatCard
           title="In Progress"
           value={data.inProgressTickets}
-          className="bg-orange-100 text-purple-600"
+          className="bg-orange-100 text-orange-600"
+        />
+
+        <StatCard
+          title="Pending"
+          value={data.pendingTickets}
+          className="bg-yellow-100 text-yellow-700"
         />
 
         <StatCard
           title="Resolved"
           value={data.resolvedTickets}
           className="bg-green-100 text-green-600"
+        />
+
+        <StatCard
+          title="Reopened"
+          value={data.reopenedTickets}
+          className="bg-purple-100 text-purple-600"
         />
 
         <StatCard
@@ -50,7 +68,7 @@ export default function DashboardPage() {
         <StatCard
           title="Unassigned"
           value={data.unassignedTickets}
-          className="bg-red-100 text-amber-600"
+          className="bg-red-100 text-red-600"
         />
       </div>
     </div>
