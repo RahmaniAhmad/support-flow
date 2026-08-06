@@ -2,11 +2,11 @@ using Api.Filters;
 using MediatR;
 using Shared.Authentication;
 
-namespace Api.Features.Tickets.StartTicketProgress;
+namespace Api.Features.Tickets.StartProgress;
 
 public static class StartTicketProgressEndpoint
 {
-    public static IEndpointRouteBuilder MapStartTicketProgress(
+    public static IEndpointRouteBuilder MapStartProgress(
         this IEndpointRouteBuilder app)
     {
         app.MapPost(
@@ -17,7 +17,7 @@ public static class StartTicketProgressEndpoint
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
-                var command = new StartTicketProgressCommand(ticketId);
+                var command = new StartProgressCommand(ticketId);
 
                 await sender.Send(command, cancellationToken);
 

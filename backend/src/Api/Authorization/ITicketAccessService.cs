@@ -7,6 +7,7 @@ public interface ITicketAccessService
 {
     bool CanAccessTicket(Ticket ticket);
     bool CanStartProgress(Ticket ticket);
+    bool CanMoveToPending(Ticket ticket);
     bool CanAssignTicketTo(Ticket ticket, User assignedUser);
     bool CanResolveTicket(Ticket ticket);
     bool CanCloseTicket(Ticket ticket);
