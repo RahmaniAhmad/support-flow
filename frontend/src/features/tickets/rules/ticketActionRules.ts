@@ -1,29 +1,34 @@
-import { TicketStatus } from "@/types/ticket";
+import { TicketListItem } from "../types";
 
-export function canAssignTicket(status: TicketStatus) {
-  return status === "Open" || status === "Reopened";
+export function canAssignTicket(ticket: TicketListItem): boolean {
+  return ticket.status === "Open" || ticket.status === "Reopened";
 }
 
-export function canStartProgress(status: TicketStatus) {
-  return status === "Assigned" || status === "Reopened" || status === "Pending";
+export function canStartProgress(ticket: TicketListItem): boolean {
+  return (
+    !!ticket.assignedToUserId &&
+    (ticket.status === "Assigned" ||
+      ticket.status === "Reopened" ||
+      ticket.status === "Pending")
+  );
 }
 
-export function canResolveTicket(status: TicketStatus) {
-  return status === "InProgress";
+export function canResolveTicket(ticket: TicketListItem): boolean {
+  return ticket.status === "InProgress";
 }
 
-export function canMoveToPending(status: TicketStatus): boolean {
-  return status === "InProgress";
+export function canMoveToPending(ticket: TicketListItem): boolean {
+  return ticket.status === "InProgress";
 }
 
-export function canCloseTicket(status: TicketStatus) {
-  return status !== "Closed";
+export function canCloseTicket(ticket: TicketListItem): boolean {
+  return ticket.status !== "Closed";
 }
 
-export function canReopenTicket(status: TicketStatus) {
-  return status === "Resolved" || status === "Closed";
+export function canReopenTicket(ticket: TicketListItem): boolean {
+  return ticket.status === "Resolved" || ticket.status === "Closed";
 }
 
-export function canAddComment(status: TicketStatus) {
-  return status !== "Closed";
+export function canAddComment(ticket: TicketListItem): boolean {
+  return ticket.status !== "Closed";
 }

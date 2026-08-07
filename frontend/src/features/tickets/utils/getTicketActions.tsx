@@ -30,7 +30,7 @@ export function getTicketActions({ ticket, can }: Params): MenuProps["items"] {
     },
   ];
 
-  if (can(AppPermissions.TicketsAssign) && canAssignTicket(ticket.status)) {
+  if (can(AppPermissions.TicketsAssign) && canAssignTicket(ticket)) {
     actions.push({
       key: TicketActionKeys.Assign,
       label: (
@@ -42,48 +42,42 @@ export function getTicketActions({ ticket, can }: Params): MenuProps["items"] {
     });
   }
 
-  if (
-    can(AppPermissions.TicketsStartProgress) &&
-    canStartProgress(ticket.status)
-  ) {
+  if (can(AppPermissions.TicketsStartProgress) && canStartProgress(ticket)) {
     actions.push({
       key: TicketActionKeys.StartProgress,
       label: "Start progress",
     });
   }
 
-  if (
-    can(AppPermissions.TicketsMoveToPending) &&
-    canMoveToPending(ticket.status)
-  ) {
+  if (can(AppPermissions.TicketsMoveToPending) && canMoveToPending(ticket)) {
     actions.push({
       key: TicketActionKeys.MoveToPending,
       label: "Move to pending",
     });
   }
 
-  if (can(AppPermissions.TicketsResolve) && canResolveTicket(ticket.status)) {
+  if (can(AppPermissions.TicketsResolve) && canResolveTicket(ticket)) {
     actions.push({
       key: TicketActionKeys.Resolve,
       label: "Resolve",
     });
   }
 
-  if (can(AppPermissions.TicketsClose) && canCloseTicket(ticket.status)) {
+  if (can(AppPermissions.TicketsClose) && canCloseTicket(ticket)) {
     actions.push({
       key: TicketActionKeys.Close,
       label: "Close",
     });
   }
 
-  if (can(AppPermissions.TicketsReopen) && canReopenTicket(ticket.status)) {
+  if (can(AppPermissions.TicketsReopen) && canReopenTicket(ticket)) {
     actions.push({
       key: TicketActionKeys.Reopen,
       label: "Reopen",
     });
   }
 
-  if (can(AppPermissions.TicketsComment) && canAddComment(ticket.status)) {
+  if (can(AppPermissions.TicketsComment) && canAddComment(ticket)) {
     actions.push(
       {
         type: "divider",

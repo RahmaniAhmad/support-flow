@@ -84,6 +84,7 @@ public sealed class GetTicketsQueryHandler
                 x.Subject,
                 x.Description,
                 x.Status,
+                x.AssignedToUserId,
                 x.AssignedToUserId != null
                 ? _db.Users
                 .Where(u => u.Id == x.AssignedToUserId)
