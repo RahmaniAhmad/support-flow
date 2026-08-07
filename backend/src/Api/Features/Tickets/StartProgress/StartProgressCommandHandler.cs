@@ -4,17 +4,17 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Authentication;
 
-namespace Api.Features.Tickets.StartTicketProgress;
+namespace Api.Features.Tickets.StartProgress;
 
-public sealed class StartTicketProgressCommandHandler
-    : IRequestHandler<StartTicketProgressCommand>
+public sealed class StartProgressCommandHandler
+    : IRequestHandler<StartProgressCommand>
 {
     private readonly SupportFlowDbContext _db;
     private readonly ICurrentUser _currentUser;
     private readonly ITicketAccessService _accessService;
 
 
-    public StartTicketProgressCommandHandler(SupportFlowDbContext db, ICurrentUser currentUser, ITicketAccessService accessService)
+    public StartProgressCommandHandler(SupportFlowDbContext db, ICurrentUser currentUser, ITicketAccessService accessService)
     {
         _db = db;
         _currentUser = currentUser;
@@ -22,7 +22,7 @@ public sealed class StartTicketProgressCommandHandler
     }
 
     public async Task Handle(
-        StartTicketProgressCommand request,
+        StartProgressCommand request,
         CancellationToken cancellationToken)
     {
         var ticket = await _db.Tickets
@@ -37,7 +37,7 @@ public sealed class StartTicketProgressCommandHandler
         if (!_accessService.CanStartProgress(ticket))
             throw new UnauthorizedAccessException();
 
-        ticket.StartProgress();
+        ticket.StartProgress(_currentUser.UserId);
 
         await _db.SaveChangesAsync(cancellationToken);
     }

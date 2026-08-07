@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import CreateTicketButton from "./CreateTicketButton";
 import TicketFilters from "./TicketFilters";
 
 import { useTickets } from "../hooks/useTickets";
 import { getTicketColumns } from "./TicketTableColumns";
-import DataTable from "@/components/ui/table/DataTable";
 import PageTitle from "@/components/ui/page/PageTitle";
 import { TicketListFilters } from "../types";
 import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
+import TicketTable from "./TicketTable";
 
 export default function TicketList() {
   const currentUser = useCurrentUser();
@@ -26,6 +26,8 @@ export default function TicketList() {
   });
 
   const { data, isLoading } = useTickets(filters);
+
+  const columns = useMemo(() => getTicketColumns(currentUser), [currentUser]);
 
   return (
     <div>
@@ -69,35 +71,22 @@ export default function TicketList() {
         }
       />
 
-      <DataTable
-        columns={getTicketColumns(currentUser)}
-        dataSource={data?.items ?? []}
+      <TicketTable
+        columns={columns}
+        data={data?.items ?? []}
         loading={isLoading}
-        rowKey="id"
         pagination={{
           current: data?.page,
           pageSize: data?.pageSize,
           total: data?.totalCount,
-
-          onChange(page, pageSize) {
-            setFilters({
-              ...filters,
-              page,
-              pageSize,
-            });
-          },
         }}
-        onChange={(pagination, filters, sorter) => {
-          const s = Array.isArray(sorter) ? sorter[0] : sorter;
-
+        onPaginationChange={(page, pageSize) =>
           setFilters((prev) => ({
             ...prev,
-            page: pagination.current ?? 1,
-            pageSize: pagination.pageSize ?? 10,
-            sortBy: s.field?.toString(),
-            descending: s.order !== "ascend",
-          }));
-        }}
+            page,
+            pageSize,
+          }))
+        }
       />
     </div>
   );

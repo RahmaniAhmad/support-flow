@@ -4,16 +4,19 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Authentication;
 
-namespace Api.Features.Tickets.ResolveTicket;
+namespace Api.Features.Tickets.MoveTicketToPending;
 
-public sealed class ResolveTicketCommandHandler
-    : IRequestHandler<ResolveTicketCommand>
+public sealed class MoveTicketToPendingCommandHandler
+    : IRequestHandler<MoveTicketToPendingCommand>
 {
     private readonly SupportFlowDbContext _db;
     private readonly ICurrentUser _currentUser;
     private readonly ITicketAccessService _accessService;
 
-    public ResolveTicketCommandHandler(SupportFlowDbContext db, ICurrentUser currentUser, ITicketAccessService accessService)
+    public MoveTicketToPendingCommandHandler(
+        SupportFlowDbContext db,
+        ICurrentUser currentUser,
+        ITicketAccessService accessService)
     {
         _db = db;
         _currentUser = currentUser;
@@ -21,7 +24,7 @@ public sealed class ResolveTicketCommandHandler
     }
 
     public async Task Handle(
-        ResolveTicketCommand request,
+        MoveTicketToPendingCommand request,
         CancellationToken cancellationToken)
     {
         var ticket = await _db.Tickets
@@ -30,12 +33,13 @@ public sealed class ResolveTicketCommandHandler
                 cancellationToken);
 
         if (ticket is null)
-            throw new InvalidOperationException("Ticket not found.");
+            throw new InvalidOperationException(
+                "Ticket not found.");
 
-        if (!_accessService.CanResolveTicket(ticket))
+        if (!_accessService.CanMoveToPending(ticket))
             throw new UnauthorizedAccessException();
 
-        ticket.Resolve(_currentUser.UserId);
+        ticket.MoveToPending(_currentUser.UserId);
 
         await _db.SaveChangesAsync(cancellationToken);
     }

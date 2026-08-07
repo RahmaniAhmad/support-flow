@@ -1,5 +1,6 @@
 using MediatR;
 using Shared.Contracts;
+using Shared.Contracts.Sorting;
 using Shared.Domain.Tickets;
 
 namespace Api.Features.Tickets.GetTickets;
@@ -11,5 +12,5 @@ public sealed record GetTicketsQuery(
     TicketStatus? Status = null,
     TicketView View = TicketView.All,
     string? SortBy = null,
-    bool Descending = true)
+    SortDirection SortDirection = SortDirection.Desc)
     : IRequest<PagedResult<GetTicketsResponse>>;

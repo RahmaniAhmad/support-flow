@@ -26,6 +26,10 @@ export async function createTicket(request: CreateTicketRequest) {
   return data;
 }
 
+export async function startProgressTicket(ticketId: string) {
+  await api.post(`/tickets/${ticketId}/start-progress`);
+}
+
 export async function resolveTicket(ticketId: string) {
   const { data } = await api.post(`/tickets/${ticketId}/resolve`);
 
@@ -40,6 +44,12 @@ export async function reopenTicket(ticketId: string) {
 
 export async function closeTicket(ticketId: string) {
   const { data } = await api.post(`/tickets/${ticketId}/close`);
+
+  return data;
+}
+
+export async function moveTicketToPending(ticketId: string) {
+  const { data } = await api.post(`/tickets/${ticketId}/move-to-pending`);
 
   return data;
 }

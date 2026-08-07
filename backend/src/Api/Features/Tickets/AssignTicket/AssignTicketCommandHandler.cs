@@ -2,6 +2,7 @@ using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Shared.Authentication;
 using Shared.Domain.Users;
 namespace Api.Features.Tickets.AssignTicket;
 
@@ -9,11 +10,13 @@ public sealed class AssignTicketCommandHandler
     : IRequestHandler<AssignTicketCommand>
 {
     private readonly SupportFlowDbContext _db;
+    private readonly ICurrentUser _currentUser;
     private readonly ITicketAccessService _accessService;
 
-    public AssignTicketCommandHandler(SupportFlowDbContext db, ITicketAccessService accessService)
+    public AssignTicketCommandHandler(SupportFlowDbContext db, ICurrentUser currentUser, ITicketAccessService accessService)
     {
         _db = db;
+        _currentUser = currentUser;
         _accessService = accessService;
     }
 
@@ -51,7 +54,7 @@ public sealed class AssignTicketCommandHandler
                 "You are not allowed to assign this ticket.");
         }
 
-        ticket.AssignTo(request.AssignedToUserId);
+        ticket.AssignTo(_currentUser.UserId, request.AssignedToUserId);
 
         await _db.SaveChangesAsync(cancellationToken);
     }

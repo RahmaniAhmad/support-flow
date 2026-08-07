@@ -63,6 +63,24 @@ public sealed class TicketAccessService : ITicketAccessService
         };
     }
 
+    public bool CanMoveToPending(Ticket ticket)
+    {
+        return _currentUser.Role switch
+        {
+            UserRole.SuperAdmin => true,
+
+            UserRole.Admin =>
+                IsSameCompany(ticket),
+
+            UserRole.Agent =>
+                 IsSameCompany(ticket)
+                &&
+                IsAssignedAgent(ticket),
+
+            _ => false
+        };
+    }
+
     public bool CanAssignTicketTo(Ticket ticket, User assignedUser)
     {
         return _currentUser.Role switch

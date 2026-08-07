@@ -8,6 +8,7 @@ export const AppPermissions = {
   TicketsAssign: "tickets:assign",
   TicketsUnassign: "tickets:unassign",
   TicketsStartProgress: "tickets:start_progress",
+  TicketsMoveToPending: "tickets:move_to_pending",
   TicketsResolve: "tickets:resolve",
   TicketsReopen: "tickets:reopen",
   TicketsClose: "tickets:close",

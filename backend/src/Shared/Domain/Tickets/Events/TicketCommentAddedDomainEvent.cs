@@ -5,5 +5,5 @@ namespace Shared.Domain.Tickets.Events;
 public sealed record TicketCommentAddedDomainEvent(
     Guid TicketId,
     Guid CompanyId,
-    Guid UserId,
+    Guid CommentedByUserId,
     Guid CommentId) : IDomainEvent;

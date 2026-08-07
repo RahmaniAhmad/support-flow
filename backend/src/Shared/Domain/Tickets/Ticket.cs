@@ -72,60 +72,85 @@ public sealed class Ticket : AggregateRoot
         TicketNumber = ticketNumber;
     }
 
-    public void AssignTo(Guid userId)
+    public void AssignTo(Guid assignedByUserId, Guid assignedToUserId)
     {
-        if (userId == Guid.Empty)
+        if (assignedByUserId == Guid.Empty)
+        {
+            throw new ArgumentException(
+                "A valid user is required to assign the ticket.",
+                nameof(assignedByUserId));
+        }
+
+        if (assignedToUserId == Guid.Empty)
         {
             throw new ArgumentException(
                 "Assigned user id is required.",
-                nameof(userId));
+                nameof(assignedToUserId));
         }
 
-        if (Status is TicketStatus.Closed or TicketStatus.Resolved)
-            throw new InvalidOperationException(
-                $"Cannot assign a ticket in {Status} status.");
-
-        if (AssignedToUserId == userId)
+        if (AssignedToUserId == assignedToUserId)
             throw new InvalidOperationException(
                 "Ticket is already assigned to this user.");
 
+        EnsureTransitionAllowed(TicketStatus.Assigned);
 
-        AssignedToUserId = userId;
-        UpdatedAtUtc = DateTime.UtcNow;
+        AssignedToUserId = assignedToUserId;
+
+        ChangeStatus(TicketStatus.Assigned);
 
         AddDomainEvent(
             new TicketAssignedDomainEvent(
                 Id,
                 CompanyId,
-                userId));
+                assignedByUserId,
+                assignedToUserId));
     }
 
-    public void StartProgress()
+    public void StartProgress(Guid startedByUserId)
     {
-        if (AssignedToUserId is null)
-            throw new InvalidOperationException(
-                "Cannot start progress on an unassigned ticket.");
-
+        EnsureAssignedAgent(startedByUserId);
 
         TransitionTo(
             TicketStatus.InProgress,
-            new TicketInProgressDomainEvent(Id, CompanyId, AssignedToUserId.Value));
+            new TicketProgressStartedDomainEvent(
+                Id,
+                CompanyId,
+                startedByUserId));
     }
 
-    public void Resolve()
+    public void MoveToPending(Guid movedToPendingByUserId)
     {
-        if (AssignedToUserId is null)
-            throw new InvalidOperationException(
-                "Only assigned tickets can be resolved.");
+        EnsureAssignedAgent(movedToPendingByUserId);
+
+        TransitionTo(
+            TicketStatus.Pending,
+            new TicketPendingDomainEvent(
+                Id,
+                CompanyId,
+                movedToPendingByUserId));
+    }
+
+    public void Resolve(Guid resolvedByUserId)
+    {
+        EnsureAssignedAgent(resolvedByUserId);
 
         TransitionTo(
             TicketStatus.Resolved,
-            new TicketResolvedDomainEvent(Id, CompanyId, AssignedToUserId.Value));
-
+            new TicketResolvedDomainEvent(
+                Id,
+                CompanyId,
+                resolvedByUserId));
     }
 
     public void Close(Guid closedByUserId)
     {
+        if (closedByUserId == Guid.Empty)
+        {
+            throw new ArgumentException(
+                "A valid user is required to close the ticket.",
+                nameof(closedByUserId));
+        }
+
         TransitionTo(
             TicketStatus.Closed,
             new TicketClosedDomainEvent(Id, CompanyId, closedByUserId));
@@ -133,13 +158,27 @@ public sealed class Ticket : AggregateRoot
 
     public void Reopen(Guid reopenedByUserId)
     {
+        if (reopenedByUserId == Guid.Empty)
+        {
+            throw new ArgumentException(
+                "A valid user is required to reopen the ticket.",
+                nameof(reopenedByUserId));
+        }
+
         TransitionTo(
             TicketStatus.Reopened,
             new TicketReopenedDomainEvent(Id, CompanyId, reopenedByUserId));
     }
 
-    public Guid AddComment(Guid userId, string content)
+    public Guid AddComment(Guid commentedByUserId, string content)
     {
+        if (commentedByUserId == Guid.Empty)
+        {
+            throw new ArgumentException(
+                "A valid user is required to add a comment.",
+                nameof(commentedByUserId));
+        }
+
         if (string.IsNullOrWhiteSpace(content))
             throw new ArgumentException(
                 "Comment cannot be empty.");
@@ -150,7 +189,7 @@ public sealed class Ticket : AggregateRoot
         var comment = TicketComment.Create
         (
              Id,
-             userId,
+             commentedByUserId,
              content
         );
 
@@ -162,26 +201,56 @@ public sealed class Ticket : AggregateRoot
             new TicketCommentAddedDomainEvent(
                 Id,
                 CompanyId,
-                userId,
+                commentedByUserId,
                 comment.Id));
 
         return comment.Id;
+    }
+
+    private void EnsureAssignedAgent(Guid actingUserId)
+    {
+        if (actingUserId == Guid.Empty)
+        {
+            throw new ArgumentException(
+                "A valid user is required.",
+                nameof(actingUserId));
+        }
+
+        if (AssignedToUserId is null)
+        {
+            throw new InvalidOperationException(
+                "Ticket must be assigned to an agent.");
+        }
+
+        if (AssignedToUserId != actingUserId)
+        {
+            throw new InvalidOperationException(
+                "Only the assigned agent can perform this action.");
+        }
+    }
+
+    private void ChangeStatus(TicketStatus newStatus)
+    {
+        Status = newStatus;
+        UpdatedAtUtc = DateTime.UtcNow;
+    }
+
+    private void EnsureTransitionAllowed(TicketStatus newStatus)
+    {
+        if (!TicketWorkflow.CanTransition(Status, newStatus))
+        {
+            throw new InvalidOperationException(
+                $"Cannot transition ticket from {Status} to {newStatus}.");
+        }
     }
 
     private void TransitionTo(
         TicketStatus newStatus,
         IDomainEvent domainEvent)
     {
-        if (!TicketWorkflow.CanTransition(
-                Status,
-                newStatus))
-        {
-            throw new InvalidOperationException(
-                $"Cannot transition ticket from {Status} to {newStatus}.");
-        }
+        EnsureTransitionAllowed(newStatus);
 
-        Status = newStatus;
-        UpdatedAtUtc = DateTime.UtcNow;
+        ChangeStatus(newStatus);
 
         AddDomainEvent(domainEvent);
     }

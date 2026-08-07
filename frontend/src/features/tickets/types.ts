@@ -9,6 +9,7 @@ export interface TicketListItem {
   status: TicketStatus;
   priority: TicketPriority;
   companyName?: string;
+  assignedToUserId?: string;
   assigneeName?: string;
   createdName?: string;
   createdAtUtc: string;
