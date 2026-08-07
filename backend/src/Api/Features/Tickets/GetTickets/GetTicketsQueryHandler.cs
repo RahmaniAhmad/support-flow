@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Authentication;
 using Shared.Contracts;
+using Shared.Contracts.Sorting;
 using Shared.Domain.Tickets;
 
 namespace Api.Features.Tickets.GetTickets;
@@ -60,15 +61,15 @@ public sealed class GetTicketsQueryHandler
 
         query = request.SortBy?.ToLowerInvariant() switch
         {
-            "subject" => request.Descending
+            "subject" => request.SortDirection == SortDirection.Desc
                 ? query.OrderByDescending(x => x.Subject)
                 : query.OrderBy(x => x.Subject),
 
-            "status" => request.Descending
+            "status" => request.SortDirection == SortDirection.Desc
                 ? query.OrderByDescending(x => x.Status)
                 : query.OrderBy(x => x.Status),
 
-            _ => request.Descending
+            _ => request.SortDirection == SortDirection.Desc
                 ? query.OrderByDescending(x => x.CreatedAtUtc)
                 : query.OrderBy(x => x.CreatedAtUtc)
         };

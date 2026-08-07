@@ -2,24 +2,20 @@ import Link from "next/link";
 import type { MenuProps } from "antd";
 
 import { TicketListItem } from "../types";
-
 import AssignTicketAction from "../assign/components/AssignTicketAction";
-import CloseTicketAction from "../components/CloseTicketAction";
-import ReopenTicketAction from "../components/ReopenTicketAction";
-import ResolveTicketAction from "../components/ResolveTicketAction";
-import StartProgressAction from "../components/StartProgressAction";
-import AddCommentButton from "../comments/components/AddCommentButton";
-
 import {
+  canAddComment,
   canAssignTicket,
   canCloseTicket,
+  canMoveToPending,
   canReopenTicket,
-  canAddComment,
   canResolveTicket,
   canStartProgress,
 } from "../rules/ticketActionRules";
 
 import { AppPermissions, Permission } from "@/features/auth/Permissions";
+import AddCommentAction from "../comments/components/AddCommentAction";
+import { TicketActionKeys } from "../constants/ticketActions";
 
 type Params = {
   ticket: TicketListItem;
@@ -27,16 +23,16 @@ type Params = {
 };
 
 export function getTicketActions({ ticket, can }: Params): MenuProps["items"] {
-  const actions: MenuProps["items"] = [];
-
-  actions.push({
-    key: "details",
-    label: <Link href={`/tickets/${ticket.id}`}>View details</Link>,
-  });
+  const actions: MenuProps["items"] = [
+    {
+      key: TicketActionKeys.Details,
+      label: <Link href={`/tickets/${ticket.id}`}>View details</Link>,
+    },
+  ];
 
   if (can(AppPermissions.TicketsAssign) && canAssignTicket(ticket.status)) {
     actions.push({
-      key: "assign",
+      key: TicketActionKeys.Assign,
       label: (
         <AssignTicketAction
           ticketId={ticket.id}
@@ -51,29 +47,39 @@ export function getTicketActions({ ticket, can }: Params): MenuProps["items"] {
     canStartProgress(ticket.status)
   ) {
     actions.push({
-      key: "start-progress",
-      label: <StartProgressAction ticketId={ticket.id} />,
+      key: TicketActionKeys.StartProgress,
+      label: "Start progress",
+    });
+  }
+
+  if (
+    can(AppPermissions.TicketsMoveToPending) &&
+    canMoveToPending(ticket.status)
+  ) {
+    actions.push({
+      key: TicketActionKeys.MoveToPending,
+      label: "Move to pending",
     });
   }
 
   if (can(AppPermissions.TicketsResolve) && canResolveTicket(ticket.status)) {
     actions.push({
-      key: "resolve",
-      label: <ResolveTicketAction ticketId={ticket.id} />,
+      key: TicketActionKeys.Resolve,
+      label: "Resolve",
     });
   }
 
   if (can(AppPermissions.TicketsClose) && canCloseTicket(ticket.status)) {
     actions.push({
-      key: "close",
-      label: <CloseTicketAction ticketId={ticket.id} />,
+      key: TicketActionKeys.Close,
+      label: "Close",
     });
   }
 
   if (can(AppPermissions.TicketsReopen) && canReopenTicket(ticket.status)) {
     actions.push({
-      key: "reopen",
-      label: <ReopenTicketAction ticketId={ticket.id} />,
+      key: TicketActionKeys.Reopen,
+      label: "Reopen",
     });
   }
 
@@ -83,12 +89,11 @@ export function getTicketActions({ ticket, can }: Params): MenuProps["items"] {
         type: "divider",
       },
       {
-        key: "comment",
+        key: TicketActionKeys.Comment,
         label: (
-          <AddCommentButton
+          <AddCommentAction
             ticketId={ticket.id}
             ticketSubject={ticket.subject}
-            variant="action"
           />
         ),
       },
@@ -97,7 +102,7 @@ export function getTicketActions({ ticket, can }: Params): MenuProps["items"] {
 
   if (ticket.status === "Closed") {
     actions.push({
-      key: "history",
+      key: TicketActionKeys.History,
       label: "View history",
     });
   }

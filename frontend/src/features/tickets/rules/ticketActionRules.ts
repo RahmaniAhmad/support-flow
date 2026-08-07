@@ -5,10 +5,14 @@ export function canAssignTicket(status: TicketStatus) {
 }
 
 export function canStartProgress(status: TicketStatus) {
-  return status === "Assigned" || status === "Reopened";
+  return status === "Assigned" || status === "Reopened" || status === "Pending";
 }
 
 export function canResolveTicket(status: TicketStatus) {
+  return status === "InProgress";
+}
+
+export function canMoveToPending(status: TicketStatus): boolean {
   return status === "InProgress";
 }
 

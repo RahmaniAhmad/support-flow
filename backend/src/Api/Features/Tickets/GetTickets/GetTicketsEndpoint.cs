@@ -1,4 +1,5 @@
 using MediatR;
+using Shared.Contracts.Sorting;
 
 namespace Api.Features.Tickets.GetTickets;
 
@@ -27,7 +28,7 @@ public static class GetTicketsEndpoint
             request.Status,
             request.View,
             request.SortBy,
-            request.Descending ?? true);
+            SortDirectionParser.Parse(request.SortDirection));
 
         var tickets = await sender.Send(query, cancellationToken);
 

@@ -1,6 +1,8 @@
+using Api.Authorization;
 using Api.Filters;
 using MediatR;
 using Shared.Authentication;
+using Shared.Domain.Users;
 
 namespace Api.Features.Tickets.MoveTicketToPending;
 
@@ -23,7 +25,8 @@ public static class MoveTicketToPendingEndpoint
                 return Results.Ok();
             })
             .AddEndpointFilter<SecurityFilter>()
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .RequirePermission(Permissions.TicketsMoveToPending);
 
         return app;
     }

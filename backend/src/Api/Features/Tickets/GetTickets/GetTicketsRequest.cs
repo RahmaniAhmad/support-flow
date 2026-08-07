@@ -1,3 +1,4 @@
+using Shared.Contracts;
 using Shared.Domain.Tickets;
 
 namespace Api.Features.Tickets.GetTickets;
@@ -9,4 +10,4 @@ public sealed record GetTicketsRequest(
     TicketStatus? Status = null,
     TicketView View = TicketView.All,
     string? SortBy = null,
-    bool? Descending = true);
+    string? SortDirection = null);

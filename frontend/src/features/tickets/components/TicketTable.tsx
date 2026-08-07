@@ -2,31 +2,30 @@
 
 import DataTable from "@/components/ui/table/DataTable";
 import { TicketListItem } from "../types";
-import { getTicketColumns } from "./TicketTableColumns";
-import { CurrentUser } from "@/types/user";
+import { ColumnsType } from "antd/es/table";
 
 interface Props {
   data: TicketListItem[];
   loading: boolean;
+  columns: ColumnsType<TicketListItem>;
   pagination?: {
     current?: number;
     pageSize?: number;
     total?: number;
   };
   onPaginationChange(page: number, pageSize: number): void;
-  currentUser: CurrentUser;
 }
 
 export default function TicketTable({
   data,
   loading,
+  columns,
   pagination,
   onPaginationChange,
-  currentUser,
 }: Props) {
   return (
     <DataTable
-      columns={getTicketColumns(currentUser)}
+      columns={columns}
       dataSource={data}
       loading={loading}
       rowKey="id"
@@ -34,7 +33,6 @@ export default function TicketTable({
         current: pagination?.current,
         pageSize: pagination?.pageSize,
         total: pagination?.total,
-
         onChange: onPaginationChange,
       }}
     />

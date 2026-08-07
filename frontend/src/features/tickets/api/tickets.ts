@@ -47,3 +47,9 @@ export async function closeTicket(ticketId: string) {
 
   return data;
 }
+
+export async function moveTicketToPending(ticketId: string) {
+  const { data } = await api.post(`/tickets/${ticketId}/move-to-pending`);
+
+  return data;
+}
