@@ -56,7 +56,7 @@ public sealed class PgVectorStore : IVectorStore
     }
 
 
-    public async Task<List<EmbeddingDocument>> SearchAsync(
+    public async Task<List<EmbeddingSearchResult>> SearchAsync(
         Vector vector,
         Guid companyId,
         int limit,
@@ -64,9 +64,14 @@ public sealed class PgVectorStore : IVectorStore
     {
         return await _db.EmbeddingDocuments
             .Where(x =>
-                x.CompanyId == companyId)
+                x.CompanyId == companyId &&
+                  x.Vector.CosineDistance(vector) < 0.40)
             .OrderBy(x =>
                 x.Vector.CosineDistance(vector))
+            .Select(x => new EmbeddingSearchResult(
+            x.SourceId,
+            x.Content,
+            x.Vector.CosineDistance(vector)))
             .Take(limit)
             .ToListAsync(cancellationToken);
     }

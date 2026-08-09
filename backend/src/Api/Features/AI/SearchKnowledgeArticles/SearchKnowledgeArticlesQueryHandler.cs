@@ -51,7 +51,7 @@ public sealed class SearchKnowledgeArticlesQueryHandler
             .Select(x => new SearchKnowledgeArticleResult(
                 x.SourceId,
                 x.Content,
-                0))
+                x.Distance))
             .ToList();
 
         return new SearchKnowledgeArticlesResponse(results);

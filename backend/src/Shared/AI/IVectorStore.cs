@@ -14,7 +14,7 @@ public interface IVectorStore
         string sourceType,
         CancellationToken cancellationToken);
 
-    Task<List<EmbeddingDocument>> SearchAsync(
+    Task<List<EmbeddingSearchResult>> SearchAsync(
         Vector vector,
         Guid companyId,
         int limit,
