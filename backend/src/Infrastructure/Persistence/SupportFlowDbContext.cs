@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Shared.Domain;
+using Shared.Domain.AI;
 using Shared.Domain.Base;
 using Shared.Domain.Companies;
 using Shared.Domain.KnowledgeBase;
@@ -29,12 +30,17 @@ public sealed class SupportFlowDbContext : DbContext
 
     public DbSet<KnowledgeArticle> KnowledgeArticles => Set<KnowledgeArticle>();
 
+    public DbSet<EmbeddingDocument> EmbeddingDocuments => Set<EmbeddingDocument>();
+
 
     protected override void OnModelCreating(
     ModelBuilder modelBuilder)
     {
+        modelBuilder.HasPostgresExtension("vector");
+
         modelBuilder.ApplyConfigurationsFromAssembly(
             typeof(SupportFlowDbContext).Assembly);
+
 
         base.OnModelCreating(modelBuilder);
     }

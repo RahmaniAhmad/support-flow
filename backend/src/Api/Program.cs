@@ -5,8 +5,6 @@ using Infrastructure.Extensions;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<Api.Options.CorsOptions>(
@@ -23,7 +21,11 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<SupportFlowDbContext>(options =>
 {
     options.UseNpgsql(
-        builder.Configuration.GetConnectionString("Database"));
+        builder.Configuration.GetConnectionString("Database"),
+        npgsqlOptions =>
+        {
+            npgsqlOptions.UseVector();
+        });
 });
 
 builder.Services.AddApi();

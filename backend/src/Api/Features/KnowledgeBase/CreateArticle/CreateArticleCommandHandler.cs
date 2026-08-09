@@ -23,8 +23,12 @@ public sealed class CreateArticleCommandHandler
         CreateArticleCommand request,
         CancellationToken cancellationToken)
     {
+        var companyId = _currentUser.CompanyId
+        ?? throw new InvalidOperationException(
+            "A company is required to create a knowledge article.");
+
         var article = KnowledgeArticle.Create(
-             _currentUser.CompanyId,
+             companyId,
              request.Title,
              request.Content);
 

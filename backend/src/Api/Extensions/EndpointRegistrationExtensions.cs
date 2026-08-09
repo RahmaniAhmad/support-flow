@@ -16,6 +16,7 @@ public static class EndpointRegistrationExtensions
 
         app.MapKnowledgeBaseEndpoints();
 
+        app.MapAIEndpoints();
 
         return app;
     }

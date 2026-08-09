@@ -5,7 +5,7 @@ namespace Shared.Domain.KnowledgeBase;
 
 public sealed class KnowledgeArticle : AggregateRoot
 {
-    public Guid? CompanyId { get; private set; }
+    public Guid CompanyId { get; private set; }
 
     public string Title { get; private set; } = string.Empty;
 
@@ -19,7 +19,7 @@ public sealed class KnowledgeArticle : AggregateRoot
     }
 
     public static KnowledgeArticle Create(
-        Guid? companyId,
+        Guid companyId,
         string title,
         string content)
     {
@@ -51,7 +51,8 @@ public sealed class KnowledgeArticle : AggregateRoot
             new KnowledgeArticleCreatedDomainEvent(
                 article.Id,
                 article.CompanyId,
-                article.Title));
+                article.Title,
+                article.Content));
 
         return article;
     }
@@ -81,7 +82,8 @@ public sealed class KnowledgeArticle : AggregateRoot
             new KnowledgeArticleUpdatedDomainEvent(
                 Id,
                 CompanyId,
-                Title));
+                Title,
+                content));
     }
 
 

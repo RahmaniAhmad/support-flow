@@ -1,3 +1,4 @@
+using Infrastructure.AI;
 using Infrastructure.Authentication;
 using Infrastructure.Caching;
 using Infrastructure.Domain;
@@ -21,6 +22,8 @@ public static class DependencyInjection
         services.AddCaching(configuration);
         services.AddDomain();
         services.AddNotifications();
+
+        services.AddAI(configuration);
 
         services.AddMediatR(cfg =>
              {
