@@ -6,6 +6,7 @@ import BackButton from "@/components/ui/navigation/BackButton";
 import PageBreadcrumbs from "@/components/ui/page/PageBreadcrumbs";
 import { notFound } from "next/navigation";
 import { getKnowledgeArticle } from "@/features/knowledge-articles/server/getKnowledgeArticle";
+import PageContent from "@/components/ui/page/PageContent";
 
 export default async function KnowledgeArticleEditPage({
   params,
@@ -23,7 +24,7 @@ export default async function KnowledgeArticleEditPage({
   }
 
   return (
-    <div>
+    <PageContent>
       <PageHeader>
         <BackButton
           fallbackHref="/knowledge-articles"
@@ -42,6 +43,6 @@ export default async function KnowledgeArticleEditPage({
         />
       </PageHeader>
       <KnowledgeArticleForm article={article} articleId={id} />
-    </div>
+    </PageContent>
   );
 }

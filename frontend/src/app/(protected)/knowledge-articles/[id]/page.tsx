@@ -1,5 +1,6 @@
 import BackButton from "@/components/ui/navigation/BackButton";
 import PageBreadcrumbs from "@/components/ui/page/PageBreadcrumbs";
+import PageContent from "@/components/ui/page/PageContent";
 import PageHeader from "@/components/ui/page/PageHeader";
 import { AppPermissions } from "@/features/auth/Permissions";
 import { requirePermission } from "@/features/auth/server/requirePermission";
@@ -25,7 +26,7 @@ export default async function KnowledgeArticlePage({ params }: Props) {
   }
 
   return (
-    <div>
+    <PageContent>
       <PageHeader>
         <BackButton
           fallbackHref="/knowledge-articles"
@@ -44,6 +45,6 @@ export default async function KnowledgeArticlePage({ params }: Props) {
         />
       </PageHeader>
       <KnowledgeArticleDetail article={article} />
-    </div>
+    </PageContent>
   );
 }

@@ -14,7 +14,7 @@ type Props = {
 
 export default function ProfileView({ profile }: Props) {
   return (
-    <div className="max-w-2xl rounded-xl bg-white p-6 shadow">
+    <div className="rounded-xl bg-white p-6 shadow">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <PageTitle>Profile</PageTitle>

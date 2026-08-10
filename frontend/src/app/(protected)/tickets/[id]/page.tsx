@@ -1,5 +1,6 @@
 import BackButton from "@/components/ui/navigation/BackButton";
 import PageBreadcrumbs from "@/components/ui/page/PageBreadcrumbs";
+import PageContent from "@/components/ui/page/PageContent";
 import PageHeader from "@/components/ui/page/PageHeader";
 import SuggestedArticles from "@/features/ai/ticket-article-suggestions/components/SuggestedArticles";
 import { AppPermissions } from "@/features/auth/Permissions";
@@ -27,7 +28,7 @@ export default async function TicketDetailsPage({ params }: Props) {
   }
 
   return (
-    <div>
+    <PageContent>
       <PageHeader>
         <BackButton fallbackHref="/tickets" label="Back" />
 
@@ -42,13 +43,17 @@ export default async function TicketDetailsPage({ params }: Props) {
           ]}
         />
       </PageHeader>
-      <div className="space-y-6">
-        <TicketDetailsView ticket={ticket} />
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="space-y-4">
+          <TicketDetailsView ticket={ticket} />
 
-        <TicketComments ticketId={id} />
+          <TicketComments ticketId={id} />
+        </div>
 
-        <SuggestedArticles ticketId={ticket.id} />
+        <aside className="lg:sticky lg:top-4 lg:self-start">
+          <SuggestedArticles ticketId={ticket.id} />
+        </aside>
       </div>
-    </div>
+    </PageContent>
   );
 }

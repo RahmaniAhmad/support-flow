@@ -1,5 +1,6 @@
 "use client";
 
+import PageContent from "@/components/ui/page/PageContent";
 import PageHeader from "@/components/ui/page/PageHeader";
 import PageTitle from "@/components/ui/page/PageTitle";
 import StatCard from "@/features/dashboard/components/StatCard";
@@ -17,7 +18,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div>
+    <PageContent>
       <PageHeader>
         <PageTitle>Dashboard</PageTitle>
       </PageHeader>
@@ -71,6 +72,6 @@ export default function DashboardPage() {
           className="bg-red-100 text-red-600"
         />
       </div>
-    </div>
+    </PageContent>
   );
 }

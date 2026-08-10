@@ -21,10 +21,6 @@ export default function KnowledgeArticleList() {
       <div className="flex flex-col gap-3 mb-4 sm:flex-row sm:justify-between sm:items-center">
         <PageTitle>Knowledge Articles</PageTitle>
         <div className="flex gap-3 items-center">
-          <Link href="/ai/search" className="...">
-            <GeminiFilled />
-            AI Search
-          </Link>
           <CreateArticleButton />
         </div>
       </div>

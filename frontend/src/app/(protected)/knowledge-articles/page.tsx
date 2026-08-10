@@ -1,3 +1,4 @@
+import PageContent from "@/components/ui/page/PageContent";
 import { AppPermissions } from "@/features/auth/Permissions";
 import { requirePermission } from "@/features/auth/server/requirePermission";
 import KnowledgeArticleList from "@/features/knowledge-articles/components/KnowledgeArticleList";
@@ -5,5 +6,9 @@ import KnowledgeArticleList from "@/features/knowledge-articles/components/Knowl
 export default async function KnowledgeArticlesPage() {
   await requirePermission(AppPermissions.KnowledgeArticlesView);
 
-  return <KnowledgeArticleList />;
+  return (
+    <PageContent>
+      <KnowledgeArticleList />
+    </PageContent>
+  );
 }
