@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type Props = {
@@ -22,11 +22,11 @@ export default function BackButton({ fallbackHref, label = "Back" }: Props) {
   return (
     <Button
       type="link"
-      icon={<ArrowLeftOutlined />}
-      className="px-0!"
+      className="flex! items-center gap-2 px-0!"
       onClick={handleBack}
     >
-      {label}
+      <ArrowLeft size={18} />
+      <span>{label}</span>
     </Button>
   );
 }

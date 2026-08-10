@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { AxiosError } from "axios";
-import { GeminiFilled, SearchOutlined } from "@ant-design/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -16,6 +15,7 @@ import {
   semanticSearchSchema,
 } from "../schemas/semantic-search.schema";
 import SemanticSearchResults from "./SemanticSearchResults";
+import { Search, Sparkles } from "lucide-react";
 
 export default function SemanticSearchForm() {
   const mutation = useSemanticSearch();
@@ -51,7 +51,7 @@ export default function SemanticSearchForm() {
         onSubmit={handleSubmit(onSubmit)}
         title={
           <div className="flex items-center gap-2">
-            <GeminiFilled className="text-blue-500" />
+            <Sparkles strokeWidth={1.5} fill="currentColor" />
             <span>Search Knowledge Base</span>
           </div>
         }
@@ -81,7 +81,7 @@ export default function SemanticSearchForm() {
             className="w-full"
             isLoading={mutation.isPending}
           >
-            <SearchOutlined className="mr-2" />
+            <Search className="mr-2" size={16} />
             Search Knowledge Base
           </Button>
         </div>

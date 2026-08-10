@@ -1,11 +1,11 @@
 "use client";
 
-import { Dropdown, Button, App, Modal } from "antd";
-import { MoreOutlined } from "@ant-design/icons";
+import { Dropdown, Button, Modal } from "antd";
 import type { MenuProps } from "antd";
 import { UserListItem } from "../types";
 import { useChangeUserStatus } from "../hooks/useChangeUserStatus";
 import Link from "next/link";
+import { EllipsisVertical } from "lucide-react";
 
 interface Props {
   user: UserListItem;
@@ -70,7 +70,7 @@ export default function UserActions({ user }: Props) {
         }}
         trigger={["click"]}
       >
-        <Button type="text" icon={<MoreOutlined />} />
+        <Button type="text" icon={<EllipsisVertical size={16} />} />
       </Dropdown>
     </>
   );

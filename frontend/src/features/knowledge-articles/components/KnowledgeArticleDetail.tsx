@@ -8,7 +8,7 @@ import { hasPermission } from "@/features/auth/authorization";
 import { AppPermissions } from "@/features/auth/Permissions";
 import Button from "@/components/ui/Button";
 import { KnowledgeArticleDetails } from "../types";
-import { DeleteOutlined } from "@ant-design/icons";
+import { Trash } from "lucide-react";
 
 type Props = {
   article: KnowledgeArticleDetails;
@@ -58,7 +58,7 @@ export default function KnowledgeArticleDetail({ article }: Props) {
         <h1 className="text-2xl font-bold">{article.title}</h1>
         {canDelete && (
           <Button
-            icon={<DeleteOutlined />}
+            icon={<Trash size={16} />}
             type="text"
             danger
             onClick={handleDelete}

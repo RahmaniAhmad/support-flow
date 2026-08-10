@@ -11,7 +11,7 @@ import { hasPermission } from "@/features/auth/authorization";
 import { AppPermissions } from "@/features/auth/Permissions";
 import Button from "@/components/ui/Button";
 import KnowledgeArticleSkeleton from "./KnowledgeArticleSkeleton";
-import { DeleteOutlined, EditOutlined, GeminiFilled } from "@ant-design/icons";
+import { Edit, Trash } from "lucide-react";
 
 export default function KnowledgeArticleList() {
   const { data, isLoading } = useKnowledgeArticles();
@@ -101,13 +101,13 @@ function ActionButtons({ articleId }: { articleId: string }) {
           href={`/knowledge-articles/${articleId}/edit`}
           className="text-sm text-blue-600"
         >
-          <EditOutlined />
+          <Edit size={16} />
         </Link>
       )}
 
       {canDelete && (
         <Button
-          icon={<DeleteOutlined />}
+          icon={<Trash size={16} />}
           type="text"
           danger
           onClick={handleDelete}

@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { GeminiFilled } from "@ant-design/icons";
 import { Card, Tag, Typography } from "antd";
 
 import SemanticSearchSkeleton from "./SemanticSearchSkeleton";
 import { SemanticSearchResponse } from "../type";
+import { Sparkles } from "lucide-react";
 
 interface Props {
   data?: SemanticSearchResponse;
@@ -42,9 +42,9 @@ export default function SemanticSearchResults({ data, isLoading }: Props) {
     <div className="space-y-4">
       <div>
         <div className="flex items-center gap-2">
-          <GeminiFilled className="text-blue-500" />
+          <Sparkles size={18} />
 
-          <Typography.Title level={5} className="!mb-0">
+          <Typography.Title level={5} className="mb-0!">
             Search Results
           </Typography.Title>
         </div>

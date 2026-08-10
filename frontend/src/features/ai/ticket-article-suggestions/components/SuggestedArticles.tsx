@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { GeminiFilled } from "@ant-design/icons";
 import { Card, Tag, Typography } from "antd";
 
 import { useSuggestedArticles } from "../hooks/useSuggestedArticles";
 import { SuggestedArticlesSkeleton } from "./SuggestedArticlesSkeleton";
+import { Sparkles } from "lucide-react";
 
 const { Text } = Typography;
 
@@ -28,7 +28,7 @@ export default function SuggestedArticles({ ticketId }: Props) {
     <div>
       <div className="mb-4">
         <div className="flex items-center gap-2">
-          <GeminiFilled className="text-blue-500!" />
+          <Sparkles size={18} className="text-blue-500!" />
 
           <Typography.Title level={5} className="mb-0!">
             Suggested Articles

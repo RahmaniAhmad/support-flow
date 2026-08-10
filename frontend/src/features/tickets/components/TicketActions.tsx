@@ -1,7 +1,6 @@
 "use client";
 
 import { Button, Dropdown, message, Modal } from "antd";
-import { MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 
 import { useCallback, useMemo } from "react";
@@ -20,6 +19,7 @@ import { useResolveTicket } from "../hooks/useResolveTicket";
 import { useCloseTicket } from "../hooks/useCloseTicket";
 import { useReopenTicket } from "../hooks/useReopenTicket";
 import { TicketAction, TicketActionKeys } from "../constants/ticketActions";
+import { EllipsisVertical } from "lucide-react";
 
 interface TicketActionsProps {
   ticket: TicketListItem;
@@ -174,7 +174,7 @@ export default function TicketActions({ ticket }: TicketActionsProps) {
         onClick: handleAction,
       }}
     >
-      <Button type="text" icon={<MoreOutlined />} />
+      <Button type="text" icon={<EllipsisVertical size={16} />} />
     </Dropdown>
   );
 }
