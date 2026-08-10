@@ -1,6 +1,7 @@
 import BackButton from "@/components/ui/navigation/BackButton";
 import PageBreadcrumbs from "@/components/ui/page/PageBreadcrumbs";
 import PageHeader from "@/components/ui/page/PageHeader";
+import SuggestedArticles from "@/features/ai/ticket-article-suggestions/components/SuggestedArticles";
 import { AppPermissions } from "@/features/auth/Permissions";
 import { requirePermission } from "@/features/auth/server/requirePermission";
 import TicketComments from "@/features/tickets/comments/components/TicketComments";
@@ -45,6 +46,8 @@ export default async function TicketDetailsPage({ params }: Props) {
         <TicketDetailsView ticket={ticket} />
 
         <TicketComments ticketId={id} />
+
+        <SuggestedArticles ticketId={ticket.id} />
       </div>
     </div>
   );

@@ -41,4 +41,10 @@ export const MENU_ITEMS: readonly MenuItem[] = [
       pathname === "/knowledge-articles" ||
       pathname.startsWith("/knowledge-articles/"),
   },
+  {
+    label: "AI Search",
+    href: "/ai/search",
+    permission: AppPermissions.AiSemanticSearch,
+    isActive: (pathname) => pathname === "/ai/search",
+  },
 ];

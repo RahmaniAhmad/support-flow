@@ -11,7 +11,7 @@ import { hasPermission } from "@/features/auth/authorization";
 import { AppPermissions } from "@/features/auth/Permissions";
 import Button from "@/components/ui/Button";
 import KnowledgeArticleSkeleton from "./KnowledgeArticleSkeleton";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, GeminiFilled } from "@ant-design/icons";
 
 export default function KnowledgeArticleList() {
   const { data, isLoading } = useKnowledgeArticles();
@@ -20,7 +20,11 @@ export default function KnowledgeArticleList() {
     <div>
       <div className="flex flex-col gap-3 mb-4 sm:flex-row sm:justify-between sm:items-center">
         <PageTitle>Knowledge Articles</PageTitle>
-        <div>
+        <div className="flex gap-3 items-center">
+          <Link href="/ai/search" className="...">
+            <GeminiFilled />
+            AI Search
+          </Link>
           <CreateArticleButton />
         </div>
       </div>

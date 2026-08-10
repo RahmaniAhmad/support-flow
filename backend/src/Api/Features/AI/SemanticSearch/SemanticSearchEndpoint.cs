@@ -1,20 +1,20 @@
 using MediatR;
 
-namespace Api.Features.AI.SearchKnowledgeArticles;
+namespace Api.Features.AI.SemanticSearch;
 
-public static class SearchKnowledgeArticlesEndpoint
+public static class SemanticSearchEndpoint
 {
-    public static IEndpointRouteBuilder MapSearchKnowledgeArticles(
+    public static IEndpointRouteBuilder MapSemanticSearch(
         this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost(
-            "/api/ai/search-knowledge",
+            "/ai/semantic-search",
             async (
-                SearchKnowledgeArticlesRequest request,
+                SemanticSearchRequest request,
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {
-                var query = new SearchKnowledgeArticlesQuery(
+                var query = new SemanticSearchQuery(
                     request.Query,
                     request.Limit);
 

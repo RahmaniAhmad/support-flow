@@ -2,18 +2,18 @@ using MediatR;
 using Shared.AI;
 using Shared.Authentication;
 
-namespace Api.Features.AI.SearchKnowledgeArticles;
+namespace Api.Features.AI.SemanticSearch;
 
-public sealed class SearchKnowledgeArticlesQueryHandler
+public sealed class SemanticSearchQueryHandler
     : IRequestHandler<
-        SearchKnowledgeArticlesQuery,
-        SearchKnowledgeArticlesResponse>
+        SemanticSearchQuery,
+        SemanticSearchResponse>
 {
     private readonly IEmbeddingService _embeddingService;
     private readonly IVectorStore _vectorStore;
     private readonly ICurrentUser _currentUser;
 
-    public SearchKnowledgeArticlesQueryHandler(
+    public SemanticSearchQueryHandler(
         IEmbeddingService embeddingService,
         IVectorStore vectorStore,
         ICurrentUser currentUser)
@@ -23,8 +23,8 @@ public sealed class SearchKnowledgeArticlesQueryHandler
         _currentUser = currentUser;
     }
 
-    public async Task<SearchKnowledgeArticlesResponse> Handle(
-        SearchKnowledgeArticlesQuery request,
+    public async Task<SemanticSearchResponse> Handle(
+        SemanticSearchQuery request,
         CancellationToken cancellationToken)
     {
         var companyId = _currentUser.CompanyId;
@@ -48,12 +48,13 @@ public sealed class SearchKnowledgeArticlesQueryHandler
                 cancellationToken);
 
         var results = documents
-            .Select(x => new SearchKnowledgeArticleResult(
+            .Select(x => new SemanticSearchResult(
                 x.SourceId,
+                x.SourceType,
                 x.Content,
                 x.Distance))
             .ToList();
 
-        return new SearchKnowledgeArticlesResponse(results);
+        return new SemanticSearchResponse(results);
     }
 }

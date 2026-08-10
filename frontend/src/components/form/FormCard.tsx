@@ -2,10 +2,10 @@ import PageTitle from "@/components/ui/page/PageTitle";
 import PageDescription from "@/components/ui/page/PageDescription";
 
 type Props = {
-  title?: string;
+  title?: React.ReactNode | string;
   description?: string;
   children: React.ReactNode;
-  onSubmit: React.FormEventHandler<HTMLFormElement>;
+  onSubmit: React.SubmitEventHandler<HTMLFormElement>;
 };
 
 export default function FormCard({

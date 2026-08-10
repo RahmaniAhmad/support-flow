@@ -31,4 +31,8 @@ public static class Permissions
     public const string KnowledgeArticlesCreate = "knowledge-articles:create";
     public const string KnowledgeArticlesUpdate = "knowledge-articles:update";
     public const string KnowledgeArticlesDelete = "knowledge-articles:delete";
+
+    // AI
+    public const string AiSemanticSearch = "ai:semantic-search";
+    public const string AiTicketSuggestions = "ai:ticket-suggestions";
 }
