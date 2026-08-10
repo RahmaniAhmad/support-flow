@@ -1,4 +1,7 @@
+using Api.Authorization;
+using Api.Filters;
 using MediatR;
+using Shared.Domain.Users;
 
 namespace Api.Features.AI.SemanticSearch;
 
@@ -23,7 +26,10 @@ public static class SemanticSearchEndpoint
                     cancellationToken);
 
                 return Results.Ok(result);
-            });
+            })
+            .AddEndpointFilter<SecurityFilter>()
+            .RequireAuthorization()
+            .RequirePermission(Permissions.AiSemanticSearch);
 
         return endpoints;
     }

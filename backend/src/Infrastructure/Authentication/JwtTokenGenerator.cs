@@ -54,7 +54,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator
             issuer: _options.Issuer,
             audience: _options.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.Add(_options.RefreshTokenLifetime),
+            expires: DateTime.UtcNow.Add(_options.AccessTokenLifetime),
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

@@ -1,4 +1,7 @@
+using Api.Authorization;
+using Api.Filters;
 using MediatR;
+using Shared.Domain.Users;
 
 
 namespace Api.Features.AI.GetTicketSuggestedArticles;
@@ -28,8 +31,9 @@ public static class GetTicketSuggestedArticlesEndpoint
                 return Results.Ok(result);
 
             })
-            .RequireAuthorization();
-
+            .AddEndpointFilter<SecurityFilter>()
+            .RequireAuthorization()
+            .RequirePermission(Permissions.AiTicketSuggestions);
 
         return endpoints;
     }
