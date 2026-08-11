@@ -11,7 +11,7 @@ export default function SemanticSearchSkeleton() {
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2!">
         {[1, 2, 3].map((item) => (
           <Card key={item} size="small">
             <Skeleton active title={{ width: "40%" }} paragraph={{ rows: 3 }} />

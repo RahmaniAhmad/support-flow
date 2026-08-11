@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import Cookies from "js-cookie";
 
 const CSRF_HEADER = "X-CSRF-TOKEN";
@@ -12,7 +12,7 @@ const api = axios.create({
   },
 });
 
-let isRefreshing = false;
+let refreshPromise: Promise<void> | null = null;
 
 api.interceptors.request.use((config) => {
   const csrfToken = Cookies.get(CSRF_COOKIE);
@@ -27,34 +27,39 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
 
-  async (error) => {
-    const originalRequest = error.config;
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
 
-    if (error.response?.status !== 401 || originalRequest._retry) {
+    if (error.response?.status !== 401 || originalRequest?._retry) {
       return Promise.reject(error);
     }
 
     originalRequest._retry = true;
 
-    if (!isRefreshing) {
-      isRefreshing = true;
-
-      try {
-        await api.post("/auth/refresh");
-        await api.get("/auth/csrf");
-
-        isRefreshing = false;
-
-        return api(originalRequest);
-      } catch {
-        isRefreshing = false;
-        window.location.href = "/login";
-
-        return Promise.reject(error);
+    try {
+      if (!refreshPromise) {
+        refreshPromise = api
+          .post("/auth/refresh")
+          .then(async () => {
+            await api.get("/auth/csrf");
+          })
+          .finally(() => {
+            refreshPromise = null;
+          });
       }
-    }
 
-    return Promise.reject(error);
+      await refreshPromise;
+
+      return api(originalRequest);
+    } catch (refreshError) {
+      refreshPromise = null;
+
+      window.location.href = "/login";
+
+      return Promise.reject(refreshError);
+    }
   },
 );
 

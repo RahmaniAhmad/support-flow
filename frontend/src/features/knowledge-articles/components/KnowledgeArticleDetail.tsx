@@ -2,13 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { Modal, message } from "antd";
-import { useDeleteKnowledgeArticle } from "../hooks/useDeleteKnowledgeArticle";
+import { Trash2 } from "lucide-react";
+
+import Button from "@/components/ui/Button";
 import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
 import { hasPermission } from "@/features/auth/authorization";
 import { AppPermissions } from "@/features/auth/Permissions";
-import Button from "@/components/ui/Button";
+
+import { useDeleteKnowledgeArticle } from "../hooks/useDeleteKnowledgeArticle";
 import { KnowledgeArticleDetails } from "../types";
-import { Trash } from "lucide-react";
 
 type Props = {
   article: KnowledgeArticleDetails;
@@ -16,7 +18,6 @@ type Props = {
 
 export default function KnowledgeArticleDetail({ article }: Props) {
   const router = useRouter();
-
   const currentUser = useCurrentUser();
 
   const deleteMutation = useDeleteKnowledgeArticle();
@@ -28,48 +29,55 @@ export default function KnowledgeArticleDetail({ article }: Props) {
 
   const handleDelete = () => {
     Modal.confirm({
-      title: "Delete article",
+      title: "Delete knowledge article?",
       content:
-        "Are you sure you want to delete this article? This action cannot be undone.",
-      okText: "Yes, delete",
+        "This article will be permanently deleted. This action cannot be undone.",
+      okText: "Delete",
       cancelText: "Cancel",
-      okButtonProps: { danger: true },
+      okButtonProps: {
+        danger: true,
+        loading: deleteMutation.isPending,
+      },
       centered: true,
-      onOk: () =>
-        new Promise<void>((resolve, reject) => {
-          deleteMutation.mutate(article.id, {
-            onSuccess: () => {
-              message.success("Article deleted.");
-              router.push("/knowledge-articles");
-              resolve();
-            },
-            onError: () => {
-              message.error("Failed to delete article.");
-              reject();
-            },
-          });
-        }),
+
+      onOk: async () => {
+        try {
+          await deleteMutation.mutateAsync(article.id);
+
+          message.success("Article deleted successfully.");
+          router.push("/knowledge-articles");
+        } catch {
+          message.error("Failed to delete the article.");
+          throw new Error("Failed to delete article");
+        }
+      },
     });
   };
 
   return (
-    <div>
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{article.title}</h1>
+    <article className="rounded-xl bg-white p-6 shadow">
+      <header className="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold text-slate-900">{article.title}</h1>
+        </div>
+
         {canDelete && (
           <Button
-            icon={<Trash size={16} />}
             type="text"
             danger
+            icon={<Trash2 size={16} />}
             onClick={handleDelete}
-          ></Button>
+            disabled={deleteMutation.isPending}
+          >
+            <span className="hidden sm:inline">Delete</span>
+          </Button>
         )}
-      </div>
+      </header>
 
       <div
-        className="mt-4 prose"
+        className="prose mt-6 max-w-none"
         dangerouslySetInnerHTML={{ __html: article.content }}
       />
-    </div>
+    </article>
   );
 }

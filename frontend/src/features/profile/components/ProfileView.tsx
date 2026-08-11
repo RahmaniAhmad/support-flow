@@ -13,12 +13,13 @@ type Props = {
 };
 
 export default function ProfileView({ profile }: Props) {
+  const fullName = `${profile.firstName} ${profile.lastName}`.trim();
+
   return (
     <div className="rounded-xl bg-white p-6 shadow">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <PageTitle>Profile</PageTitle>
-
           <PageDescription>View your account information.</PageDescription>
         </div>
 
@@ -27,28 +28,25 @@ export default function ProfileView({ profile }: Props) {
         </Link>
       </div>
 
-      <div className="flex flex-col gap-y-5 p-4 border border-gray-300 rounded-xl">
+      <dl className="divide-y divide-gray-200 rounded-xl border border-gray-200">
         <ProfileItem label="Email" value={profile.email} />
-        <ProfileItem label="Company" value={profile.companyName ?? ""} />
-        <ProfileItem
-          label="Name"
-          value={`${profile.firstName} ${profile.lastName}`}
-        />
-
+        <ProfileItem label="Company" value={profile.companyName ?? "-"} />
+        <ProfileItem label="Name" value={fullName || "-"} />
         <ProfileItem label="Phone" value={profile.phone ?? "-"} />
-
         <ProfileItem label="Role" value={profile.role} />
-      </div>
+      </dl>
     </div>
   );
 }
 
 function ProfileItem({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <div className="text-sm text-slate-500">{label}</div>
+    <div className="grid gap-1 px-4 py-4 sm:grid-cols-3 sm:gap-4">
+      <dt className="text-sm font-medium text-slate-500">{label}</dt>
 
-      <div className="font-medium text-slate-800">{value}</div>
+      <dd className="text-sm font-medium text-slate-800 sm:col-span-2">
+        {value}
+      </dd>
     </div>
   );
 }

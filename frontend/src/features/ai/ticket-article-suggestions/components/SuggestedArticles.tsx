@@ -21,7 +21,19 @@ export default function SuggestedArticles({ ticketId }: Props) {
   }
 
   if (!data?.results.length) {
-    return null;
+    return (
+      <div className="rounded-lg border border-dashed border-slate-300 p-6 text-center">
+        <Sparkles size={20} className="mx-auto mb-2 text-slate-400" />
+
+        <Typography.Text strong className="block">
+          No Suggested Articles
+        </Typography.Text>
+
+        <Typography.Text type="secondary" className="text-sm">
+          We couldn&apos;t find any knowledge articles relevant to this ticket.
+        </Typography.Text>
+      </div>
+    );
   }
 
   return (
