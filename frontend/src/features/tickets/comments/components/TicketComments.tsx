@@ -26,11 +26,7 @@ export default function TicketComments({ ticketId }: Props) {
   }
 
   return (
-    <div
-      className="
-      rounded-xl bg-white p-5 shadow
-    "
-    >
+    <div className="rounded-xl bg-white p-5 shadow">
       <div className="mb-5 flex items-center justify-between">
         <h3 className="font-semibold">Comments</h3>
 

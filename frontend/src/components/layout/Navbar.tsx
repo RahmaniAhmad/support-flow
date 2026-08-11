@@ -2,17 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { Avatar, Dropdown } from "antd";
-import {
-  DownOutlined,
-  LogoutOutlined,
-  MenuOutlined,
-  ProfileOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-
 import Button from "../ui/Button";
 import { logout } from "@/features/auth/api/auth";
 import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
+import { ChevronDown, LogOut, Menu, UserRound } from "lucide-react";
 
 type Props = {
   onMenuClick: () => void;
@@ -45,7 +38,7 @@ export default function Navbar({ onMenuClick }: Props) {
     },
     {
       key: "profile",
-      icon: <ProfileOutlined />,
+      icon: <UserRound size={18} />,
       label: "Profile",
       onClick: () => {
         router.push("/profile");
@@ -56,7 +49,7 @@ export default function Navbar({ onMenuClick }: Props) {
     },
     {
       key: "logout",
-      icon: <LogoutOutlined />,
+      icon: <LogOut size={18} />,
       label: "Logout",
       danger: true,
       onClick: handleLogout,
@@ -70,7 +63,7 @@ export default function Navbar({ onMenuClick }: Props) {
           onClick={onMenuClick}
           className="rounded p-2 transition-colors hover:bg-gray-100 md:hidden"
         >
-          <MenuOutlined />
+          <Menu size={18} />
         </button>
 
         <h1 className="hidden text-lg font-semibold sm:block">
@@ -86,8 +79,8 @@ export default function Navbar({ onMenuClick }: Props) {
         placement="bottomRight"
       >
         <Button type="text" className="flex items-center gap-2">
-          <Avatar size="small" icon={<UserOutlined />} />
-          <DownOutlined className="text-xs" />
+          <Avatar size="small" icon={<UserRound />} />
+          <ChevronDown size={18} className="text-gray-500" />
         </Button>
       </Dropdown>
     </header>

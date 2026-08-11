@@ -1,11 +1,11 @@
-import PageTitle from "@/components/ui/page/PageTitle";
 import PageDescription from "@/components/ui/page/PageDescription";
+import PageTitle from "@/components/ui/page/PageTitle";
 
 type Props = {
-  title?: string;
+  title?: React.ReactNode;
   description?: string;
   children: React.ReactNode;
-  onSubmit: React.FormEventHandler<HTMLFormElement>;
+  onSubmit: React.SubmitEventHandler;
 };
 
 export default function FormCard({
@@ -15,25 +15,18 @@ export default function FormCard({
   onSubmit,
 }: Props) {
   return (
-    <form
-      noValidate
-      onSubmit={onSubmit}
-      className="
-        w-full
-        max-w-3xl
-        rounded-xl
-        bg-white
-        p-6
-        shadow
-      "
-    >
-      <div className="mb-6 mt-3">
-        {title && <PageTitle>{title}</PageTitle>}
+    <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
+      <form onSubmit={onSubmit} className="p-6">
+        {(title || description) && (
+          <div className="mb-6">
+            {title && <PageTitle>{title}</PageTitle>}
 
-        {description && <PageDescription>{description}</PageDescription>}
-      </div>
+            {description && <PageDescription>{description}</PageDescription>}
+          </div>
+        )}
 
-      <div className="flex flex-col gap-y-4">{children}</div>
-    </form>
+        <div className="flex flex-col gap-y-4">{children}</div>
+      </form>
+    </div>
   );
 }

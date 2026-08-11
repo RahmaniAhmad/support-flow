@@ -28,19 +28,22 @@ export default function Sidebar({ onClose }: Props) {
       <nav className="flex flex-col gap-1 p-4">
         {visibleItems.map((item) => {
           const isActive = item.isActive?.(pathname) ?? false;
+          const Icon = item.icon;
 
           return (
             <Link
               key={item.href}
               href={item.href}
               onClick={onClose}
-              className={`rounded p-3 transition ${
+              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors ${
                 isActive
                   ? "bg-slate-200 font-semibold text-slate-900"
                   : "text-slate-600 hover:bg-slate-100"
               }`}
             >
-              {item.label}
+              <Icon size={18} strokeWidth={1.8} />
+
+              <span>{item.label}</span>
             </Link>
           );
         })}

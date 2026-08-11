@@ -1,5 +1,6 @@
 import BackButton from "@/components/ui/navigation/BackButton";
 import PageBreadcrumbs from "@/components/ui/page/PageBreadcrumbs";
+import PageContent from "@/components/ui/page/PageContent";
 import PageHeader from "@/components/ui/page/PageHeader";
 import UpdateProfileForm from "@/features/profile/components/UpdateProfileForm";
 import { getProfile } from "@/features/profile/server/getProfile";
@@ -13,7 +14,7 @@ export default async function ProfilePage() {
   }
 
   return (
-    <div>
+    <PageContent>
       <PageHeader>
         <BackButton fallbackHref="/profile" label="Back to profile" />
 
@@ -29,6 +30,6 @@ export default async function ProfilePage() {
         />
       </PageHeader>
       <UpdateProfileForm profile={profile} />
-    </div>
+    </PageContent>
   );
 }

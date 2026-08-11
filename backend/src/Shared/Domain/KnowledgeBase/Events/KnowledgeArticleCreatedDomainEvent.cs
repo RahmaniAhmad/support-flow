@@ -4,6 +4,7 @@ namespace Shared.Domain.KnowledgeBase.Events;
 
 public sealed record KnowledgeArticleCreatedDomainEvent(
     Guid ArticleId,
-    Guid? CompanyId,
-    string Title) : IDomainEvent;
+    Guid CompanyId,
+    string Title,
+    string Content) : IDomainEvent;
 

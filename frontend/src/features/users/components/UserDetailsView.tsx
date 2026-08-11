@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Typography } from "antd";
+import { Card, Tag, Typography } from "antd";
 
 import UserDetailsActions from "./UserDetailsActions";
 import { UserDetails } from "../types";
@@ -13,16 +13,18 @@ type Props = {
 };
 
 export default function UserDetailsView({ user }: Props) {
+  const fullName = `${user.firstName} ${user.lastName}`.trim();
+
   return (
     <div className="flex flex-col gap-6">
       <Card>
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
-            <Title level={2} className="mb-2!">
-              {user.firstName} {user.lastName}
+            <Title level={2} className="mb-1!">
+              {fullName || "-"}
             </Title>
 
-            <div className="text-sm text-slate-500">{user.email}</div>
+            <div className="break-all text-sm text-slate-500">{user.email}</div>
           </div>
 
           <UserDetailsActions user={user} />
@@ -30,8 +32,17 @@ export default function UserDetailsView({ user }: Props) {
       </Card>
 
       <Card title="Information">
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-          <InfoItem label="Role" value={user.role} />
+        <div className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
+          <InfoItem label="Role" value={<Tag>{user.role}</Tag>} />
+
+          <InfoItem
+            label="Status"
+            value={
+              <Tag color={user.isActive ? "success" : "default"}>
+                {user.isActive ? "Active" : "Inactive"}
+              </Tag>
+            }
+          />
 
           <InfoItem label="Company" value={user.companyName ?? "-"} />
 
@@ -43,11 +54,6 @@ export default function UserDetailsView({ user }: Props) {
             label="Created"
             value={formatDate(user.createdAtUtc)}
             nowrap
-          />
-
-          <InfoItem
-            label="Status"
-            value={user.isActive ? "Active" : "Inactive"}
           />
         </div>
       </Card>
@@ -62,7 +68,7 @@ function InfoItem({
   breakText = false,
 }: {
   label: string;
-  value: string;
+  value: React.ReactNode;
   nowrap?: boolean;
   breakText?: boolean;
 }) {

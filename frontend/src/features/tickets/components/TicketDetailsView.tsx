@@ -14,7 +14,7 @@ type Props = {
 
 export default function TicketDetailsView({ ticket }: Props) {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <Card>
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">

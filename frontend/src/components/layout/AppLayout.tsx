@@ -34,7 +34,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex flex-1 flex-col">
         <Navbar onMenuClick={() => setSidebarOpen(true)} />
 
-        <main className="flex-1 bg-slate-50 p-6">{children}</main>
+        <main className="flex-1 bg-slate-50 p-4 md:p-6">{children}</main>
       </div>
     </div>
   );

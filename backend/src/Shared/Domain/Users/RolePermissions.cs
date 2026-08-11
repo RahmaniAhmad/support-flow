@@ -11,80 +11,87 @@ public static class RolePermissions
             [
                Permissions.DashboardView,
 
-                Permissions.TicketsView,
-                Permissions.TicketsCreate,
-                Permissions.TicketsAssign,
-                Permissions.TicketsStartProgress,
-                Permissions.TicketsMoveToPending,
-                Permissions.TicketsResolve,
-                Permissions.TicketsReopen,
-                Permissions.TicketsClose,
-                Permissions.TicketsComment,
+               Permissions.TicketsView,
+               Permissions.TicketsCreate,
+               Permissions.TicketsAssign,
+               Permissions.TicketsStartProgress,
+               Permissions.TicketsMoveToPending,
+               Permissions.TicketsResolve,
+               Permissions.TicketsReopen,
+               Permissions.TicketsClose,
+               Permissions.TicketsComment,
+               Permissions.UsersView,
+               Permissions.UsersCreate,
+               Permissions.UsersUpdate,
+               Permissions.UsersResetPassword,
+               Permissions.UsersChangeStatus,
 
-                Permissions.UsersView,
-                Permissions.UsersCreate,
-                Permissions.UsersUpdate,
-                Permissions.UsersResetPassword,
-                Permissions.UsersChangeStatus
-               ,
-               // Knowledge articles
                Permissions.KnowledgeArticlesView,
                Permissions.KnowledgeArticlesCreate,
                Permissions.KnowledgeArticlesUpdate,
-               Permissions.KnowledgeArticlesDelete
+               Permissions.KnowledgeArticlesDelete,
+
+               Permissions.AiSemanticSearch,
+               Permissions.AiTicketSuggestions
            ],
 
            [UserRole.Admin] =
             [
                Permissions.DashboardView,
 
-                Permissions.TicketsView,
-                Permissions.TicketsCreate,
-                Permissions.TicketsAssign,
-                Permissions.TicketsStartProgress,
-                Permissions.TicketsMoveToPending,
-                Permissions.TicketsResolve,
-                Permissions.TicketsReopen,
-                Permissions.TicketsClose,
-                Permissions.TicketsComment,
+               Permissions.TicketsView,
+               Permissions.TicketsCreate,
+               Permissions.TicketsAssign,
+               Permissions.TicketsStartProgress,
+               Permissions.TicketsMoveToPending,
+               Permissions.TicketsResolve,
+               Permissions.TicketsReopen,
+               Permissions.TicketsClose,
+               Permissions.TicketsComment,
+               Permissions.UsersView,
+               Permissions.UsersCreate,
+               Permissions.UsersUpdate,
+               Permissions.UsersResetPassword,
+               Permissions.UsersChangeStatus,
+               Permissions.KnowledgeArticlesView,
+               Permissions.KnowledgeArticlesCreate,
+               Permissions.KnowledgeArticlesUpdate,
+               Permissions.KnowledgeArticlesDelete,
 
-                Permissions.UsersView,
-                Permissions.UsersCreate,
-                Permissions.UsersUpdate,
-                Permissions.UsersResetPassword,
-                Permissions.UsersChangeStatus,
-                // Knowledge articles
-                Permissions.KnowledgeArticlesView,
-                Permissions.KnowledgeArticlesCreate,
-                Permissions.KnowledgeArticlesUpdate,
-                Permissions.KnowledgeArticlesDelete,
+               Permissions.AiSemanticSearch,
+               Permissions.AiTicketSuggestions
                ],
 
            [UserRole.Agent] =
             [
                Permissions.DashboardView,
 
-                Permissions.TicketsView,
-                Permissions.TicketsCreate,
-                Permissions.TicketsAssign,
-                Permissions.TicketsStartProgress,
-                Permissions.TicketsMoveToPending,
-                Permissions.TicketsResolve,
-                Permissions.TicketsClose,
-                Permissions.TicketsComment,
-                // Knowledge articles - agents can view and create/update
-                Permissions.KnowledgeArticlesView,
-                Permissions.KnowledgeArticlesCreate,
-                Permissions.KnowledgeArticlesUpdate,
+               Permissions.TicketsView,
+               Permissions.TicketsCreate,
+               Permissions.TicketsAssign,
+               Permissions.TicketsStartProgress,
+               Permissions.TicketsMoveToPending,
+               Permissions.TicketsResolve,
+               Permissions.TicketsClose,
+               Permissions.TicketsComment,
+               Permissions.KnowledgeArticlesView,
+               Permissions.KnowledgeArticlesCreate,
+               Permissions.KnowledgeArticlesUpdate,
+
+               Permissions.AiSemanticSearch,
+               Permissions.AiTicketSuggestions
                ],
 
            [UserRole.Customer] =
             [
                Permissions.TicketsView,
-                Permissions.TicketsCreate,
-                Permissions.TicketsComment,
-               // Customers can view published knowledge articles via API
-               Permissions.KnowledgeArticlesView
+               Permissions.TicketsCreate,
+               Permissions.TicketsComment,
+
+               Permissions.KnowledgeArticlesView,
+
+               Permissions.AiSemanticSearch,
+               Permissions.AiTicketSuggestions
                ]
         }
         .ToImmutableDictionary(x => x.Key, x => x.Value.ToImmutableArray());

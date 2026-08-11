@@ -26,6 +26,10 @@ export const AppPermissions = {
   KnowledgeArticlesCreate: "knowledge-articles:create",
   KnowledgeArticlesUpdate: "knowledge-articles:update",
   KnowledgeArticlesDelete: "knowledge-articles:delete",
+
+  // AI
+  AiSemanticSearch: "ai:semantic-search",
+  AiTicketSuggestions: "ai:get-ticket-suggestions",
 } as const;
 
 export type Permission = (typeof AppPermissions)[keyof typeof AppPermissions];
