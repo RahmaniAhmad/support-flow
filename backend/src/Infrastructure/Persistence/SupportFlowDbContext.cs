@@ -31,7 +31,8 @@ public sealed class SupportFlowDbContext : DbContext
     public DbSet<KnowledgeArticle> KnowledgeArticles => Set<KnowledgeArticle>();
 
     public DbSet<EmbeddingDocument> EmbeddingDocuments => Set<EmbeddingDocument>();
-
+    public DbSet<PasswordResetToken> PasswordResetTokens =>
+        Set<PasswordResetToken>();
 
     protected override void OnModelCreating(
     ModelBuilder modelBuilder)
