@@ -1,6 +1,7 @@
-namespace Api.Features.Dashboard;
+namespace Api.Features.Dashboard.Statistics;
 
-public sealed record DashboardResponse(
+public sealed record DashboardStatisticsResponse(
+    int TotalTickets,
     int OpenTickets,
     int AssignedTickets,
     int InProgressTickets,
@@ -8,4 +9,5 @@ public sealed record DashboardResponse(
     int ResolvedTickets,
     int ReopenedTickets,
     int ClosedTickets,
-    int UnassignedTickets);
+    int UnassignedTickets
+);
