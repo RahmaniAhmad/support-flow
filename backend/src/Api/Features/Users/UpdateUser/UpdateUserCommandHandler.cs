@@ -9,13 +9,11 @@ public sealed class UpdateUserCommandHandler
 {
     private readonly SupportFlowDbContext _db;
 
-
     public UpdateUserCommandHandler(
         SupportFlowDbContext db)
     {
         _db = db;
     }
-
 
     public async Task Handle(
         UpdateUserCommand request,
@@ -26,19 +24,16 @@ public sealed class UpdateUserCommandHandler
                 x => x.Id == request.UserId,
                 cancellationToken);
 
-
         if (user is null)
         {
             throw new InvalidOperationException(
                 "User not found.");
         }
 
-
         user.UpdateProfile(
             request.FirstName,
             request.LastName,
             request.Phone);
-
 
         await _db.SaveChangesAsync(
             cancellationToken);

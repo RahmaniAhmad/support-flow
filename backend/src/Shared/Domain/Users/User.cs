@@ -44,7 +44,7 @@ public sealed class User : AggregateRoot
         return new User
         {
             CompanyId = companyId,
-            Email = email,
+            Email = email.Trim().ToLowerInvariant(),
             PasswordHash = passwordHash,
             Role = role,
             IsActive = true,

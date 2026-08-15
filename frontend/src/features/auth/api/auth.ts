@@ -1,5 +1,10 @@
 import api from "@/lib/axios";
-import { LoginRequest, RegisterRequest } from "../types";
+import {
+  ForgotPasswordRequest,
+  LoginRequest,
+  RegisterRequest,
+  ResetPasswordRequest,
+} from "../types";
 
 export async function login(request: LoginRequest) {
   const response = await api.post("/auth/login", request);
@@ -15,4 +20,20 @@ export async function register(request: RegisterRequest): Promise<void> {
 
 export async function logout(): Promise<void> {
   await api.post("/auth/logout");
+}
+
+export async function forgotPassword(
+  request: ForgotPasswordRequest,
+): Promise<void> {
+  const response = await api.post("/auth/forgot-password", request);
+
+  return response.data;
+}
+
+export async function resetPassword(
+  request: ResetPasswordRequest,
+): Promise<void> {
+  const response = await api.post("/auth/reset-password", request);
+
+  return response.data;
 }

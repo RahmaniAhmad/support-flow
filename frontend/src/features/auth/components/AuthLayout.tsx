@@ -1,3 +1,4 @@
+import { Sparkles } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
 
@@ -23,7 +24,8 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           </div>
 
           <div className="max-w-lg">
-            <p className="mb-4 text-sm font-medium uppercase tracking-wider text-blue-400">
+            <p className="flex items-center gap-2 mb-4 text-sm font-medium uppercase tracking-wider text-blue-400">
+              <Sparkles strokeWidth={1.5} fill="currentColor" />
               Intelligent Customer Support
             </p>
 

@@ -1,6 +1,7 @@
 using Infrastructure.AI;
 using Infrastructure.Authentication;
 using Infrastructure.Caching;
+using Infrastructure.Configuration;
 using Infrastructure.Domain;
 using Infrastructure.Notifications;
 using Infrastructure.Persistence.Seeders;
@@ -17,6 +18,9 @@ public static class DependencyInjection
     {
         services.Configure<SuperAdminOptions>(
             configuration.GetSection(SuperAdminOptions.SectionName));
+
+        services.Configure<FrontendOptions>(
+                 configuration.GetSection(FrontendOptions.SectionName));
 
         services.AddAuthentication(configuration);
         services.AddCaching(configuration);

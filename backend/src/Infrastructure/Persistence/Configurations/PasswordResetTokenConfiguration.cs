@@ -15,6 +15,9 @@ public sealed class PasswordResetTokenConfiguration
 
         builder.HasKey(x => x.Id);
 
+        builder.Property(x => x.Id)
+                 .ValueGeneratedNever();
+
         builder.Property(x => x.TokenHash)
             .HasMaxLength(128)
             .IsRequired();

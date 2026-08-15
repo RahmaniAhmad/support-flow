@@ -3,9 +3,9 @@
 import { useRouter } from "next/navigation";
 import { Avatar, Dropdown } from "antd";
 import Button from "../ui/Button";
-import { logout } from "@/features/auth/api/auth";
 import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
 import { ChevronDown, LogOut, Menu, UserRound } from "lucide-react";
+import { useLogout } from "@/features/auth/hooks/useLogout";
 
 type Props = {
   onMenuClick: () => void;
@@ -14,9 +14,11 @@ type Props = {
 export default function Navbar({ onMenuClick }: Props) {
   const router = useRouter();
   const currentUser = useCurrentUser();
+  const logoutMutation = useLogout();
 
   const handleLogout = async () => {
-    await logout();
+    await logoutMutation.mutateAsync();
+
     router.replace("/login");
   };
 

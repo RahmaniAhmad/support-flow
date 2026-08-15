@@ -82,7 +82,7 @@ export default function ForgotPasswordPage() {
                 htmlType="submit"
                 isLoading={forgotPasswordMutation.isPending}
               >
-                Send Reset Instructions
+                Request Password Reset
               </Button>
             </form>
 
