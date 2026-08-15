@@ -29,46 +29,50 @@ public sealed class GetAgentPerformanceQueryHandler
         CancellationToken cancellationToken)
     {
 
-        var users = _db.Users
-            .AsQueryable();
+        var query =
+            from user in _db.Users
+
+            where user.Role == UserRole.Agent
+
+            where !request.CompanyId.HasValue ||
+                  user.CompanyId == request.CompanyId.Value
+
+            join ticket in _db.Tickets
+                on user.Id equals ticket.AssignedToUserId
+                into tickets
 
 
-        if (request.CompanyId.HasValue)
-        {
-            users = users.Where(x =>
-                x.CompanyId == request.CompanyId.Value);
-        }
+            select new
+            {
+                user.Id,
 
-
-
-        var result = await users
-
-            .Where(x =>
-                x.Role == UserRole.Agent)
-
-            .Select(user =>
-                new AgentPerformanceResponse(
-
-                    user.Id,
-
+                Name =
                     user.FirstName + " " +
                     user.LastName,
 
 
-                    _db.Tickets.Count(ticket =>
-                        ticket.AssignedToUserId ==
-                        user.Id),
+                AssignedTickets =
+                    tickets.Count(),
 
 
-                    _db.Tickets.Count(ticket =>
-                        ticket.AssignedToUserId ==
-                        user.Id &&
-                        ticket.Status ==
-                        TicketStatus.Resolved)
-                ))
+                ResolvedTickets =
+                    tickets.Count(x =>
+                        x.Status == TicketStatus.Resolved)
+            };
+
+
+
+        var result = await query
 
             .OrderByDescending(x =>
                 x.AssignedTickets)
+
+            .Select(x =>
+                new AgentPerformanceResponse(
+                    x.Id,
+                    x.Name,
+                    x.AssignedTickets,
+                    x.ResolvedTickets))
 
             .ToListAsync(cancellationToken);
 

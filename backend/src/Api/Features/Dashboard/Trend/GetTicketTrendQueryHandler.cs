@@ -3,16 +3,14 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Tickets;
 
-
 namespace Api.Features.Dashboard.Trend;
 
 
 public sealed class GetTicketTrendQueryHandler
-: IRequestHandler<
-    GetTicketTrendQuery,
-    IReadOnlyList<TicketTrendResponse>>
+    : IRequestHandler<
+        GetTicketTrendQuery,
+        IReadOnlyList<TicketTrendResponse>>
 {
-
 
     private readonly SupportFlowDbContext _db;
 
@@ -30,7 +28,6 @@ public sealed class GetTicketTrendQueryHandler
         CancellationToken cancellationToken)
     {
 
-
         var query = _db.Tickets.AsQueryable();
 
 
@@ -42,34 +39,60 @@ public sealed class GetTicketTrendQueryHandler
         }
 
 
+        var fromDate =
+            DateTime.SpecifyKind(
+                request.From.ToDateTime(TimeOnly.MinValue),
+                DateTimeKind.Utc);
 
-        var result = await query
 
-        .Where(x =>
-            DateOnly.FromDateTime(x.CreatedAtUtc)
-                >= request.From &&
-            DateOnly.FromDateTime(x.CreatedAtUtc)
-                <= request.To)
+        var toDate =
+            DateTime.SpecifyKind(
+                request.To
+                    .AddDays(1)
+                    .ToDateTime(TimeOnly.MinValue),
+                DateTimeKind.Utc);
 
-        .GroupBy(x =>
-            x.CreatedAtUtc.Date)
 
-        .Select(x =>
-            new TicketTrendResponse(
-                DateOnly.FromDateTime(x.Key),
-                x.Count(),
-                x.Count(t =>
-                    t.Status == TicketStatus.Resolved)
-            ))
+        var tickets = await query
 
-        .OrderBy(x => x.Date)
+            .Where(x =>
+                x.CreatedAtUtc >= fromDate &&
+                x.CreatedAtUtc < toDate)
 
-        .ToListAsync(cancellationToken);
+            .Select(x => new
+            {
+                x.CreatedAtUtc,
+                x.Status
+            })
+
+            .ToListAsync(cancellationToken);
+
+
+        var result = tickets
+
+            .GroupBy(x =>
+                x.CreatedAtUtc.Date)
+
+            .Select(x =>
+                new TicketTrendResponse(
+
+                    DateOnly.FromDateTime(
+                        x.Key),
+
+                    x.Count(),
+
+                    x.Count(t =>
+                        t.Status ==
+                        TicketStatus.Resolved)
+                ))
+
+            .OrderBy(x =>
+                x.Date)
+
+            .ToList();
 
 
 
         return result;
-
     }
-
 }
