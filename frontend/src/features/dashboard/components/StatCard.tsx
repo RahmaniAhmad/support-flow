@@ -15,7 +15,7 @@ export default function StatCard({
 }: Props) {
   return (
     <div
-      className={`flex items-center justify-between gap-2 rounded-xl border border-gray-300 bg-white p-6 shadow-sm ${
+      className={`flex items-center justify-between gap-2 rounded-xl border border-gray-300 bg-white p-6 ${
         className ?? ""
       }`}
     >
