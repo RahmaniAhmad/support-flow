@@ -3,20 +3,25 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import Button from "@/components/ui/Button";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { useRegister } from "@/features/auth/hooks/useRegister";
+
 import {
-  registerSchema,
   RegisterForm,
+  registerSchema,
 } from "@/features/auth/schemas/register.schema";
+
+import Button from "@/components/ui/Button";
 import FormInput from "@/components/form/FormInput";
 import FormPasswordInput from "@/components/form/FormPasswordInput";
+import AuthLayout from "@/features/auth/components/AuthLayout";
+import AuthHeader from "@/features/auth/components/AuthHeader";
+import AuthError from "@/features/auth/components/AuthError";
 
 export default function RegisterPage() {
   const router = useRouter();
-
   const registerMutation = useRegister();
 
   const { control, handleSubmit } = useForm<RegisterForm>({
@@ -37,41 +42,39 @@ export default function RegisterPage() {
 
       router.push("/login");
     } catch {
-      // React Query exposes the error through registerMutation.error
+      // Error is exposed through registerMutation.error.
     }
   }
 
   const error =
     registerMutation.error instanceof AxiosError
       ? (registerMutation.error.response?.data?.message ??
-        "Registration failed.")
+        "Unable to create your account.")
       : registerMutation.isError
-        ? "Registration failed."
+        ? "Unable to create your account."
         : null;
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
-      <form
-        noValidate
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg"
-      >
-        <h1 className="mb-2 text-center text-3xl font-bold text-slate-900">
-          Create Company
-        </h1>
+    <AuthLayout>
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <AuthHeader
+          title="Create your workspace"
+          description="Set up your company workspace and start managing customer support."
+        />
 
-        <p className="mb-8 text-center text-sm text-slate-500">
-          Register your company to start managing tickets.
-        </p>
-
-        <div className="flex flex-col mb-6 gap-y-4">
+        <form
+          noValidate
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-5"
+        >
           <div>
             <label
               htmlFor="companyName"
               className="mb-2 block text-sm font-medium text-slate-700"
             >
-              Company Name
+              Company name
             </label>
+
             <FormInput
               control={control}
               name="companyName"
@@ -85,8 +88,9 @@ export default function RegisterPage() {
               htmlFor="email"
               className="mb-2 block text-sm font-medium text-slate-700"
             >
-              Email
+              Administrator email
             </label>
+
             <FormInput
               control={control}
               name="email"
@@ -102,10 +106,11 @@ export default function RegisterPage() {
             >
               Password
             </label>
+
             <FormPasswordInput
               control={control}
               name="password"
-              placeholder="••••••••"
+              placeholder="Create a strong password"
             />
           </div>
 
@@ -114,41 +119,48 @@ export default function RegisterPage() {
               htmlFor="confirmPassword"
               className="mb-2 block text-sm font-medium text-slate-700"
             >
-              Confirm Password
+              Confirm password
             </label>
 
             <FormPasswordInput
               control={control}
               name="confirmPassword"
-              placeholder="••••••••"
+              placeholder="Confirm your password"
             />
           </div>
 
-          {error && (
-            <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-              {error}
-            </div>
-          )}
+          <AuthError message={error} />
 
           <Button
             className="w-full"
             htmlType="submit"
             isLoading={registerMutation.isPending}
           >
-            Create Company
+            Create Workspace
           </Button>
+        </form>
+
+        <div className="my-6 flex items-center gap-4">
+          <div className="h-px flex-1 bg-slate-200" />
+          <span className="text-xs text-slate-400">ALREADY A MEMBER?</span>
+          <div className="h-px flex-1 bg-slate-200" />
         </div>
 
-        <p className="mt-8 text-center text-sm text-slate-600">
-          Already have an account?{" "}
+        <p className="text-center text-sm text-slate-600">
+          Already have a SupportFlow account?{" "}
           <Link
             href="/login"
-            className="font-medium text-blue-600 hover:text-blue-700"
+            className="font-semibold text-blue-600 transition-colors hover:text-blue-700"
           >
             Sign in
           </Link>
         </p>
-      </form>
-    </main>
+      </div>
+
+      <p className="mt-6 text-center text-xs leading-5 text-slate-500">
+        By creating an account, you agree to SupportFlow&apos;s terms and
+        privacy policy.
+      </p>
+    </AuthLayout>
   );
 }

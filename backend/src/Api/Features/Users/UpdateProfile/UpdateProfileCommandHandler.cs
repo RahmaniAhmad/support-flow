@@ -11,7 +11,6 @@ public sealed class UpdateProfileCommandHandler
     private readonly SupportFlowDbContext _db;
     private readonly ICurrentUser _currentUser;
 
-
     public UpdateProfileCommandHandler(
         SupportFlowDbContext db,
         ICurrentUser currentUser)
@@ -19,7 +18,6 @@ public sealed class UpdateProfileCommandHandler
         _db = db;
         _currentUser = currentUser;
     }
-
 
     public async Task Handle(
         UpdateProfileCommand request,
@@ -30,19 +28,16 @@ public sealed class UpdateProfileCommandHandler
                 x => x.Id == _currentUser.UserId,
                 cancellationToken);
 
-
         if (user is null)
         {
             throw new InvalidOperationException(
                 "User not found.");
         }
 
-
         user.UpdateProfile(
             request.FirstName,
             request.LastName,
             request.Phone);
-
 
         await _db.SaveChangesAsync(cancellationToken);
     }

@@ -5,7 +5,9 @@ namespace Shared.Domain;
 
 public sealed class User : AggregateRoot
 {
+
     private readonly List<RefreshToken> _refreshTokens = [];
+    private readonly List<PasswordResetToken> _passwordResetTokens = [];
 
     public Guid? CompanyId { get; private set; }
 
@@ -26,7 +28,8 @@ public sealed class User : AggregateRoot
     public DateTime CreatedAtUtc { get; private set; }
 
     public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens;
-
+    public IReadOnlyCollection<PasswordResetToken> PasswordResetTokens =>
+        _passwordResetTokens;
 
     private User() { }
 
@@ -41,7 +44,7 @@ public sealed class User : AggregateRoot
         return new User
         {
             CompanyId = companyId,
-            Email = email,
+            Email = email.Trim().ToLowerInvariant(),
             PasswordHash = passwordHash,
             Role = role,
             IsActive = true,
@@ -113,6 +116,20 @@ public sealed class User : AggregateRoot
         return CreateRefreshToken(
             newTokenHash,
             expiresAtUtc);
+    }
+
+    public PasswordResetToken CreatePasswordResetToken(
+        string tokenHash,
+        DateTime expiresAtUtc)
+    {
+        var token = PasswordResetToken.Create(
+            Id,
+            tokenHash,
+            expiresAtUtc);
+
+        _passwordResetTokens.Add(token);
+
+        return token;
     }
 
     public void ChangePassword(string passwordHash)
