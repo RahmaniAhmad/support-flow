@@ -11,6 +11,7 @@ import TicketTrendChart from "@/features/dashboard/components/TicketTrendChart";
 import AgentPerformance from "@/features/dashboard/components/AgentPerformance";
 
 import RecentActivities from "@/features/dashboard/components/RecentActivities";
+import TicketStatusChart from "@/features/dashboard/components/TicketStatusChart";
 
 export default function DashboardPage() {
   return (
@@ -27,8 +28,10 @@ export default function DashboardPage() {
             <TicketTrendChart />
           </div>
 
-          <AgentPerformance />
+          <TicketStatusChart />
         </div>
+
+        <AgentPerformance />
 
         <RecentActivities />
       </div>

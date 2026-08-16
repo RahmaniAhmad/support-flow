@@ -31,7 +31,7 @@ export default function TicketTrendChart() {
     <div className="rounded-xl border border-gray-300 bg-white p-6">
       <h3 className="mb-4 font-semibold">Ticket Trend</h3>
 
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={350}>
         <LineChart data={data}>
           <CartesianGrid />
 
