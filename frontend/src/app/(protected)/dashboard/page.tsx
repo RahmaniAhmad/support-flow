@@ -12,6 +12,7 @@ import AgentPerformance from "@/features/dashboard/components/AgentPerformance";
 
 import RecentActivities from "@/features/dashboard/components/RecentActivities";
 import TicketStatusChart from "@/features/dashboard/components/TicketStatusChart";
+import UnassignedTickets from "@/features/dashboard/components/UnassignedTickets";
 
 export default function DashboardPage() {
   return (
@@ -31,7 +32,10 @@ export default function DashboardPage() {
           <TicketStatusChart />
         </div>
 
-        <AgentPerformance />
+        <div className="grid gap-6 xl:grid-cols-2">
+          <AgentPerformance />
+          <UnassignedTickets />
+        </div>
 
         <RecentActivities />
       </div>

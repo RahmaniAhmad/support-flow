@@ -27,3 +27,11 @@ export interface RecentActivityRespons {
   message: string;
   createdAtUtc: string;
 }
+
+export interface UnassignedTicketRespons {
+  id: string;
+  ticketNumber: number;
+  subject: string;
+  createdBy: string;
+  createdAtUtc: string;
+}

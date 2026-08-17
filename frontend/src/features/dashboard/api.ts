@@ -4,6 +4,7 @@ import {
   DashboardStatisticsRespons,
   RecentActivityRespons,
   TicketTrendRespons,
+  UnassignedTicketRespons,
 } from "./type";
 
 export async function getDashboardStatistics() {
@@ -35,6 +36,19 @@ export async function getAgentPerformance() {
 export async function getRecentActivities() {
   const response = await api.get<RecentActivityRespons[]>(
     "/dashboard/activities",
+  );
+
+  return response.data;
+}
+
+export async function getUnassignedTickets() {
+  const response = await api.get<UnassignedTicketRespons[]>(
+    "/dashboard/unassigned-tickets",
+    {
+      params: {
+        limit: 5,
+      },
+    },
   );
 
   return response.data;
