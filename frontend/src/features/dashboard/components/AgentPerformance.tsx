@@ -1,15 +1,12 @@
 "use client";
 
+import { WidgetSkeleton } from "@/components/ui/skeleton";
 import { useAgentPerformance } from "../hooks/useAgentPerformance";
 
 export default function AgentPerformance() {
   const { data, isPending, error } = useAgentPerformance();
 
-  if (isPending) {
-    return (
-      <div className="rounded-xl border bg-white p-6">Loading agents...</div>
-    );
-  }
+  if (isPending) return <WidgetSkeleton />;
 
   if (error || !data) {
     return (

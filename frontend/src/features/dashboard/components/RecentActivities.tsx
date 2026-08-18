@@ -3,17 +3,12 @@
 import { Clock } from "lucide-react";
 
 import { useRecentActivities } from "../hooks/useRecentActivities";
+import { WidgetSkeleton } from "@/components/ui/skeleton";
 
 export default function RecentActivities() {
   const { data, isPending, error } = useRecentActivities();
 
-  if (isPending) {
-    return (
-      <div className="rounded-xl border bg-white p-6">
-        Loading activities...
-      </div>
-    );
-  }
+  if (isPending) return <WidgetSkeleton />;
 
   if (error || !data) {
     return (

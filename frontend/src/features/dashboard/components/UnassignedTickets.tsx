@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Inbox, UserRoundX } from "lucide-react";
 
 import { useUnassignedTickets } from "../hooks/useUnassignedTickets";
+import { WidgetSkeleton } from "@/components/ui/skeleton";
 
 function formatDate(date: string) {
   return new Intl.DateTimeFormat("en", {
@@ -17,57 +18,14 @@ function formatDate(date: string) {
 export default function UnassignedTickets() {
   const { data, isPending, error } = useUnassignedTickets();
 
-  if (isPending) {
+  if (isPending) return <WidgetSkeleton />;
+
+  if (error || !data) {
     return (
-      <div className="flex h-full min-h-90 flex-col rounded-xl border border-gray-300 bg-white p-6">
-        <div className="mb-6">
-          <div className="h-5 w-40 animate-pulse rounded bg-gray-200" />
-
-          <div className="mt-2 h-4 w-56 animate-pulse rounded bg-gray-200" />
-        </div>
-
-        <div className="space-y-4">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between gap-4"
-            >
-              <div className="flex-1 space-y-2">
-                <div className="h-4 w-3/4 animate-pulse rounded bg-gray-200" />
-
-                <div className="h-3 w-1/3 animate-pulse rounded bg-gray-200" />
-              </div>
-
-              <div className="h-4 w-4 animate-pulse rounded bg-gray-200" />
-            </div>
-          ))}
-        </div>
+      <div className="rounded-xl border bg-white p-6">
+        Failed to load tickets
       </div>
     );
-  }
-
-  if (error) {
-    return (
-      <div className="flex h-full min-h-90 flex-col rounded-xl border border-gray-300 bg-white p-6">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100 text-red-600">
-            <UserRoundX className="h-5 w-5" />
-          </div>
-
-          <div>
-            <h3 className="font-semibold">Unassigned Tickets</h3>
-
-            <p className="text-sm text-muted-foreground">
-              Failed to load tickets
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!data) {
-    return null;
   }
 
   return (

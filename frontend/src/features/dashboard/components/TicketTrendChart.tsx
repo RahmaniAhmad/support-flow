@@ -11,15 +11,12 @@ import {
 } from "recharts";
 
 import { useTicketTrend } from "../hooks/useTicketTrend";
+import { WidgetSkeleton } from "@/components/ui/skeleton";
 
 export default function TicketTrendChart() {
   const { data, isPending, error } = useTicketTrend("2026-08-01", "2026-08-31");
 
-  if (isPending) {
-    return (
-      <div className="rounded-xl border bg-white p-6">Loading trend...</div>
-    );
-  }
+  if (isPending) return <WidgetSkeleton />;
 
   if (error || !data) {
     return (

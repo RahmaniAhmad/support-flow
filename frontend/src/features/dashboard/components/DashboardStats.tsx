@@ -5,13 +5,18 @@ import { Inbox, Clock3, CircleCheck, UserRoundX } from "lucide-react";
 import StatCard from "./StatCard";
 
 import { useDashboardStatistics } from "../hooks/useDashboardStatistics";
+import { CardSkeleton } from "@/components/ui/skeleton";
 
 export default function DashboardStats() {
-  const { data, isPending } = useDashboardStatistics();
+  const { data, isPending, error } = useDashboardStatistics();
 
-  if (isPending) return <div>Loading...</div>;
+  if (isPending) return <CardSkeleton length={4} />;
 
-  if (!data) return null;
+  if (error || !data) {
+    return (
+      <div className="rounded-xl border bg-white p-6">Failed to load stats</div>
+    );
+  }
 
   return (
     <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">

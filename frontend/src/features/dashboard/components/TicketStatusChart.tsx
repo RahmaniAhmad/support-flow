@@ -10,6 +10,7 @@ import {
   YAxis,
 } from "recharts";
 import { useDashboardStatistics } from "../hooks/useDashboardStatistics";
+import { WidgetSkeleton } from "@/components/ui/skeleton";
 
 const STATUS_COLORS = {
   Open: "#3b82f6",
@@ -22,23 +23,16 @@ const STATUS_COLORS = {
 };
 
 export default function TicketStatusChart() {
-  const { data, isPending } = useDashboardStatistics();
+  const { data, isPending, error } = useDashboardStatistics();
 
-  if (isPending) {
+  if (isPending) return <WidgetSkeleton />;
+
+  if (error || !data) {
     return (
-      <div className="rounded-xl border bg-card p-6">
-        <div className="mb-6">
-          <div className="h-5 w-32 animate-pulse rounded bg-muted" />
-          <div className="mt-2 h-4 w-48 animate-pulse rounded bg-muted" />
-        </div>
-
-        <div className="h-75 animate-pulse rounded bg-muted/50" />
+      <div className="rounded-xl border bg-white p-6">
+        Failed to load status chart
       </div>
     );
-  }
-
-  if (!data) {
-    return null;
   }
 
   const chartData = [
