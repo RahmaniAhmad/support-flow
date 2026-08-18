@@ -136,7 +136,7 @@ export default function UnassignedTickets() {
           {/* Footer */}
           <div className="mt-5 border-t pt-4">
             <Link
-              href="/tickets?assigned=false"
+              href="/tickets?status=unassigned"
               className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
             >
               View all unassigned tickets

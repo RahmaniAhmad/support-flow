@@ -50,15 +50,28 @@ export interface TicketComment {
 
 export type TicketListResponse = PagedResponse<TicketListItem>;
 
+export type TicketViewParam = "all" | "assigned-to-me" | "created-by-me";
+
 export type TicketView = "All" | "AssignedToMe" | "CreatedByMe";
+
+export type TicketStatusParam =
+  | "open"
+  | "assigned"
+  | "in-progress"
+  | "pending"
+  | "resolved"
+  | "reopened"
+  | "closed"
+  | "unassigned";
+
+export type TicketFilter = TicketStatus | "Unassigned";
 
 export interface TicketListFilters {
   page?: number;
   pageSize?: number;
   search?: string;
-  status?: TicketStatus;
+  status?: TicketFilter;
   view: TicketView;
-  assignedToUserId?: string;
   sortBy?: string;
   sortDirection?: SortDirection;
 }

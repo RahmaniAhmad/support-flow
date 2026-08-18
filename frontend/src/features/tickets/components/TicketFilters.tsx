@@ -1,17 +1,16 @@
 "use client";
 
-import { TicketStatus } from "@/types/ticket";
 import { Input, Select } from "antd";
 import { useEffect, useState } from "react";
-import { TicketView } from "../types";
+import { TicketFilter, TicketView } from "../types";
 
 type Props = {
   search?: string;
-  status?: TicketStatus;
+  status?: TicketFilter;
   view: TicketView;
 
   onSearch(value: string): void;
-  onStatusChange(value?: TicketStatus): void;
+  onStatusChange(value?: TicketFilter): void;
   onViewChange(view: TicketView): void;
 };
 
@@ -35,11 +34,13 @@ export default function TicketFilters({
 
   return (
     <div
-      className="flex
-      flex-col
-      gap-3
-      mb-4
-      sm:flex-row"
+      className="
+        mb-4
+        flex
+        flex-col
+        gap-3
+        sm:flex-row
+      "
     >
       <Input.Search
         className="w-full sm:w-80"
@@ -49,7 +50,7 @@ export default function TicketFilters({
         onChange={(e) => setSearchValue(e.target.value)}
       />
 
-      <Select<TicketStatus>
+      <Select<TicketFilter>
         className="min-w-32"
         placeholder="Status"
         allowClear
@@ -61,23 +62,36 @@ export default function TicketFilters({
             value: "Open",
           },
           {
-            label: "Reopened",
-            value: "Reopened",
-          },
-          {
             label: "Assigned",
             value: "Assigned",
+          },
+          {
+            label: "In Progress",
+            value: "InProgress",
+          },
+          {
+            label: "Pending",
+            value: "Pending",
           },
           {
             label: "Resolved",
             value: "Resolved",
           },
           {
+            label: "Reopened",
+            value: "Reopened",
+          },
+          {
             label: "Closed",
             value: "Closed",
           },
+          {
+            label: "Unassigned",
+            value: "Unassigned",
+          },
         ]}
       />
+
       <Select<TicketView>
         className="min-w-44"
         value={view}

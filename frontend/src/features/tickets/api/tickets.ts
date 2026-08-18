@@ -7,8 +7,13 @@ import {
 } from "../types";
 
 export async function getTickets(filters?: TicketListFilters) {
+  const { status, ...rest } = filters ?? {};
+
   const { data } = await api.get<TicketListResponse>("/tickets", {
-    params: filters,
+    params: {
+      ...rest,
+      status,
+    },
   });
 
   return data;
