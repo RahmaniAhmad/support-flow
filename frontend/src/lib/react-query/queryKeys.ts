@@ -3,6 +3,21 @@ import { TicketListFilters } from "@/features/tickets/types";
 export const queryKeys = {
   dashboard: {
     all: ["dashboard"] as const,
+
+    statistics: () => [...queryKeys.dashboard.all, "statistics"] as const,
+
+    trend: (from: string, to: string) =>
+      [...queryKeys.dashboard.all, "trend", from, to] as const,
+
+    agents: () => [...queryKeys.dashboard.all, "agents"] as const,
+
+    activities: () => [...queryKeys.dashboard.all, "activities"] as const,
+
+    unassignedTickets: (limit: number) =>
+      [...queryKeys.dashboard.all, "unassigned-tickets", limit] as const,
+
+    statusDistribution: () =>
+      [...queryKeys.dashboard.all, "status-distribution"] as const,
   },
 
   tickets: {

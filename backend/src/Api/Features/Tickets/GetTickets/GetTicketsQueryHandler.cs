@@ -53,10 +53,36 @@ public sealed class GetTicketsQueryHandler
                 EF.Functions.ILike(x.Description, $"%{request.Search}%"));
         }
 
-        if (request.Status is not null)
+        if (request.Filter is not null)
         {
-            query = query.Where(x =>
-                x.Status == request.Status);
+            query = request.Filter switch
+            {
+                TicketFilter.Unassigned =>
+                    query.Where(x => x.AssignedToUserId == null),
+
+                TicketFilter.Open =>
+                    query.Where(x => x.Status == TicketStatus.Open),
+
+                TicketFilter.Assigned =>
+                    query.Where(x => x.Status == TicketStatus.Assigned),
+
+                TicketFilter.InProgress =>
+                    query.Where(x => x.Status == TicketStatus.InProgress),
+
+                TicketFilter.Pending =>
+                    query.Where(x => x.Status == TicketStatus.Pending),
+
+                TicketFilter.Resolved =>
+                    query.Where(x => x.Status == TicketStatus.Resolved),
+
+                TicketFilter.Reopened =>
+                    query.Where(x => x.Status == TicketStatus.Reopened),
+
+                TicketFilter.Closed =>
+                    query.Where(x => x.Status == TicketStatus.Closed),
+
+                _ => query
+            };
         }
 
         query = request.SortBy?.ToLowerInvariant() switch
