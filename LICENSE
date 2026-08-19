@@ -1,21 +1,68 @@
-MIT License
+# SupportFlow Personal and Non-Commercial License
 
-Copyright (c) 2026  Ahmad Rahmani
+Copyright (c) 2026 Ahmad Rahmani
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## 1. Grant of License
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Permission is hereby granted, free of charge, to any individual obtaining a copy of this software and associated documentation files (the "Software"), to use, copy, modify, and distribute the Software, subject to the limitations described below.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## 2. Personal and Non-Commercial Use
+
+The Software may be freely used for:
+
+- Personal use
+- Individual learning and educational purposes
+- Personal experimentation
+- Non-commercial projects
+- Evaluation and development purposes that do not provide a commercial benefit to an organization or business
+
+## 3. Commercial and Organizational Use
+
+Use of the Software by a company, organization, business, or other commercial entity is **not permitted without a separate commercial license** from the copyright holder.
+
+Commercial use includes, but is not limited to:
+
+- Deploying the Software for internal business operations
+- Using the Software to provide services to customers or clients
+- Using the Software as part of a commercial product or service
+- Offering the Software as a hosted or SaaS service
+- Reselling or sublicensing the Software
+- Using modified versions of the Software for commercial purposes
+- Using the Software to generate revenue or provide a commercial benefit to an organization
+
+A commercial license may be obtained by contacting the copyright holder.
+
+## 4. Redistribution
+
+Individuals may share and distribute copies of the Software for personal and non-commercial purposes, provided that this license and the original copyright notice are included with the Software.
+
+Redistribution for commercial purposes requires a separate commercial license.
+
+## 5. Modifications
+
+Individuals are permitted to modify the Software for personal and non-commercial purposes.
+
+Any modified or derivative version used by a company, organization, business, or commercial entity requires a separate commercial license.
+
+## 6. Restrictions
+
+Without a commercial license, you may not:
+
+- Use the Software for commercial purposes
+- Deploy the Software for a company or organization
+- Sell the Software or a derivative work
+- Offer the Software as a paid service or SaaS
+- Sublicense the Software for commercial use
+- Incorporate the Software into a commercial product or service
+
+## 7. Commercial Licensing
+
+For commercial use, including company deployments, SaaS offerings, redistribution, or incorporation into commercial products, please contact the copyright holder to obtain a commercial license.
+
+Commercial licensing terms and fees are determined separately by the copyright holder.
+
+## 8. Disclaimer of Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+IN NO EVENT SHALL THE AUTHOR OR COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
