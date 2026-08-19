@@ -229,7 +229,7 @@ PostgreSQL and other infrastructure services are expected to be provided through
 ### Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/RahmaniAhmad/support-flow.git
 
 cd SupportFlow
 ```
