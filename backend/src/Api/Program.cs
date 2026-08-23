@@ -14,10 +14,10 @@ var allowedOrigins = builder.Configuration
     .GetSection(Api.Options.CorsOptions.SectionName + ":AllowedOrigins")
     .Get<string[]>() ?? [];
 
-// OpenAPI / Swagger
+builder.Services.AddExceptionHandling();
+
 builder.Services.AddOpenApi();
 
-// Database
 builder.Services.AddDbContext<SupportFlowDbContext>(options =>
 {
     options.UseNpgsql(
@@ -30,11 +30,6 @@ builder.Services.AddDbContext<SupportFlowDbContext>(options =>
 
 builder.Services.AddApi();
 builder.Services.AddInfrastructure(builder.Configuration);
-
-builder.Services.AddMediatR(cfg =>
-{
-    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
-});
 
 builder.Services.AddAntiforgery(options =>
 {
@@ -57,16 +52,16 @@ builder.Services.AddAntiforgery(options =>
 });
 
 builder.Services.AddCors(options =>
-       {
-           options.AddPolicy("AllowNextJsApp",
-               builder =>
-               {
-                   builder.WithOrigins(allowedOrigins)
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
-               });
-       });
+{
+    options.AddPolicy("AllowNextJsApp", policy =>
+    {
+        policy
+            .WithOrigins(allowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -79,7 +74,8 @@ var app = builder.Build();
 
 await app.InitializeDatabaseAsync();
 
-// OpenAPI
+app.UseExceptionHandler();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -87,15 +83,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowNextJsApp");
-
 app.UseRouting();
 
-// Authentication / Authorization
+app.UseCors("AllowNextJsApp");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Endpoints
 app.MapApplicationEndpoints();
 
 app.Run();

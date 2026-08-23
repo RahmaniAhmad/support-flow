@@ -1,5 +1,8 @@
 using Api.Authorization;
 using Api.DependencyInjection;
+using FluentValidation;
+using Infrastructure.Pipeline;
+using MediatR;
 
 namespace Api.DependencyInjection;
 
@@ -11,6 +14,12 @@ public static class ApiDependencyInjection
         {
             cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
         });
+        services.AddValidatorsFromAssembly(
+                  typeof(Program).Assembly);
+
+        services.AddScoped(
+                  typeof(IPipelineBehavior<,>),
+                  typeof(ValidationBehavior<,>));
 
         services.AddCacheKeyProviders();
         services.AddApplicationAuthorization();
