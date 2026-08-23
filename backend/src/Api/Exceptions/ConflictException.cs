@@ -1,4 +1,4 @@
-namespace Shared.Domain.Exceptions;
+namespace Api.Exceptions;
 
 public sealed class ConflictException(
     string message,

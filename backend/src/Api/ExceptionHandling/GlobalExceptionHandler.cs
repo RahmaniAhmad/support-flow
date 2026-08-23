@@ -1,7 +1,7 @@
+using Api.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Domain.Exceptions;
 
 namespace Api.ExceptionHandling;
 
@@ -21,17 +21,15 @@ public sealed class GlobalExceptionHandler
         Exception exception,
         CancellationToken cancellationToken)
     {
-        _logger.LogError(
-            exception,
-            "Unhandled exception occurred. TraceId: {TraceId}",
-            httpContext.TraceIdentifier);
+        LogException(httpContext, exception);
 
         var problemDetails = CreateProblemDetails(
             httpContext,
             exception);
 
         httpContext.Response.StatusCode =
-            problemDetails.Status ?? StatusCodes.Status500InternalServerError;
+            problemDetails.Status
+            ?? StatusCodes.Status500InternalServerError;
 
         httpContext.Response.ContentType =
             "application/problem+json";
@@ -41,6 +39,35 @@ public sealed class GlobalExceptionHandler
             cancellationToken);
 
         return true;
+    }
+
+    private void LogException(
+        HttpContext httpContext,
+        Exception exception)
+    {
+        switch (exception)
+        {
+            case ValidationException:
+            case BadRequestException:
+            case UnauthorizedException:
+            case ForbiddenException:
+            case NotFoundException:
+            case ConflictException:
+                _logger.LogWarning(
+                    "Request failed with {ExceptionType}. " +
+                    "TraceId: {TraceId}",
+                    exception.GetType().Name,
+                    httpContext.TraceIdentifier);
+                break;
+
+            default:
+                _logger.LogError(
+                    exception,
+                    "Unhandled exception occurred. " +
+                    "TraceId: {TraceId}",
+                    httpContext.TraceIdentifier);
+                break;
+        }
     }
 
     private static ProblemDetails CreateProblemDetails(
@@ -53,6 +80,22 @@ public sealed class GlobalExceptionHandler
                 CreateValidationProblemDetails(
                     httpContext,
                     validationException),
+
+            UnauthorizedException unauthorizedException =>
+                CreateProblemDetails(
+                    httpContext,
+                    StatusCodes.Status401Unauthorized,
+                    "Unauthorized",
+                    unauthorizedException.Message,
+                    unauthorizedException.Code),
+
+            ForbiddenException forbiddenException =>
+                CreateProblemDetails(
+                    httpContext,
+                    StatusCodes.Status403Forbidden,
+                    "Forbidden",
+                    forbiddenException.Message,
+                    forbiddenException.Code),
 
             NotFoundException notFoundException =>
                 CreateProblemDetails(
