@@ -1,3 +1,6 @@
+using Api.Errors.ErrorCodes;
+using Api.Errors.ErrorMessages;
+using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,8 +31,9 @@ public sealed class CreateTicketCommandHandler
         CancellationToken cancellationToken)
     {
         var companyId = _currentUser.CompanyId
-            ?? throw new UnauthorizedAccessException(
-                "User must belong to a company to create a ticket.");
+                   ?? throw new BadRequestException(
+                       CommonErrorMessages.CompanyContextRequired,
+                       CommonErrorCodes.CompanyContextRequired);
 
         var counter = await _db.CompanyTicketCounters
           .FirstOrDefaultAsync(
