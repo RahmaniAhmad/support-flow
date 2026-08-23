@@ -1,3 +1,6 @@
+using Api.Errors.ErrorCodes;
+using Api.Errors.ErrorMessages;
+using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -35,10 +38,11 @@ public sealed class ResetPasswordCommandHandler
                 cancellationToken);
 
         if (resetToken is null ||
-            !resetToken.IsValid(DateTime.UtcNow))
+                 !resetToken.IsValid(DateTime.UtcNow))
         {
-            throw new InvalidOperationException(
-                "Invalid or expired password reset token.");
+            throw new BadRequestException(
+                AuthenticationErrorMessages.InvalidPasswordResetToken,
+                AuthenticationErrorCodes.InvalidPasswordResetToken);
         }
 
         var user = await _db.Users
@@ -48,8 +52,9 @@ public sealed class ResetPasswordCommandHandler
 
         if (user is null || !user.IsActive)
         {
-            throw new InvalidOperationException(
-                "Unable to reset password.");
+            throw new BadRequestException(
+                AuthenticationErrorMessages.PasswordResetUnavailable,
+                AuthenticationErrorCodes.PasswordResetUnavailable);
         }
 
         var passwordHash = _passwordHasher.Hash(

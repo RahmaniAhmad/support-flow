@@ -7,6 +7,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shared.Domain;
 using Shared.Domain.Users;
+using Api.Exceptions;
+using Api.Errors.ErrorMessages;
+using Api.Errors.ErrorCodes;
 
 namespace Api.Features.Authentication.Login;
 
@@ -38,11 +41,15 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, LoginRes
         var user = await _db.Users.Include(u => u.RefreshTokens)
             .FirstOrDefaultAsync(x => x.Email == command.Email, cancellationToken);
 
-        if (user is null)
-            return null;
-
-        if (!_passwordHasher.Verify(command.Password, user.PasswordHash))
-            return null;
+        if (user is null ||
+         !_passwordHasher.Verify(
+             command.Password,
+             user.PasswordHash))
+        {
+            throw new UnauthorizedException(
+                AuthenticationErrorMessages.InvalidCredentials,
+                AuthenticationErrorCodes.InvalidCredentials);
+        }
 
 
         var accessToken = _jwtTokenGenerator.Generate(

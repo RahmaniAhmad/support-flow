@@ -1,3 +1,6 @@
+using Api.Errors.ErrorCodes;
+using Api.Errors.ErrorMessages;
+using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +34,9 @@ public class RegisterCompanyCommandHandler
 
         if (emailExists)
         {
-            throw new InvalidOperationException("Email is already registered.");
+            throw new ConflictException(
+                AuthenticationErrorMessages.EmailAlreadyRegistered,
+                AuthenticationErrorCodes.EmailAlreadyRegistered);
         }
 
         var company = Company.Create(request.CompanyName);
