@@ -1,9 +1,12 @@
 using Api.Authorization;
+using Api.Errors.ErrorCodes;
+using Api.Errors.ErrorMessages;
+using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Authentication;
-using Shared.Domain.Users;
+
 namespace Api.Features.Tickets.AssignTicket;
 
 public sealed class AssignTicketCommandHandler
@@ -31,7 +34,11 @@ public sealed class AssignTicketCommandHandler
             cancellationToken);
 
         if (ticket is null)
-            throw new InvalidOperationException("Ticket not found.");
+        {
+            throw new NotFoundException(
+                TicketErrorMessages.TicketNotFound,
+                TicketErrorCodes.TicketNotFound);
+        }
 
         var assignedUser = await _db.Users
         .Where(x =>
@@ -43,15 +50,19 @@ public sealed class AssignTicketCommandHandler
 
 
         if (assignedUser is null)
-            throw new InvalidOperationException(
-                "Assigned user not found.");
+        {
+            throw new NotFoundException(
+                TicketErrorMessages.AssignedUserNotFound,
+                TicketErrorCodes.AssignedUserNotFound);
+        }
 
         if (!_accessService.CanAssignTicketTo(
-                ticket,
-                assignedUser))
+              ticket,
+              assignedUser))
         {
-            throw new UnauthorizedAccessException(
-                "You are not allowed to assign this ticket.");
+            throw new ForbiddenException(
+                TicketErrorMessages.CannotAssignTicket,
+                TicketErrorCodes.CannotAssignTicket);
         }
 
         ticket.AssignTo(_currentUser.UserId, request.AssignedToUserId);

@@ -1,3 +1,6 @@
+using Api.Errors.ErrorCodes;
+using Api.Errors.ErrorMessages;
+using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -41,8 +44,9 @@ public sealed class CreateUserCommandHandler
 
         if (exists)
         {
-            throw new InvalidOperationException(
-                "Email already exists.");
+            throw new ConflictException(
+               UserErrorMessages.EmailAlreadyExists,
+               UserErrorCodes.EmailAlreadyExists);
         }
 
 
@@ -51,7 +55,10 @@ public sealed class CreateUserCommandHandler
 
         if (_currentUser.Role != UserRole.SuperAdmin)
         {
-            companyId = _currentUser.CompanyId;
+            companyId = _currentUser.CompanyId
+            ?? throw new ForbiddenException(
+                CommonErrorMessages.CompanyContextRequired,
+                CommonErrorCodes.CompanyContextRequired);
         }
 
 
@@ -90,8 +97,9 @@ public sealed class CreateUserCommandHandler
         {
             if (role == UserRole.SuperAdmin)
             {
-                throw new InvalidOperationException(
-                    "Cannot create another SuperAdmin.");
+                throw new ForbiddenException(
+                   UserErrorMessages.CannotCreateSuperAdmin,
+                   UserErrorCodes.CannotCreateSuperAdmin);
             }
 
             return;
@@ -103,15 +111,17 @@ public sealed class CreateUserCommandHandler
             if (role != UserRole.Agent &&
                 role != UserRole.Customer)
             {
-                throw new UnauthorizedAccessException(
-                    "Admin can only create Agent or Customer users.");
+                throw new ForbiddenException(
+                 UserErrorMessages.AdminCannotCreateThisRole,
+                 UserErrorCodes.AdminCannotCreateThisRole);
             }
 
             return;
         }
 
 
-        throw new UnauthorizedAccessException(
-            "You cannot create users.");
+        throw new ForbiddenException(
+            UserErrorMessages.CannotCreateUsers,
+            UserErrorCodes.CannotCreateUsers);
     }
 }

@@ -1,4 +1,7 @@
 using Api.Authorization;
+using Api.Errors.ErrorCodes;
+using Api.Errors.ErrorMessages;
+using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -27,17 +30,25 @@ public sealed class MoveTicketToPendingCommandHandler
         MoveTicketToPendingCommand request,
         CancellationToken cancellationToken)
     {
-        var ticket = await _db.Tickets
+        var ticket = await _accessService
+            .ApplyTicketAccessFilter(_db.Tickets)
             .FirstOrDefaultAsync(
                 x => x.Id == request.TicketId,
                 cancellationToken);
 
         if (ticket is null)
-            throw new InvalidOperationException(
-                "Ticket not found.");
+        {
+            throw new NotFoundException(
+                TicketErrorMessages.TicketNotFound,
+                TicketErrorCodes.TicketNotFound);
+        }
 
         if (!_accessService.CanMoveToPending(ticket))
-            throw new UnauthorizedAccessException();
+        {
+            throw new ForbiddenException(
+                TicketErrorMessages.CannotMoveToPending,
+                TicketErrorCodes.CannotMoveToPending);
+        }
 
         ticket.MoveToPending(_currentUser.UserId);
 

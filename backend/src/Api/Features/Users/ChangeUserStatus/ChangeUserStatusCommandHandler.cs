@@ -1,4 +1,7 @@
 using Api.Authorization;
+using Api.Errors.ErrorCodes;
+using Api.Errors.ErrorMessages;
+using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -29,11 +32,18 @@ public sealed class ChangeUserStatusCommandHandler
                 cancellationToken);
 
         if (user is null)
-            throw new InvalidOperationException("User not found");
+        {
+            throw new NotFoundException(
+                UserErrorMessages.UserNotFound,
+                UserErrorCodes.UserNotFound);
+        }
 
         if (!_accessService.CanChangeStatus(user))
-            throw new UnauthorizedAccessException(
-                "You cannot manage this user.");
+        {
+            throw new ForbiddenException(
+                UserErrorMessages.CannotChangeStatus,
+                UserErrorCodes.CannotChangeStatus);
+        }
 
         if (request.IsActive)
         {

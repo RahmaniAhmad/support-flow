@@ -1,4 +1,7 @@
 using Api.Authorization;
+using Api.Errors.ErrorCodes;
+using Api.Errors.ErrorMessages;
+using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +35,11 @@ public sealed class AddCommentCommandHandler
             cancellationToken);
 
         if (ticket is null)
-            throw new InvalidOperationException("Ticket not found.");
+        {
+            throw new NotFoundException(
+                TicketErrorMessages.TicketNotFound,
+                TicketErrorCodes.TicketNotFound);
+        }
 
         var commentId = ticket.AddComment(
             _currentUser.UserId,

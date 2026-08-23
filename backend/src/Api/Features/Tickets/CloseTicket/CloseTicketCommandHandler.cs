@@ -1,4 +1,7 @@
 using Api.Authorization;
+using Api.Errors.ErrorCodes;
+using Api.Errors.ErrorMessages;
+using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,17 +27,27 @@ public sealed class CloseTicketCommandHandler
         CloseTicketCommand request,
         CancellationToken cancellationToken)
     {
-        var ticket = await _db.Tickets
-            .FirstOrDefaultAsync(
-                x =>
-                    x.Id == request.TicketId,
-                cancellationToken);
+        var ticket = await _accessService
+        .ApplyTicketAccessFilter(_db.Tickets)
+        .FirstOrDefaultAsync(
+            x => x.Id == request.TicketId,
+            cancellationToken);
+
 
         if (ticket is null)
-            throw new InvalidOperationException("Ticket not found.");
+        {
+            throw new NotFoundException(
+                TicketErrorMessages.TicketNotFound,
+                TicketErrorCodes.TicketNotFound);
+        }
 
-        if (!_accessService.CanAccessTicket(ticket))
-            throw new UnauthorizedAccessException();
+        if (!_accessService.CanCloseTicket(ticket))
+        {
+            throw new ForbiddenException(
+                TicketErrorMessages.CannotCloseTicket,
+                TicketErrorCodes.CannotCloseTicket);
+        }
+
 
         ticket.Close(_currentUser.UserId);
 
