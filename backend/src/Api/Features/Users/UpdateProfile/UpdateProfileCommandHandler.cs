@@ -1,3 +1,6 @@
+using Api.Errors.ErrorCodes;
+using Api.Errors.ErrorMessages;
+using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -30,8 +33,9 @@ public sealed class UpdateProfileCommandHandler
 
         if (user is null)
         {
-            throw new InvalidOperationException(
-                "User not found.");
+            throw new NotFoundException(
+            UserErrorMessages.UserNotFound,
+            UserErrorCodes.UserNotFound);
         }
 
         user.UpdateProfile(

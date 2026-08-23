@@ -1,4 +1,7 @@
 using Api.Authorization;
+using Api.Errors.ErrorCodes;
+using Api.Errors.ErrorMessages;
+using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,18 +31,6 @@ public sealed class ResetUserPasswordCommandHandler
         ResetUserPasswordCommand request,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(request.Password))
-        {
-            throw new InvalidOperationException(
-                "Password is required.");
-        }
-
-        if (request.Password.Length < 8)
-        {
-            throw new InvalidOperationException(
-                "Password must be at least 8 characters.");
-        }
-
         var user = await _db.Users
             .FirstOrDefaultAsync(
                 x => x.Id == request.UserId,
@@ -48,14 +39,16 @@ public sealed class ResetUserPasswordCommandHandler
 
         if (user is null)
         {
-            throw new InvalidOperationException(
-                "User not found.");
+            throw new NotFoundException(
+                    UserErrorMessages.UserNotFound,
+                    UserErrorCodes.UserNotFound);
         }
 
         if (!_accessService.CanResetPassword(user))
         {
-            throw new UnauthorizedAccessException(
-                "You cannot reset this user's password.");
+            throw new ForbiddenException(
+              UserErrorMessages.CannotResetPassword,
+              UserErrorCodes.CannotResetPassword);
         }
 
         var passwordHash =
