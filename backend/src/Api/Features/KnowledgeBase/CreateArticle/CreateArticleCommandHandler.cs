@@ -1,3 +1,6 @@
+using Api.Errors.ErrorCodes;
+using Api.Errors.ErrorMessages;
+using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
 using Shared.Authentication;
@@ -24,8 +27,9 @@ public sealed class CreateArticleCommandHandler
         CancellationToken cancellationToken)
     {
         var companyId = _currentUser.CompanyId
-        ?? throw new InvalidOperationException(
-            "A company is required to create a knowledge article.");
+           ?? throw new ForbiddenException(
+            CommonErrorMessages.CompanyContextRequired,
+            CommonErrorCodes.CompanyContextRequired);
 
         var article = KnowledgeArticle.Create(
              companyId,

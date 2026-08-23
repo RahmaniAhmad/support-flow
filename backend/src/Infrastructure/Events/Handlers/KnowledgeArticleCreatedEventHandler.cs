@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Shared.AI;
 using Shared.Domain.AI;
 using Shared.Domain.KnowledgeBase.Events;
@@ -12,38 +13,51 @@ public sealed class KnowledgeArticleCreatedDomainEventHandler
 
     private readonly IEmbeddingService _embeddingService;
     private readonly IVectorStore _vectorStore;
+    private readonly ILogger<KnowledgeArticleCreatedDomainEventHandler> _logger;
 
     public KnowledgeArticleCreatedDomainEventHandler(
         IEmbeddingService embeddingService,
-        IVectorStore vectorStore)
+        IVectorStore vectorStore,
+        ILogger<KnowledgeArticleCreatedDomainEventHandler> logger)
     {
         _embeddingService = embeddingService;
         _vectorStore = vectorStore;
+        _logger = logger;
     }
 
     public async Task Handle(
         KnowledgeArticleCreatedDomainEvent notification,
         CancellationToken cancellationToken)
     {
-        var text = BuildEmbeddingText(
-            notification.Title,
-            notification.Content);
+        try
+        {
+            var text = BuildEmbeddingText(
+                notification.Title,
+                notification.Content);
 
-        var vector =
-            await _embeddingService.GenerateAsync(
+            var vector =
+                await _embeddingService.GenerateAsync(
+                    text,
+                    cancellationToken);
+
+            var document = new EmbeddingDocument(
+                notification.ArticleId,
+                SourceType,
                 text,
+                vector,
+                notification.CompanyId);
+
+            await _vectorStore.UpsertAsync(
+                document,
                 cancellationToken);
-
-        var document = new EmbeddingDocument(
-            notification.ArticleId,
-            SourceType,
-            text,
-            vector,
-            notification.CompanyId);
-
-        await _vectorStore.UpsertAsync(
-            document,
-            cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "Failed to generate embedding for KnowledgeArticle {ArticleId}",
+                notification.ArticleId);
+        }
     }
 
 
