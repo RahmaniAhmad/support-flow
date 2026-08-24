@@ -10,7 +10,7 @@ import { getTicketColumns } from "./TicketTableColumns";
 import PageTitle from "@/components/ui/page/PageTitle";
 import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
 import TicketTable from "./TicketTable";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   TicketFilter,
   TicketListFilters,

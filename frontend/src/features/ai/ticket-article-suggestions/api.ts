@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import api from "@/lib/api/axios";
 import { SuggestedArticlesResponse } from "./type";
 
 export async function getSuggestedArticles(ticketId: string) {

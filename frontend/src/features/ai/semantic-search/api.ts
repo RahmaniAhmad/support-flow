@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import api from "@/lib/api/axios";
 import { SemanticSearchResponse } from "./type";
 
 export async function semanticSearch(query: string, limit = 5) {

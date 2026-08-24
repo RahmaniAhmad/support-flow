@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import api from "@/lib/api/axios";
 import { TicketComment } from "../../types";
 import { AddCommentRequest } from "../type";
 
