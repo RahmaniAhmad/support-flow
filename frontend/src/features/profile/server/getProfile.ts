@@ -1,6 +1,6 @@
 import "server-only";
 
-import serverApi from "@/lib/server-api";
+import serverApi from "@/lib/api/server-api";
 
 export async function getProfile() {
   try {

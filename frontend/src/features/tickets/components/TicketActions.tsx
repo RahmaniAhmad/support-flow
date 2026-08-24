@@ -121,7 +121,7 @@ export default function TicketActions({ ticket }: TicketActionsProps) {
   }, [ticket.id, reopenMutation, handleConfirmAction]);
 
   const handleAction: MenuProps["onClick"] = useCallback(
-    ({ key }) => {
+    ({ key }: { key: string }) => {
       switch (key as TicketAction) {
         case TicketActionKeys.StartProgress:
           startProgressMutation.mutate(ticket.id, {

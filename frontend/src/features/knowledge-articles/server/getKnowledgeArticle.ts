@@ -1,4 +1,4 @@
-import serverApi from "@/lib/server-api";
+import serverApi from "@/lib/api/server-api";
 
 export async function getKnowledgeArticle(id: string) {
   try {

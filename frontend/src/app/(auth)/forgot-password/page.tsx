@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -17,6 +16,7 @@ import {
   forgotPasswordSchema,
   ForgotPasswordForm,
 } from "@/features/auth/schemas/forgotPassword.schema";
+import { getProblemDetails } from "@/lib/api/errors";
 
 export default function ForgotPasswordPage() {
   const forgotPasswordMutation = useForgotPassword();
@@ -29,20 +29,14 @@ export default function ForgotPasswordPage() {
   });
 
   async function onSubmit(data: ForgotPasswordForm) {
-    try {
-      await forgotPasswordMutation.mutateAsync(data);
-    } catch {
-      // Error is exposed through forgotPasswordMutation.error.
-    }
+    await forgotPasswordMutation.mutateAsync(data);
   }
 
-  const error =
-    forgotPasswordMutation.error instanceof AxiosError
-      ? (forgotPasswordMutation.error.response?.data?.message ??
-        "Unable to process your request.")
-      : forgotPasswordMutation.isError
-        ? "Unable to process your request."
-        : null;
+  const problemDetails = getProblemDetails(forgotPasswordMutation.error);
+
+  const error = forgotPasswordMutation.isError
+    ? (problemDetails?.detail ?? "Unable to process your request.")
+    : null;
 
   return (
     <AuthLayout>
