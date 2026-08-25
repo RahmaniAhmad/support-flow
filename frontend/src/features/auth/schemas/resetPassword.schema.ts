@@ -10,4 +10,4 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
   });
 
-export type ResetPasswordForm = z.infer<typeof resetPasswordSchema>;
+export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;

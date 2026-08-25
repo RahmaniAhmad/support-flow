@@ -6,25 +6,27 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRegister } from "@/features/auth/hooks/useRegister";
-
 import {
-  RegisterForm,
+  RegisterFormData,
   registerSchema,
 } from "@/features/auth/schemas/register.schema";
 
 import Button from "@/components/ui/Button";
 import FormInput from "@/components/form/FormInput";
 import FormPasswordInput from "@/components/form/FormPasswordInput";
+
 import AuthLayout from "@/features/auth/components/AuthLayout";
 import AuthHeader from "@/features/auth/components/AuthHeader";
 import AuthError from "@/features/auth/components/AuthError";
-import { getProblemDetails } from "@/lib/api/errors";
 
-export default function RegisterView() {
+import { getApiErrorMessage } from "@/lib/api/errors";
+
+export default function RegisterForm() {
   const router = useRouter();
+
   const registerMutation = useRegister();
 
-  const { control, handleSubmit } = useForm<RegisterForm>({
+  const { control, handleSubmit } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       companyName: "",
@@ -34,24 +36,25 @@ export default function RegisterView() {
     },
   });
 
-  async function onSubmit(data: RegisterForm) {
-    const request = {
-      companyName: data.companyName,
-      email: data.email,
-      password: data.password,
-    };
+  async function onSubmit(data: RegisterFormData) {
+    try {
+      await registerMutation.mutateAsync({
+        companyName: data.companyName,
+        email: data.email,
+        password: data.password,
+      });
 
-    registerMutation.mutate(request, {
-      onSuccess: () => {
-        router.push("/login");
-      },
-    });
+      router.push("/login");
+    } catch {
+      // Error handled by mutation state
+    }
   }
 
-  const problemDetails = getProblemDetails(registerMutation.error);
-
   const error = registerMutation.isError
-    ? (problemDetails?.detail ?? "Unable to create your account.")
+    ? getApiErrorMessage(
+        registerMutation.error,
+        "Unable to create your account.",
+      )
     : null;
 
   return (

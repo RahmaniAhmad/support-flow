@@ -6,7 +6,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useLogin } from "@/features/auth/hooks/useLogin";
-import { LoginForm, loginSchema } from "@/features/auth/schemas/login.schema";
+import {
+  LoginFormData,
+  loginSchema,
+} from "@/features/auth/schemas/login.schema";
 
 import Button from "@/components/ui/Button";
 import FormInput from "@/components/form/FormInput";
@@ -15,13 +18,14 @@ import FormPasswordInput from "@/components/form/FormPasswordInput";
 import AuthLayout from "@/features/auth/components/AuthLayout";
 import AuthHeader from "@/features/auth/components/AuthHeader";
 import AuthError from "@/features/auth/components/AuthError";
-import { getProblemDetails } from "@/lib/api/errors";
 
-export default function LoginView() {
+import { getApiErrorMessage } from "@/lib/api/errors";
+
+export default function LoginForm() {
   const router = useRouter();
   const loginMutation = useLogin();
 
-  const { control, handleSubmit } = useForm<LoginForm>({
+  const { control, handleSubmit } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -29,19 +33,21 @@ export default function LoginView() {
     },
   });
 
-  async function onSubmit(data: LoginForm) {
-    loginMutation.mutate(data, {
-      onSuccess: () => {
-        router.push("/dashboard");
-      },
-    });
+  async function onSubmit(data: LoginFormData) {
+    try {
+      await loginMutation.mutateAsync(data);
+
+      router.push("/dashboard");
+    } catch {
+      // Error handled by mutation state
+    }
   }
 
-  const problemDetails = getProblemDetails(loginMutation.error);
-
   const error = loginMutation.isError
-    ? (problemDetails?.detail ??
-      "Unable to sign in. Please check your credentials.")
+    ? getApiErrorMessage(
+        loginMutation.error,
+        "Unable to sign in. Please check your credentials.",
+      )
     : null;
 
   return (
@@ -101,7 +107,9 @@ export default function LoginView() {
 
         <div className="my-6 flex items-center gap-4">
           <div className="h-px flex-1 bg-slate-200" />
+
           <span className="text-xs text-slate-400">OR</span>
+
           <div className="h-px flex-1 bg-slate-200" />
         </div>
 
