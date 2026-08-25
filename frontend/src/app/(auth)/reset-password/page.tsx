@@ -1,10 +1,10 @@
-import ResetPasswordView from "@/features/auth/components/ResetPasswordView";
+import ResetPasswordForm from "@/features/auth/components/ResetPasswordForm";
 import { Suspense } from "react";
 
 export default function ResetPasswordPage() {
   return (
     <Suspense fallback={null}>
-      <ResetPasswordView />
+      <ResetPasswordForm />
     </Suspense>
   );
 }
