@@ -6,6 +6,7 @@ type FormInputProps<T extends FieldValues> = {
   name: FieldPath<T>;
   placeholder?: string;
   type?: React.HTMLInputTypeAttribute;
+  maxLength?: number;
 };
 
 export default function FormInput<T extends FieldValues>({
@@ -13,6 +14,7 @@ export default function FormInput<T extends FieldValues>({
   name,
   placeholder,
   type = "text",
+  maxLength,
 }: FormInputProps<T>) {
   return (
     <Controller
@@ -24,6 +26,7 @@ export default function FormInput<T extends FieldValues>({
             {...field}
             type={type}
             placeholder={placeholder}
+            maxLength={maxLength}
             status={fieldState.error ? "error" : undefined}
           />
           {fieldState.error && (
