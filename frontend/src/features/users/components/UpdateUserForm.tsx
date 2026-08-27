@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -17,6 +16,9 @@ import {
 
 import { useUpdateUser } from "../hooks/useUpdateUser";
 import FormCard from "@/components/form/FormCard";
+import { USER_VALIDATION } from "../constants/user-validation";
+import FormError from "@/components/form/FormError";
+import FormLabel from "@/components/form/FormLabel";
 
 type Props = {
   user: UpdateUserFormData;
@@ -40,22 +42,14 @@ export default function UpdateUserForm({ user, userId }: Props) {
     },
   });
 
-  async function onSubmit(data: UpdateUserFormData) {
-    try {
-      await mutation.mutateAsync(data);
-
-      message.success("User updated successfully.");
-
-      router.push(`/users/${userId}`);
-    } catch {}
+  function onSubmit(data: UpdateUserFormData) {
+    mutation.mutate(data, {
+      onSuccess: () => {
+        message.success("User updated successfully.");
+        router.push(`/users/${userId}`);
+      },
+    });
   }
-
-  const error =
-    mutation.error instanceof AxiosError
-      ? (mutation.error.response?.data?.message ?? "Failed to update user.")
-      : mutation.isError
-        ? "Failed to update user."
-        : null;
 
   return (
     <FormCard
@@ -64,69 +58,36 @@ export default function UpdateUserForm({ user, userId }: Props) {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div>
-        <label
-          className="
-              mb-2
-              block
-              text-sm
-              font-medium
-              text-slate-700
-            "
-        >
-          First Name
-        </label>
-
-        <FormInput control={control} name="firstName" placeholder="John" />
+        <FormLabel>First Name</FormLabel>
+        <FormInput
+          control={control}
+          name="firstName"
+          placeholder="Ahmad"
+          maxLength={USER_VALIDATION.FIRST_NAME_MAX_LENGTH}
+        />
       </div>
 
       <div>
-        <label
-          className="
-              mb-2
-              block
-              text-sm
-              font-medium
-              text-slate-700
-            "
-        >
-          Last Name
-        </label>
-
-        <FormInput control={control} name="lastName" placeholder="Smith" />
+        <FormLabel>Last Name</FormLabel>
+        <FormInput
+          control={control}
+          name="lastName"
+          placeholder="Rahmani"
+          maxLength={USER_VALIDATION.LAST_NAME_MAX_LENGTH}
+        />
       </div>
 
       <div>
-        <label
-          className="
-              mb-2
-              block
-              text-sm
-              font-medium
-              text-slate-700
-            "
-        >
-          Phone
-        </label>
-
-        <FormInput control={control} name="phone" placeholder="+123456789" />
+        <FormLabel>Phone</FormLabel>
+        <FormInput
+          control={control}
+          name="phone"
+          placeholder="+123456789"
+          maxLength={USER_VALIDATION.PHONE_MAX_LENGTH}
+        />
       </div>
 
-      {error && (
-        <div
-          className="
-              rounded-md
-              border
-              border-red-200
-              bg-red-50
-              px-3
-              py-2
-              text-sm
-              text-red-700
-            "
-        >
-          {error}
-        </div>
-      )}
+      {mutation.error && <FormError error={mutation.error} />}
 
       <Button
         htmlType="submit"

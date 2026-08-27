@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -15,10 +14,12 @@ import {
   CreateUserFormData,
 } from "../schemas/create-user.schema";
 import FormCard from "@/components/form/FormCard";
+import FormError from "@/components/form/FormError";
+import { USER_VALIDATION } from "../constants/user-validation";
+import FormLabel from "@/components/form/FormLabel";
 
 export default function CreateUserForm() {
   const router = useRouter();
-
   const message = useMessage();
 
   const mutation = useCreateUser();
@@ -36,24 +37,14 @@ export default function CreateUserForm() {
     },
   });
 
-  async function onSubmit(data: CreateUserFormData) {
-    try {
-      await mutation.mutateAsync(data);
-
-      message.success("User created successfully.");
-
-      router.push("/users");
-    } catch {
-      // error handled below
-    }
+  function onSubmit(data: CreateUserFormData) {
+    mutation.mutate(data, {
+      onSuccess: () => {
+        message.success("User created successfully.");
+        router.push("/users");
+      },
+    });
   }
-
-  const error =
-    mutation.error instanceof AxiosError
-      ? (mutation.error.response?.data?.message ?? "Failed to create user.")
-      : mutation.isError
-        ? "Failed to create user."
-        : null;
 
   return (
     <FormCard
@@ -62,74 +53,37 @@ export default function CreateUserForm() {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div>
-        <label
-          htmlFor="firstName"
-          className="
-              mb-2
-              block
-              text-sm
-              font-medium
-              text-slate-700
-            "
-        >
-          First Name
-        </label>
-
-        <FormInput control={control} name="firstName" placeholder="John" />
-      </div>
-
-      <div>
-        <label
-          htmlFor="lastName"
-          className="
-              mb-2
-              block
-              text-sm
-              font-medium
-              text-slate-700
-            "
-        >
-          Last Name
-        </label>
-
-        <FormInput control={control} name="lastName" placeholder="Smith" />
-      </div>
-
-      <div>
-        <label
-          htmlFor="email"
-          className="
-              mb-2
-              block
-              text-sm
-              font-medium
-              text-slate-700
-            "
-        >
-          Email
-        </label>
-
+        <FormLabel>First Name</FormLabel>
         <FormInput
           control={control}
-          name="email"
-          placeholder="john@example.com"
+          name="firstName"
+          placeholder="Ahmad"
+          maxLength={USER_VALIDATION.FIRST_NAME_MAX_LENGTH}
         />
       </div>
 
       <div>
-        <label
-          htmlFor="password"
-          className="
-              mb-2
-              block
-              text-sm
-              font-medium
-              text-slate-700
-            "
-        >
-          Password
-        </label>
+        <FormLabel>Last Name</FormLabel>
+        <FormInput
+          control={control}
+          name="lastName"
+          placeholder="Rahmani"
+          maxLength={USER_VALIDATION.LAST_NAME_MAX_LENGTH}
+        />
+      </div>
 
+      <div>
+        <FormLabel>Email</FormLabel>
+        <FormInput
+          control={control}
+          name="email"
+          placeholder="ahmad@example.com"
+          maxLength={USER_VALIDATION.EMAIL_MAX_LENGTH}
+        />
+      </div>
+
+      <div>
+        <FormLabel>Password</FormLabel>
         <FormInput
           control={control}
           name="password"
@@ -139,36 +93,17 @@ export default function CreateUserForm() {
       </div>
 
       <div>
-        <label
-          htmlFor="phone"
-          className="
-              mb-2
-              block
-              text-sm
-              font-medium
-              text-slate-700
-            "
-        >
-          Phone
-        </label>
-
-        <FormInput control={control} name="phone" placeholder="+123456789" />
+        <FormLabel>Phone</FormLabel>
+        <FormInput
+          control={control}
+          name="phone"
+          placeholder="+123456789"
+          maxLength={USER_VALIDATION.PHONE_MAX_LENGTH}
+        />
       </div>
 
       <div>
-        <label
-          htmlFor="role"
-          className="
-              mb-2
-              block
-              text-sm
-              font-medium
-              text-slate-700
-            "
-        >
-          Role
-        </label>
-
+        <FormLabel>Role</FormLabel>
         <select
           {...control.register("role")}
           className="
@@ -187,22 +122,7 @@ export default function CreateUserForm() {
         </select>
       </div>
 
-      {error && (
-        <div
-          className="
-              rounded-md
-              border
-              border-red-200
-              bg-red-50
-              px-3
-              py-2
-              text-sm
-              text-red-700
-            "
-        >
-          {error}
-        </div>
-      )}
+      {mutation.error && <FormError error={mutation.error} />}
 
       <Button
         htmlType="submit"
