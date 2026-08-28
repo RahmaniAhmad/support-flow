@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/react-query/queryKeys";
-import { reopenTicket } from "../api/tickets";
+import { reopenTicket } from "../api";
 
 export function useReopenTicket() {
   const queryClient = useQueryClient();

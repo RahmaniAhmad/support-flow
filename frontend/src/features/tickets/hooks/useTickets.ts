@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/react-query/queryKeys";
 
 import { TicketListFilters } from "../types";
-import { getTickets } from "../api/tickets";
+import { getTickets } from "../api";
 
 export function useTickets(filters?: TicketListFilters) {
   return useQuery({

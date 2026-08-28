@@ -12,6 +12,7 @@ public sealed class CreateTicketCommandValidator
             .MaximumLength(200);
 
         RuleFor(x => x.Description)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(4000);
     }
 }

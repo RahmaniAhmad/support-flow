@@ -1,0 +1,4 @@
+export const TICKET_VALIDATION = {
+  SUBJECT_MAX_LENGTH: 200,
+  DESCRIPTION_MAX_LENGTH: 4000,
+} as const;

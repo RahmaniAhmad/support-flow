@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/react-query/queryKeys";
-import { createTicket } from "../api/tickets";
+import { createTicket } from "../api";
 
 export function useCreateTicket() {
   const queryClient = useQueryClient();

@@ -4,7 +4,7 @@ import {
   TicketDetails,
   TicketListFilters,
   TicketListResponse,
-} from "../types";
+} from "./types";
 
 export async function getTickets(filters?: TicketListFilters) {
   const { status, ...rest } = filters ?? {};
