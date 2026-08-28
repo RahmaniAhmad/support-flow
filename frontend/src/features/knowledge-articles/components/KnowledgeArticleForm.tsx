@@ -14,6 +14,9 @@ import {
 import { useCreateKnowledgeArticle } from "../hooks/useCreateKnowledgeArticle";
 import { useUpdateKnowledgeArticle } from "../hooks/useUpdateKnowledgeArticle";
 import { useMessage } from "@/app/providers/MessageProvider";
+import FormError from "@/components/form/FormError";
+import FormLabel from "@/components/form/FormLabel";
+import { KNOWLEDGE_ARTICLES_VALIDATION } from "../constants/knowledge-articles-validation";
 
 type Props = {
   article?: CreateArticleFormData;
@@ -32,19 +35,22 @@ export default function KnowledgeArticleForm({ article, articleId }: Props) {
     defaultValues: article ?? { title: "", content: "" },
   });
 
-  async function onSubmit(data: CreateArticleFormData) {
-    try {
-      if (articleId) {
-        await updateMutation.mutateAsync(data);
-        message.success("Article updated successfully.");
-        router.push("/knowledge-articles");
-      } else {
-        await createMutation.mutateAsync(data);
-        message.success("Article created successfully.");
-        router.push("/knowledge-articles");
-      }
-    } catch {
-      // handled via mutation error state
+  function onSubmit(data: CreateArticleFormData) {
+    if (articleId) {
+      updateMutation.mutate(data, {
+        onSuccess: () => {
+          message.success("Article updated successfully.");
+          router.push("/knowledge-articles");
+        },
+      });
+    } else {
+      createMutation.mutate(data, {
+        onSuccess: () => {
+          debugger;
+          message.success("Article created successfully.");
+          router.push("/knowledge-articles");
+        },
+      });
     }
   }
 
@@ -59,27 +65,27 @@ export default function KnowledgeArticleForm({ article, articleId }: Props) {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700">
-          Title
-        </label>
+        <FormLabel>Title</FormLabel>
         <FormInput
           control={control}
           name="title"
           placeholder="How to reset password"
+          maxLength={KNOWLEDGE_ARTICLES_VALIDATION.TITLE_MAX_LENGTH}
         />
       </div>
-
       <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700">
-          Content
-        </label>
+        <FormLabel>Content</FormLabel>
         <FormTextArea
           control={control}
           name="content"
           placeholder="Article content..."
           rows={12}
+          maxLength={KNOWLEDGE_ARTICLES_VALIDATION.TITLE_MAX_LENGTH}
         />
       </div>
+
+      {createMutation.error && <FormError error={createMutation.error} />}
+      {updateMutation.error && <FormError error={updateMutation.error} />}
 
       <Button htmlType="submit" className="w-full" isLoading={isLoading}>
         {articleId ? "Save" : "Create"}
