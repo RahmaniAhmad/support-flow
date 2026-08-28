@@ -28,7 +28,7 @@ export default function KnowledgeArticleForm({ article, articleId }: Props) {
   const message = useMessage();
 
   const createMutation = useCreateKnowledgeArticle();
-  const updateMutation = useUpdateKnowledgeArticle(articleId);
+  const updateMutation = useUpdateKnowledgeArticle(articleId ?? "");
 
   const { control, handleSubmit } = useForm<CreateArticleFormData>({
     resolver: zodResolver(createArticleSchema),
