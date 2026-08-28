@@ -9,7 +9,8 @@ public sealed class CreateUserCommandValidator
     {
         RuleFor(x => x.Email)
             .NotEmpty()
-            .EmailAddress();
+            .EmailAddress()
+            .MaximumLength(256);
 
         RuleFor(x => x.Password)
             .NotEmpty()

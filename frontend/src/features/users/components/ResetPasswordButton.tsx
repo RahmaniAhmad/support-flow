@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Modal } from "antd";
-import { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -17,6 +16,8 @@ import {
 } from "../schemas/reset-password.schema";
 
 import { useResetUserPassword } from "../hooks/useResetUserPassword";
+import FormError from "@/components/form/FormError";
+import FormLabel from "@/components/form/FormLabel";
 
 type Props = {
   userId: string;
@@ -42,24 +43,14 @@ export default function ResetPasswordButton({ userId }: Props) {
     setOpen(false);
   }
 
-  async function onSubmit(data: ResetPasswordFormData) {
-    try {
-      await mutation.mutateAsync(data.password);
-
-      message.success("Password reset successfully.");
-
-      handleClose();
-    } catch {
-      // error handled below
-    }
+  function onSubmit(data: ResetPasswordFormData) {
+    mutation.mutate(data.password, {
+      onSuccess: () => {
+        message.success("Password reset successfully.");
+        handleClose();
+      },
+    });
   }
-
-  const error =
-    mutation.error instanceof AxiosError
-      ? (mutation.error.response?.data?.message ?? "Failed to reset password.")
-      : mutation.isError
-        ? "Failed to reset password."
-        : null;
 
   return (
     <>
@@ -78,17 +69,7 @@ export default function ResetPasswordButton({ userId }: Props) {
           className="mt-4 flex flex-col gap-y-4"
         >
           <div>
-            <label
-              className="
-                mb-2
-                block
-                text-sm
-                font-medium
-                text-slate-700
-              "
-            >
-              New Password
-            </label>
+            <FormLabel>New Password</FormLabel>
 
             <FormInput
               control={control}
@@ -98,22 +79,7 @@ export default function ResetPasswordButton({ userId }: Props) {
             />
           </div>
 
-          {error && (
-            <div
-              className="
-                rounded-md
-                border
-                border-red-200
-                bg-red-50
-                px-3
-                py-2
-                text-sm
-                text-red-700
-              "
-            >
-              {error}
-            </div>
-          )}
+          {mutation.error && <FormError error={mutation.error} />}
 
           <Button
             htmlType="submit"

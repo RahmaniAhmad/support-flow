@@ -4,21 +4,21 @@ using Shared.AI;
 using Shared.Domain.AI;
 using Shared.Domain.KnowledgeBase.Events;
 
-namespace Infrastructure.Event.Handler;
+namespace Infrastructure.Events.Handlers;
 
-public sealed class KnowledgeArticleCreatedDomainEventHandler
-    : INotificationHandler<KnowledgeArticleCreatedDomainEvent>
+public sealed class KnowledgeArticleUpdatedEmbeddingHandler
+    : INotificationHandler<KnowledgeArticleUpdatedDomainEvent>
 {
     private const string SourceType = "KnowledgeArticle";
 
     private readonly IEmbeddingService _embeddingService;
     private readonly IVectorStore _vectorStore;
-    private readonly ILogger<KnowledgeArticleCreatedDomainEventHandler> _logger;
+    private readonly ILogger<KnowledgeArticleUpdatedEmbeddingHandler> _logger;
 
-    public KnowledgeArticleCreatedDomainEventHandler(
+    public KnowledgeArticleUpdatedEmbeddingHandler(
         IEmbeddingService embeddingService,
         IVectorStore vectorStore,
-        ILogger<KnowledgeArticleCreatedDomainEventHandler> logger)
+        ILogger<KnowledgeArticleUpdatedEmbeddingHandler> logger)
     {
         _embeddingService = embeddingService;
         _vectorStore = vectorStore;
@@ -26,7 +26,7 @@ public sealed class KnowledgeArticleCreatedDomainEventHandler
     }
 
     public async Task Handle(
-        KnowledgeArticleCreatedDomainEvent notification,
+        KnowledgeArticleUpdatedDomainEvent notification,
         CancellationToken cancellationToken)
     {
         try
