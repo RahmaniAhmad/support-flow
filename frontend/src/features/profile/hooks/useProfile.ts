@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getProfile } from "../api/profile";
 import { queryKeys } from "@/lib/react-query/queryKeys";
+import { getProfile } from "../api";
 
 export function useProfile() {
   return useQuery({
