@@ -4,7 +4,7 @@ import {
   LoginRequest,
   RegisterRequest,
   ResetPasswordRequest,
-} from "../types";
+} from "./types";
 
 export async function login(request: LoginRequest) {
   const response = await api.post("/auth/login", request);

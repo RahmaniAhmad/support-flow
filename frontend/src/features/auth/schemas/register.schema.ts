@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { AUTH_VALIDATION } from "../constants/auth-validation";
 
 export const registerSchema = z
   .object({
@@ -6,15 +7,29 @@ export const registerSchema = z
       .string()
       .trim()
       .min(1, "Company name is required")
-      .max(100, "Company name is too long"),
-
+      .max(
+        AUTH_VALIDATION.COMPANY_NAME_MAX_LENGTH,
+        `Company name must be ${AUTH_VALIDATION.COMPANY_NAME_MAX_LENGTH} characters or fewer.`,
+      ),
     email: z
-      .string()
+      .email("Please enter a valid email address")
       .trim()
       .min(1, "Email is required")
-      .pipe(z.email("Please enter a valid email address")),
+      .max(
+        AUTH_VALIDATION.EMAIL_MAX_LENGTH,
+        `Email must be ${AUTH_VALIDATION.EMAIL_MAX_LENGTH} characters or fewer.`,
+      ),
 
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: z
+      .string()
+      .min(
+        AUTH_VALIDATION.PASSWORD_MIN_LENGTH,
+        `Password must be at least ${AUTH_VALIDATION.PASSWORD_MIN_LENGTH} characters`,
+      )
+      .max(
+        AUTH_VALIDATION.PASSWORD_MAX_LENGTH,
+        `Password must be ${AUTH_VALIDATION.PASSWORD_MAX_LENGTH} characters or fewer.`,
+      ),
 
     confirmPassword: z.string(),
   })

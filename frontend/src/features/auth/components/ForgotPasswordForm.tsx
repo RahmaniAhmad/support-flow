@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import AuthLayout from "@/features/auth/components/AuthLayout";
 import AuthHeader from "@/features/auth/components/AuthHeader";
-import AuthError from "@/features/auth/components/AuthError";
 
 import Button from "@/components/ui/Button";
 import FormInput from "@/components/form/FormInput";
@@ -17,7 +16,9 @@ import {
   ForgotPasswordFormData,
 } from "@/features/auth/schemas/forgotPassword.schema";
 
-import { getApiErrorMessage } from "@/lib/api/errors";
+import FormLabel from "@/components/form/FormLabel";
+import { AUTH_VALIDATION } from "../constants/auth-validation";
+import FormError from "@/components/form/FormError";
 
 export default function ForgotPasswordForm() {
   const forgotPasswordMutation = useForgotPassword();
@@ -32,13 +33,6 @@ export default function ForgotPasswordForm() {
   function onSubmit(data: ForgotPasswordFormData) {
     forgotPasswordMutation.mutate(data);
   }
-
-  const error = forgotPasswordMutation.isError
-    ? getApiErrorMessage(
-        forgotPasswordMutation.error,
-        "Unable to process your request.",
-      )
-    : null;
 
   return (
     <AuthLayout>
@@ -56,23 +50,19 @@ export default function ForgotPasswordForm() {
               className="space-y-5"
             >
               <div>
-                <label
-                  htmlFor="email"
-                  className="mb-2 block text-sm
-                  font-medium text-slate-700"
-                >
-                  Email address
-                </label>
-
+                <FormLabel>Email address</FormLabel>
                 <FormInput
                   control={control}
                   name="email"
                   type="email"
                   placeholder="you@company.com"
+                  maxLength={AUTH_VALIDATION.EMAIL_MAX_LENGTH}
                 />
               </div>
 
-              <AuthError message={error} />
+              {forgotPasswordMutation.error && (
+                <FormError error={forgotPasswordMutation.error} />
+              )}
 
               <Button
                 className="w-full"
