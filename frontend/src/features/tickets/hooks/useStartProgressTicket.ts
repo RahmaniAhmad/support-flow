@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/react-query/queryKeys";
-import { startProgressTicket } from "../api/tickets";
+import { startProgressTicket } from "../api";
 
 export function useStartProgressTicket() {
   const queryClient = useQueryClient();

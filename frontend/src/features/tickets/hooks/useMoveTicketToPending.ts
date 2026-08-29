@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { moveTicketToPending } from "../api/tickets";
+import { moveTicketToPending } from "../api";
 import { queryKeys } from "@/lib/react-query/queryKeys";
 
 export function useMoveTicketToPending() {

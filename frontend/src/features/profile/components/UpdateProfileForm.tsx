@@ -1,6 +1,5 @@
 "use client";
 
-import { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -15,6 +14,9 @@ import { useRouter } from "next/navigation";
 import FormCard from "@/components/form/FormCard";
 import FormInput from "@/components/form/FormInput";
 import Button from "@/components/ui/Button";
+import FormLabel from "@/components/form/FormLabel";
+import { PROFILE_VALIDATION } from "../constants/profile-validation";
+import FormError from "@/components/form/FormError";
 
 type Props = {
   profile: UpdateProfileFormData;
@@ -36,24 +38,14 @@ export default function UpdateProfileForm({ profile }: Props) {
     },
   });
 
-  async function onSubmit(data: UpdateProfileFormData) {
-    try {
-      await mutation.mutateAsync(data);
-
-      message.success("Profile updated successfully.");
-
-      router.push("/profile");
-    } catch {
-      // React Query exposes the error through mutation.error
-    }
+  function onSubmit(data: UpdateProfileFormData) {
+    mutation.mutate(data, {
+      onSuccess: () => {
+        message.success("Profile updated successfully.");
+        router.push("/profile");
+      },
+    });
   }
-
-  const error =
-    mutation.error instanceof AxiosError
-      ? (mutation.error.response?.data?.message ?? "Failed to update profile.")
-      : mutation.isError
-        ? "Failed to update profile."
-        : null;
 
   return (
     <FormCard
@@ -62,47 +54,36 @@ export default function UpdateProfileForm({ profile }: Props) {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div>
-        <label
-          htmlFor="firstName"
-          className="mb-2 block text-sm font-medium text-slate-700"
-        >
-          First Name
-        </label>
-
-        <FormInput control={control} name="firstName" placeholder="Ahmad" />
+        <FormLabel>First Name</FormLabel>
+        <FormInput
+          control={control}
+          name="firstName"
+          placeholder="Ahmad"
+          maxLength={PROFILE_VALIDATION.FIRST_NAME_MAX_LENGTH}
+        />
       </div>
 
       <div>
-        <label
-          htmlFor="lastName"
-          className="mb-2 block text-sm font-medium text-slate-700"
-        >
-          Last Name
-        </label>
-
-        <FormInput control={control} name="lastName" placeholder="Rahmani" />
+        <FormLabel>Last Name</FormLabel>
+        <FormInput
+          control={control}
+          name="lastName"
+          placeholder="Rahmani"
+          maxLength={PROFILE_VALIDATION.LAST_NAME_MAX_LENGTH}
+        />
       </div>
 
       <div>
-        <label
-          htmlFor="phone"
-          className="mb-2 block text-sm font-medium text-slate-700"
-        >
-          Phone
-        </label>
-
+        <FormLabel>Phone</FormLabel>
         <FormInput
           control={control}
           name="phone"
           placeholder="+98 912 000 0000"
+          maxLength={PROFILE_VALIDATION.PHONE_MAX_LENGTH}
         />
       </div>
 
-      {error && (
-        <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-          {error}
-        </div>
-      )}
+      {mutation.error && <FormError error={mutation.error} />}
 
       <Button
         htmlType="submit"

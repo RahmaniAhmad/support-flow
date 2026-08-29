@@ -6,48 +6,55 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import AuthLayout from "@/features/auth/components/AuthLayout";
 import AuthHeader from "@/features/auth/components/AuthHeader";
-import AuthError from "@/features/auth/components/AuthError";
 
 import Button from "@/components/ui/Button";
-import FormInput from "@/components/form/FormInput";
 
-import { useForgotPassword } from "@/features/auth/hooks/useForgotPassword";
+import FormLabel from "@/components/form/FormLabel";
+import { AUTH_VALIDATION } from "../constants/auth-validation";
+import FormError from "@/components/form/FormError";
+import { useResetPassword } from "../hooks/useResetPassword";
 import {
-  forgotPasswordSchema,
-  ForgotPasswordFormData,
-} from "@/features/auth/schemas/forgotPassword.schema";
+  ResetPasswordFormData,
+  resetPasswordSchema,
+} from "../schemas/resetPassword.schema";
+import FormPasswordInput from "@/components/form/FormPasswordInput";
+import { useRouter, useSearchParams } from "next/navigation";
 
-import { getApiErrorMessage } from "@/lib/api/errors";
+export default function ResetPasswordForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-export default function ForgotPasswordForm() {
-  const forgotPasswordMutation = useForgotPassword();
+  const token = searchParams.get("token");
 
-  const { control, handleSubmit } = useForm<ForgotPasswordFormData>({
-    resolver: zodResolver(forgotPasswordSchema),
+  const resetPasswordMutation = useResetPassword();
+
+  const { control, handleSubmit } = useForm<ResetPasswordFormData>({
+    resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      email: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
-  function onSubmit(data: ForgotPasswordFormData) {
-    forgotPasswordMutation.mutate(data);
-  }
+  function onSubmit(data: ResetPasswordFormData) {
+    if (!token) {
+      return;
+    }
 
-  const error = forgotPasswordMutation.isError
-    ? getApiErrorMessage(
-        forgotPasswordMutation.error,
-        "Unable to process your request.",
-      )
-    : null;
+    resetPasswordMutation.mutate(
+      { token, password: data.password },
+      { onSuccess: () => router.push("/login") },
+    );
+  }
 
   return (
     <AuthLayout>
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        {!forgotPasswordMutation.isSuccess ? (
+        {!resetPasswordMutation.isSuccess ? (
           <>
             <AuthHeader
-              title="Forgot your password?"
-              description="Enter your email address and we'll send you instructions to reset your password."
+              title="Create a new password"
+              description="Choose a strong password for your SupportFlow account."
             />
 
             <form
@@ -56,29 +63,35 @@ export default function ForgotPasswordForm() {
               className="space-y-5"
             >
               <div>
-                <label
-                  htmlFor="email"
-                  className="mb-2 block text-sm font-medium text-slate-700"
-                >
-                  Email address
-                </label>
-
-                <FormInput
+                <FormLabel>Password</FormLabel>
+                <FormPasswordInput
                   control={control}
-                  name="email"
-                  type="email"
-                  placeholder="you@company.com"
+                  name="password"
+                  placeholder="Create a strong password"
+                  maxLength={AUTH_VALIDATION.PASSWORD_MAX_LENGTH}
                 />
               </div>
 
-              <AuthError message={error} />
+              <div>
+                <FormLabel>Confirm password</FormLabel>
+                <FormPasswordInput
+                  control={control}
+                  name="confirmPassword"
+                  placeholder="Confirm your password"
+                  maxLength={AUTH_VALIDATION.PASSWORD_MAX_LENGTH}
+                />
+              </div>
+
+              {resetPasswordMutation.error && (
+                <FormError error={resetPasswordMutation.error} />
+              )}
 
               <Button
                 className="w-full"
                 htmlType="submit"
-                isLoading={forgotPasswordMutation.isPending}
+                isLoading={resetPasswordMutation.isPending}
               >
-                Request Password Reset
+                Update Password
               </Button>
             </form>
 

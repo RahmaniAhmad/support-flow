@@ -38,7 +38,7 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, LoginRes
         LoginCommand command,
         CancellationToken cancellationToken)
     {
-        var user = await _db.Users.Include(u => u.RefreshTokens)
+        var user = await _db.Users.Where(u => u.IsActive).Include(u => u.RefreshTokens)
             .FirstOrDefaultAsync(x => x.Email == command.Email, cancellationToken);
 
         if (user is null ||

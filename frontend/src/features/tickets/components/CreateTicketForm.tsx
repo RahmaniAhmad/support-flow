@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -15,6 +14,9 @@ import {
 import FormTextArea from "@/components/form/FormTextArea";
 import { useMessage } from "@/app/providers/MessageProvider";
 import FormCard from "@/components/form/FormCard";
+import FormLabel from "@/components/form/FormLabel";
+import { TICKET_VALIDATION } from "../constants/ticket-validation";
+import FormError from "@/components/form/FormError";
 
 export default function CreateTicketForm() {
   const router = useRouter();
@@ -31,24 +33,14 @@ export default function CreateTicketForm() {
     },
   });
 
-  async function onSubmit(data: CreateTicketFormData) {
-    try {
-      await mutation.mutateAsync(data);
-
-      message.success("Ticket created successfully.");
-
-      router.push("/tickets");
-    } catch {
-      // React Query exposes the error through mutation.error
-    }
+  function onSubmit(data: CreateTicketFormData) {
+    mutation.mutate(data, {
+      onSuccess: () => {
+        message.success("Ticket created successfully.");
+        router.push("/tickets");
+      },
+    });
   }
-
-  const error =
-    mutation.error instanceof AxiosError
-      ? (mutation.error.response?.data?.message ?? "Failed to create ticket.")
-      : mutation.isError
-        ? "Failed to create ticket."
-        : null;
 
   return (
     <FormCard
@@ -57,41 +49,27 @@ export default function CreateTicketForm() {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div>
-        <label
-          htmlFor="subject"
-          className="mb-2 block text-sm font-medium text-slate-700"
-        >
-          Subject
-        </label>
-
+        <FormLabel>Subject</FormLabel>
         <FormInput
           control={control}
           name="subject"
           placeholder="Unable to log in"
+          maxLength={TICKET_VALIDATION.SUBJECT_MAX_LENGTH}
         />
       </div>
 
       <div>
-        <label
-          htmlFor="description"
-          className="mb-2 block text-sm font-medium text-slate-700"
-        >
-          Description
-        </label>
-
+        <FormLabel>Description</FormLabel>
         <FormTextArea
           control={control}
           name="description"
           placeholder="Describe your issue..."
           rows={8}
+          maxLength={TICKET_VALIDATION.DESCRIPTION_MAX_LENGTH}
         />
       </div>
 
-      {error && (
-        <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-          {error}
-        </div>
-      )}
+      {mutation.error && <FormError error={mutation.error} />}
 
       <Button
         htmlType="submit"

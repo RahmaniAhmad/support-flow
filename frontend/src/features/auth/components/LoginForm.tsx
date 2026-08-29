@@ -17,9 +17,10 @@ import FormPasswordInput from "@/components/form/FormPasswordInput";
 
 import AuthLayout from "@/features/auth/components/AuthLayout";
 import AuthHeader from "@/features/auth/components/AuthHeader";
-import AuthError from "@/features/auth/components/AuthError";
 
-import { getApiErrorMessage } from "@/lib/api/errors";
+import FormLabel from "@/components/form/FormLabel";
+import FormError from "@/components/form/FormError";
+import { AUTH_VALIDATION } from "../constants/auth-validation";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -33,22 +34,13 @@ export default function LoginForm() {
     },
   });
 
-  async function onSubmit(data: LoginFormData) {
-    try {
-      await loginMutation.mutateAsync(data);
-
-      router.push("/dashboard");
-    } catch {
-      // Error handled by mutation state
-    }
+  function onSubmit(data: LoginFormData) {
+    loginMutation.mutate(data, {
+      onSuccess: () => {
+        router.push("/dashboard");
+      },
+    });
   }
-
-  const error = loginMutation.isError
-    ? getApiErrorMessage(
-        loginMutation.error,
-        "Unable to sign in. Please check your credentials.",
-      )
-    : null;
 
   return (
     <AuthLayout>
@@ -63,22 +55,20 @@ export default function LoginForm() {
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-5"
         >
-          <FormInput
-            control={control}
-            name="email"
-            type="email"
-            placeholder="you@company.com"
-          />
+          <div>
+            <FormLabel>Email</FormLabel>
+            <FormInput
+              control={control}
+              name="email"
+              type="email"
+              placeholder="you@company.com"
+              maxLength={AUTH_VALIDATION.EMAIL_MAX_LENGTH}
+            />
+          </div>
 
           <div>
             <div className="mb-2 flex items-center justify-between">
-              <label
-                htmlFor="password"
-                className="text-sm font-medium text-slate-700"
-              >
-                Password
-              </label>
-
+              <FormLabel>Password</FormLabel>
               <Link
                 href="/forgot-password"
                 className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-700"
@@ -91,10 +81,11 @@ export default function LoginForm() {
               control={control}
               name="password"
               placeholder="Enter your password"
+              maxLength={AUTH_VALIDATION.PASSWORD_MAX_LENGTH}
             />
           </div>
 
-          <AuthError message={error} />
+          {loginMutation.error && <FormError error={loginMutation.error} />}
 
           <Button
             className="w-full"

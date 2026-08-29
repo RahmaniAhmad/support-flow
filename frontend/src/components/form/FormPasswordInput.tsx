@@ -7,12 +7,14 @@ type FormPasswordInputProps<T extends FieldValues> = {
   control: Control<T>;
   name: FieldPath<T>;
   placeholder?: string;
+  maxLength?: number;
 };
 
 export default function FormPasswordInput<T extends FieldValues>({
   control,
   name,
   placeholder,
+  maxLength,
 }: FormPasswordInputProps<T>) {
   return (
     <Controller
@@ -24,6 +26,7 @@ export default function FormPasswordInput<T extends FieldValues>({
             {...field}
             type="password"
             placeholder={placeholder}
+            maxLength={maxLength}
             status={fieldState.error ? "error" : undefined}
           />
           {fieldState.error && (

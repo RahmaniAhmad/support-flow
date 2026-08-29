@@ -17,9 +17,10 @@ import FormPasswordInput from "@/components/form/FormPasswordInput";
 
 import AuthLayout from "@/features/auth/components/AuthLayout";
 import AuthHeader from "@/features/auth/components/AuthHeader";
-import AuthError from "@/features/auth/components/AuthError";
 
-import { getApiErrorMessage } from "@/lib/api/errors";
+import FormLabel from "@/components/form/FormLabel";
+import { AUTH_VALIDATION } from "../constants/auth-validation";
+import FormError from "@/components/form/FormError";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -36,26 +37,20 @@ export default function RegisterForm() {
     },
   });
 
-  async function onSubmit(data: RegisterFormData) {
-    try {
-      await registerMutation.mutateAsync({
+  function onSubmit(data: RegisterFormData) {
+    registerMutation.mutate(
+      {
         companyName: data.companyName,
         email: data.email,
         password: data.password,
-      });
-
-      router.push("/login");
-    } catch {
-      // Error handled by mutation state
-    }
+      },
+      {
+        onSuccess: () => {
+          router.push("/login");
+        },
+      },
+    );
   }
-
-  const error = registerMutation.isError
-    ? getApiErrorMessage(
-        registerMutation.error,
-        "Unable to create your account.",
-      )
-    : null;
 
   return (
     <AuthLayout>
@@ -71,68 +66,50 @@ export default function RegisterForm() {
           className="space-y-5"
         >
           <div>
-            <label
-              htmlFor="companyName"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Company name
-            </label>
-
+            <FormLabel>Company name</FormLabel>
             <FormInput
               control={control}
               name="companyName"
               type="text"
               placeholder="Acme Inc."
+              maxLength={AUTH_VALIDATION.COMPANY_NAME_MAX_LENGTH}
             />
           </div>
 
           <div>
-            <label
-              htmlFor="email"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Administrator email
-            </label>
-
+            <FormLabel>Administrator email</FormLabel>
             <FormInput
               control={control}
               name="email"
               type="email"
               placeholder="admin@company.com"
+              maxLength={AUTH_VALIDATION.EMAIL_MAX_LENGTH}
             />
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Password
-            </label>
-
+            <FormLabel>Password</FormLabel>
             <FormPasswordInput
               control={control}
               name="password"
               placeholder="Create a strong password"
+              maxLength={AUTH_VALIDATION.PASSWORD_MAX_LENGTH}
             />
           </div>
 
           <div>
-            <label
-              htmlFor="confirmPassword"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Confirm password
-            </label>
-
+            <FormLabel>Confirm password</FormLabel>
             <FormPasswordInput
               control={control}
               name="confirmPassword"
               placeholder="Confirm your password"
+              maxLength={AUTH_VALIDATION.PASSWORD_MAX_LENGTH}
             />
           </div>
 
-          <AuthError message={error} />
+          {registerMutation.error && (
+            <FormError error={registerMutation.error} />
+          )}
 
           <Button
             className="w-full"
