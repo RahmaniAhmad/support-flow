@@ -22,7 +22,7 @@ public static class CsrfEndpoint
         HttpContext context,
         IOptions<JwtOptions> jwtOptions)
     {
-        context.IssueXsrfToken(jwtOptions.Value.AccessTokenLifetime);
+        context.IssueXsrfToken(jwtOptions.Value.XsrfTokenLifetime);
 
         return Results.NoContent();
     }
