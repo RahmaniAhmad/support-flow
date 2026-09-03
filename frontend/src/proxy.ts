@@ -79,6 +79,10 @@ async function refreshTokens(request: NextRequest): Promise<{
   }
 
   try {
+    // ------------------------------------------
+    // 1. Refresh access + refresh tokens
+    // ------------------------------------------
+
     const refreshResponse = await fetch(`${API_URL}/auth/refresh`, {
       method: "POST",
       headers: {
@@ -100,9 +104,9 @@ async function refreshTokens(request: NextRequest): Promise<{
       };
     }
 
-    const setCookies = refreshResponse.headers.getSetCookie();
+    const refreshSetCookies = refreshResponse.headers.getSetCookie();
 
-    if (!setCookies.length) {
+    if (!refreshSetCookies.length) {
       console.error("Token refresh succeeded but no Set-Cookie headers.");
 
       return {
@@ -111,9 +115,56 @@ async function refreshTokens(request: NextRequest): Promise<{
       };
     }
 
+    // ------------------------------------------
+    // 2. Build cookies containing the NEW tokens
+    // ------------------------------------------
+
+    const refreshCookieHeader = updateRequestCookies(
+      request,
+      refreshSetCookies,
+    ).get("Cookie");
+
+    if (!refreshCookieHeader) {
+      return {
+        success: false,
+        setCookies: [],
+      };
+    }
+
+    // ------------------------------------------
+    // 3. Get a NEW CSRF token
+    // ------------------------------------------
+
+    const csrfResponse = await fetch(`${API_URL}/auth/csrf`, {
+      method: "GET",
+      headers: {
+        Cookie: refreshCookieHeader,
+      },
+      cache: "no-store",
+    });
+
+    if (!csrfResponse.ok) {
+      console.error(
+        "CSRF token request failed:",
+        csrfResponse.status,
+        await csrfResponse.text(),
+      );
+
+      return {
+        success: false,
+        setCookies: [],
+      };
+    }
+
+    const csrfSetCookies = csrfResponse.headers.getSetCookie();
+
+    // ------------------------------------------
+    // 4. Return cookies from BOTH responses
+    // ------------------------------------------
+
     return {
       success: true,
-      setCookies,
+      setCookies: [...refreshSetCookies, ...csrfSetCookies],
     };
   } catch (error) {
     console.error("Token refresh request failed:", error);
