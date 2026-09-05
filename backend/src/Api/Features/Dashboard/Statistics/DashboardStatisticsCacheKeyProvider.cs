@@ -20,7 +20,9 @@ public sealed class DashboardStatisticsCacheKeyProvider
     public string GetGroup(
         GetDashboardStatisticsQuery request)
     {
-        return "dashboard:statistics";
+        return request.CompanyId.HasValue
+      ? $"dashboard:statistics:{request.CompanyId}"
+      : "dashboard:statistics:all";
     }
 
 

@@ -25,6 +25,10 @@ public sealed class TicketResolvedEventHandler
             $"tickets:company:{notification.CompanyId}:ticket:{notification.TicketId}:version");
 
         await _cache.IncrementVersionAsync(
-            $"dashboard:{notification.CompanyId}:version");
+            $"dashboard:statistics:{notification.CompanyId}:version");
+
+        await _cache.IncrementVersionAsync(
+            $"dashboard:agents:{notification.CompanyId}:version");
+
     }
 }

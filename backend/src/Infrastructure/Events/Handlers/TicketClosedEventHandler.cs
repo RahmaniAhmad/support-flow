@@ -30,6 +30,6 @@ public sealed class TicketClosedEventHandler
 
 
         await _cache.IncrementVersionAsync(
-            $"dashboard:{notification.CompanyId}:version");
+            $"dashboard:statistics:{notification.CompanyId}:version");
     }
 }

@@ -7,6 +7,6 @@ export function useDashboardStatistics() {
     queryKey: queryKeys.dashboard.statistics(),
     queryFn: getDashboardStatistics,
 
-    staleTime: 60_000,
+    staleTime: 30_000,
   });
 }
