@@ -9,6 +9,6 @@ export function useUnassignedTickets(limit = DEFAULT_LIMIT) {
     queryKey: queryKeys.dashboard.unassignedTickets(limit),
     queryFn: getUnassignedTickets,
 
-    staleTime: 60_000,
+    staleTime: 30_000,
   });
 }

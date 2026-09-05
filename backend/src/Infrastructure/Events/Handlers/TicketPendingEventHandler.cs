@@ -25,6 +25,6 @@ public sealed class TicketPendingEventHandler
             $"tickets:company:{notification.CompanyId}:ticket:{notification.TicketId}:version");
 
         await _cache.IncrementVersionAsync(
-            $"dashboard:{notification.CompanyId}:version");
+            $"dashboard:statistics:{notification.CompanyId}:version");
     }
 }

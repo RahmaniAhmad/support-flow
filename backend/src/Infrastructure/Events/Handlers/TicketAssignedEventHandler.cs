@@ -29,6 +29,12 @@ public sealed class TicketAssignedEventHandler
 
 
         await _cache.IncrementVersionAsync(
-            $"dashboard:{notification.CompanyId}:version");
+            $"dashboard:statistics:{notification.CompanyId}:version");
+
+        await _cache.IncrementVersionAsync(
+            $"dashboard:agents:{notification.CompanyId}:version");
+
+        await _cache.IncrementVersionAsync(
+            $"dashboard:unassigned:{notification.CompanyId}:version");
     }
 }

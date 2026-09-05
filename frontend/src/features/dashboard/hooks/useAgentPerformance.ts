@@ -7,6 +7,6 @@ export function useAgentPerformance() {
     queryKey: queryKeys.dashboard.agents(),
     queryFn: getAgentPerformance,
 
-    staleTime: 60_000,
+    staleTime: 30_000,
   });
 }

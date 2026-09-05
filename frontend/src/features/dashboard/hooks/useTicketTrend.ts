@@ -7,6 +7,6 @@ export function useTicketTrend(from: string, to: string) {
     queryKey: queryKeys.dashboard.trend(from, to),
     queryFn: () => getTicketTrend(from, to),
 
-    staleTime: 60_000,
+    staleTime: 30_000,
   });
 }
