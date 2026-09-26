@@ -6,6 +6,7 @@ using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Authentication;
+using Shared.Domain.Tickets.Exceptions;
 
 namespace Api.Features.Tickets.StartProgress;
 

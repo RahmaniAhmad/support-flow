@@ -1,5 +1,6 @@
 using Shared.Domain.Base;
 using Shared.Domain.Tickets.Events;
+using Shared.Domain.Tickets.Exceptions;
 using Shared.Domain.Tickets.Workflows;
 
 namespace Shared.Domain.Tickets;
@@ -7,51 +8,66 @@ namespace Shared.Domain.Tickets;
 public sealed class Ticket : AggregateRoot
 {
     public long TicketNumber { get; private set; }
+
     public Guid CompanyId { get; private set; }
+
     public Guid CreatedByUserId { get; private set; }
+
     public Guid? AssignedToUserId { get; private set; }
+
     public string Subject { get; private set; } = string.Empty;
+
     public string Description { get; private set; } = string.Empty;
+
     public TicketStatus Status { get; private set; }
+
     public DateTime CreatedAtUtc { get; private set; }
+
     public DateTime? UpdatedAtUtc { get; private set; }
+
     private readonly List<TicketComment> _comments = [];
+
     public IReadOnlyCollection<TicketComment> Comments => _comments;
 
-    private Ticket() { }
-    public static Ticket Create(Guid companyId, Guid userId, string subject, string description)
+    private Ticket()
     {
-        if (companyId == Guid.Empty)
-            throw new ArgumentException(
-                "Company id is required.",
-                nameof(companyId));
+    }
 
-        if (userId == Guid.Empty)
-            throw new ArgumentException(
-                "Creator user id is required.",
-                nameof(userId));
+    public static Ticket Create(
+        Guid companyId,
+        Guid userId,
+        string subject,
+        string description)
+    {
+        ArgumentOutOfRangeException.ThrowIfEqual(
+            companyId,
+            Guid.Empty);
 
-        if (string.IsNullOrWhiteSpace(subject))
-            throw new ArgumentException(
-                "Subject is required.",
-                nameof(subject));
+        ArgumentOutOfRangeException.ThrowIfEqual(
+            userId,
+            Guid.Empty);
 
-        if (string.IsNullOrWhiteSpace(description))
-            throw new ArgumentException(
-                "Description is required.",
-                nameof(description));
+        ArgumentException.ThrowIfNullOrWhiteSpace(
+            subject);
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(
+            description);
 
         var ticket = new Ticket
         {
             CompanyId = companyId,
             CreatedByUserId = userId,
-            Subject = subject,
-            Description = description,
+            Subject = subject.Trim(),
+            Description = description.Trim(),
             Status = TicketStatus.Open,
             CreatedAtUtc = DateTime.UtcNow
         };
 
-        ticket.AddDomainEvent(new TicketCreatedDomainEvent(ticket.Id, ticket.CompanyId, ticket.Subject));
+        ticket.AddDomainEvent(
+            new TicketCreatedDomainEvent(
+                ticket.Id,
+                ticket.CompanyId,
+                ticket.Subject));
 
         return ticket;
     }
@@ -59,40 +75,38 @@ public sealed class Ticket : AggregateRoot
     public void AssignTicketNumber(long ticketNumber)
     {
         if (ticketNumber <= 0)
-            throw new ArgumentException(
-                "Ticket number must be greater than zero.",
-                nameof(ticketNumber));
-
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(ticketNumber),
+                ticketNumber,
+                "Ticket number must be greater than zero.");
+        }
 
         if (TicketNumber != 0)
-            throw new InvalidOperationException(
-                "Ticket number has already been assigned.");
-
+        {
+            throw new TicketNumberAlreadyAssignedException(
+                TicketNumber);
+        }
 
         TicketNumber = ticketNumber;
     }
 
-    public void AssignTo(Guid assignedByUserId, Guid assignedToUserId)
+    public void AssignTo(
+        Guid assignedByUserId,
+        Guid assignedToUserId)
     {
-        if (assignedByUserId == Guid.Empty)
-        {
-            throw new ArgumentException(
-                "A valid user is required to assign the ticket.",
-                nameof(assignedByUserId));
-        }
+        ValidateUserId(assignedByUserId);
 
-        if (assignedToUserId == Guid.Empty)
-        {
-            throw new ArgumentException(
-                "Assigned user id is required.",
-                nameof(assignedToUserId));
-        }
+        ValidateUserId(assignedToUserId);
 
         if (AssignedToUserId == assignedToUserId)
-            throw new InvalidOperationException(
-                "Ticket is already assigned to this user.");
+        {
+            throw new TicketAlreadyAssignedException(
+                assignedToUserId);
+        }
 
-        EnsureTransitionAllowed(TicketStatus.Assigned);
+        EnsureTransitionAllowed(
+            TicketStatus.Assigned);
 
         AssignedToUserId = assignedToUserId;
 
@@ -144,54 +158,45 @@ public sealed class Ticket : AggregateRoot
 
     public void Close(Guid closedByUserId)
     {
-        if (closedByUserId == Guid.Empty)
-        {
-            throw new ArgumentException(
-                "A valid user is required to close the ticket.",
-                nameof(closedByUserId));
-        }
+        ValidateUserId(closedByUserId);
 
         TransitionTo(
             TicketStatus.Closed,
-            new TicketClosedDomainEvent(Id, CompanyId, closedByUserId));
+            new TicketClosedDomainEvent(
+                Id,
+                CompanyId,
+                closedByUserId));
     }
 
     public void Reopen(Guid reopenedByUserId)
     {
-        if (reopenedByUserId == Guid.Empty)
-        {
-            throw new ArgumentException(
-                "A valid user is required to reopen the ticket.",
-                nameof(reopenedByUserId));
-        }
+        ValidateUserId(reopenedByUserId);
 
         TransitionTo(
             TicketStatus.Reopened,
-            new TicketReopenedDomainEvent(Id, CompanyId, reopenedByUserId));
+            new TicketReopenedDomainEvent(
+                Id,
+                CompanyId,
+                reopenedByUserId));
     }
 
-    public Guid AddComment(Guid commentedByUserId, string content)
+    public Guid AddComment(
+        Guid commentedByUserId,
+        string content)
     {
-        if (commentedByUserId == Guid.Empty)
+        ValidateUserId(commentedByUserId);
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(content);
+
+        if (Status == TicketStatus.Closed)
         {
-            throw new ArgumentException(
-                "A valid user is required to add a comment.",
-                nameof(commentedByUserId));
+            throw new TicketClosedException();
         }
 
-        if (string.IsNullOrWhiteSpace(content))
-            throw new ArgumentException(
-                "Comment cannot be empty.");
-
-        if (Status is TicketStatus.Closed)
-            throw new InvalidOperationException("Cannot comment on a closed ticket.");
-
-        var comment = TicketComment.Create
-        (
-             Id,
-             commentedByUserId,
-             content
-        );
+        var comment = TicketComment.Create(
+            Id,
+            commentedByUserId,
+            content.Trim());
 
         _comments.Add(comment);
 
@@ -207,41 +212,35 @@ public sealed class Ticket : AggregateRoot
         return comment.Id;
     }
 
-    private void EnsureAssignedAgent(Guid actingUserId)
+    private void EnsureAssignedAgent(
+        Guid actingUserId)
     {
-        if (actingUserId == Guid.Empty)
-        {
-            throw new ArgumentException(
-                "A valid user is required.",
-                nameof(actingUserId));
-        }
+        ValidateUserId(actingUserId);
 
         if (AssignedToUserId is null)
         {
-            throw new InvalidOperationException(
-                "Ticket must be assigned to an agent.");
+            throw new TicketNotAssignedException();
         }
 
         if (AssignedToUserId != actingUserId)
         {
-            throw new InvalidOperationException(
-                "Only the assigned agent can perform this action.");
+            throw new NotAssignedAgentException();
         }
     }
 
-    private void ChangeStatus(TicketStatus newStatus)
+    private void EnsureTransitionAllowed(
+        TicketStatus targetStatus)
     {
-        Status = newStatus;
-        UpdatedAtUtc = DateTime.UtcNow;
-    }
-
-    private void EnsureTransitionAllowed(TicketStatus newStatus)
-    {
-        if (!TicketWorkflow.CanTransition(Status, newStatus))
+        if (TicketWorkflow.CanTransition(
+                Status,
+                targetStatus))
         {
-            throw new InvalidOperationException(
-                $"Cannot transition ticket from {Status} to {newStatus}.");
+            return;
         }
+
+        throw new InvalidTicketTransitionException(
+            Status,
+            targetStatus);
     }
 
     private void TransitionTo(
@@ -253,5 +252,19 @@ public sealed class Ticket : AggregateRoot
         ChangeStatus(newStatus);
 
         AddDomainEvent(domainEvent);
+    }
+
+    private void ChangeStatus(
+        TicketStatus newStatus)
+    {
+        Status = newStatus;
+        UpdatedAtUtc = DateTime.UtcNow;
+    }
+
+    private static void ValidateUserId(Guid userId)
+    {
+        ArgumentOutOfRangeException.ThrowIfEqual(
+            userId,
+            Guid.Empty);
     }
 }
