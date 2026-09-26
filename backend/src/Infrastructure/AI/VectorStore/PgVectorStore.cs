@@ -90,6 +90,7 @@ public sealed class PgVectorStore : IVectorStore
             .Select(x => new EmbeddingSearchResult(
             x.SourceId,
             x.SourceType,
+            x.Title,
             x.Content,
             x.Vector.CosineDistance(vector)))
             .Take(limit)

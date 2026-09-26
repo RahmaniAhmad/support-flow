@@ -37,19 +37,24 @@ public sealed class GeminiChatService : IChatCompletionService
         }
 
         var prompt = $"""
-        You are a helpful support assistant.
+You are a helpful support assistant.
 
-        Answer the user question using only the provided knowledge base.
+Use the knowledge base to answer the user's problem.
+The user's wording may be different from the knowledge base wording.
+Match the intent, not only exact words.
 
-        Knowledge base:
-        {context}
+Only use information supported by the knowledge base.
+Do not add unsupported steps.
 
-        User question:
-        {question}
+Knowledge base:
+{context}
 
-        If the answer is not available in the knowledge base, say:
-        "I couldn't find this information."
-        """;
+User question:
+{question}
+
+If the knowledge base does not contain relevant information, say:
+"I couldn't find this information."
+""";
 
         try
         {

@@ -18,6 +18,10 @@ public sealed class EmbeddingDocumentConfiguration
             .HasMaxLength(100)
             .IsRequired();
 
+        builder.Property(x => x.Title)
+            .HasMaxLength(200)
+            .IsRequired();
+
         builder.Property(x => x.Content)
             .HasMaxLength(10000)
             .IsRequired();

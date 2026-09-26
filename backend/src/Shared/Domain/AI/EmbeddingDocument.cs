@@ -10,6 +10,8 @@ public sealed class EmbeddingDocument
 
     public string SourceType { get; private set; } = string.Empty;
 
+    public string Title { get; private set; } = string.Empty;
+
     public string Content { get; private set; } = string.Empty;
 
     public Vector Vector { get; private set; } = default!;
@@ -23,6 +25,7 @@ public sealed class EmbeddingDocument
     public static EmbeddingDocument Create(
         Guid sourceId,
         string sourceType,
+        string title,
         string content,
         Vector vector,
         Guid companyId)
@@ -33,6 +36,9 @@ public sealed class EmbeddingDocument
 
         ArgumentException.ThrowIfNullOrWhiteSpace(
             sourceType);
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(
+               title);
 
         ArgumentException.ThrowIfNullOrWhiteSpace(
             content);
@@ -48,6 +54,7 @@ public sealed class EmbeddingDocument
             Id = Guid.NewGuid(),
             SourceId = sourceId,
             SourceType = sourceType.Trim(),
+            Title = title.Trim(),
             Content = content.Trim(),
             Vector = vector,
             CompanyId = companyId

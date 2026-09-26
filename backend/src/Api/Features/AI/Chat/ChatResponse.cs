@@ -8,4 +8,5 @@ public sealed record ChatResponse(
 public sealed record ChatSource(
     Guid SourceId,
     string SourceType,
+    string Title,
     double Distance);

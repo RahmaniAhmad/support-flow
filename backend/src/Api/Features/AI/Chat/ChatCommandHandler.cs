@@ -62,8 +62,14 @@ public sealed class ChatCommandHandler
 
         var context = string.Join(
             "\n\n",
-            searchResults.Select(x => x.Content));
-
+            searchResults.Select(x =>
+            $"""
+            Title:
+            {x.Title}
+            
+            Content:
+            {x.Content}
+            """));
 
         var answer =
             await _chatService.GenerateAnswerAsync(
@@ -77,6 +83,7 @@ public sealed class ChatCommandHandler
                 .Select(x => new ChatSource(
                     x.SourceId,
                     x.SourceType,
+                    x.Title,
                     x.Distance))
                 .ToList();
 
