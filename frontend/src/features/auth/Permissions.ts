@@ -30,6 +30,7 @@ export const AppPermissions = {
   // AI
   AiSemanticSearch: "ai:semantic-search",
   AiTicketSuggestions: "ai:get-ticket-suggestions",
+  AiAssistant: "ai:assistant",
 } as const;
 
 export type Permission = (typeof AppPermissions)[keyof typeof AppPermissions];

@@ -49,7 +49,6 @@ export default async function TicketDetailsPage({ params }: Props) {
 
           <TicketComments ticketId={id} />
         </div>
-
         <aside className="lg:sticky lg:top-4 lg:self-start">
           <SuggestedArticles ticketId={ticket.id} />
         </aside>

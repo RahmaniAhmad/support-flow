@@ -32,6 +32,7 @@ public static class RolePermissions
                Permissions.KnowledgeArticlesDelete,
 
                Permissions.AiSemanticSearch,
+               Permissions.AiAssistant,
                Permissions.AiTicketSuggestions
            ],
 
@@ -59,6 +60,7 @@ public static class RolePermissions
                Permissions.KnowledgeArticlesDelete,
 
                Permissions.AiSemanticSearch,
+               Permissions.AiAssistant,
                Permissions.AiTicketSuggestions
                ],
 
@@ -79,6 +81,7 @@ public static class RolePermissions
                Permissions.KnowledgeArticlesUpdate,
 
                Permissions.AiSemanticSearch,
+               Permissions.AiAssistant,
                Permissions.AiTicketSuggestions
                ],
 
@@ -91,6 +94,7 @@ public static class RolePermissions
                Permissions.KnowledgeArticlesView,
 
                Permissions.AiSemanticSearch,
+               Permissions.AiAssistant,
                Permissions.AiTicketSuggestions
                ]
         }

@@ -27,6 +27,6 @@ public static class ChatEndpoint
             })
             .AddEndpointFilter<SecurityFilter>()
             .RequireAuthorization()
-            .RequirePermission(Permissions.AiSemanticSearch);
+            .RequirePermission(Permissions.AiAssistant);
     }
 }

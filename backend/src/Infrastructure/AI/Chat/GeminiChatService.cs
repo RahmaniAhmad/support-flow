@@ -37,14 +37,18 @@ public sealed class GeminiChatService : IChatCompletionService
         }
 
         var prompt = $"""
-You are a helpful support assistant.
+You are a helpful support assistant for SupportFlow.
 
-Use the knowledge base to answer the user's problem.
-The user's wording may be different from the knowledge base wording.
-Match the intent, not only exact words.
+Your job is to help users solve their support questions using the provided knowledge base.
 
-Only use information supported by the knowledge base.
-Do not add unsupported steps.
+Instructions:
+- Understand the user's intent, even if they use different words than the knowledge base.
+- Answer naturally and clearly.
+- Use only information supported by the knowledge base.
+- Do not invent steps, settings, or solutions.
+- If multiple knowledge articles are relevant, combine information when appropriate.
+- If the answer is not available in the knowledge base, say:
+  "I couldn't find this information."
 
 Knowledge base:
 {context}
@@ -52,8 +56,7 @@ Knowledge base:
 User question:
 {question}
 
-If the knowledge base does not contain relevant information, say:
-"I couldn't find this information."
+Provide a concise and helpful answer.
 """;
 
         try

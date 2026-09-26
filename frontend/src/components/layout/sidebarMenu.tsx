@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  Bot,
   Headset,
   LayoutDashboard,
   LucideIcon,
@@ -61,5 +62,12 @@ export const MENU_ITEMS: readonly MenuItem[] = [
     icon: Search,
     permission: AppPermissions.AiSemanticSearch,
     isActive: (pathname) => pathname === "/ai/search",
+  },
+  {
+    label: "AI Assistant",
+    href: "/ai/assistant",
+    icon: Bot,
+    permission: AppPermissions.AiAssistant,
+    isActive: (pathname) => pathname === "/ai/assistant",
   },
 ];

@@ -35,4 +35,5 @@ public static class Permissions
     // AI
     public const string AiSemanticSearch = "ai:semantic-search";
     public const string AiTicketSuggestions = "ai:ticket-suggestions";
+    public const string AiAssistant = "ai:assistant";
 }
