@@ -1,4 +1,5 @@
 using Shared.Domain.Base;
+using Shared.Domain.Users.Exceptions;
 
 namespace Shared.Domain.Users;
 
@@ -31,17 +32,11 @@ public sealed class PasswordResetToken : Entity
         string tokenHash,
         DateTime expiresAtUtc)
     {
-        if (userId == Guid.Empty)
-            throw new InvalidOperationException(
-                "User is required.");
+        ArgumentOutOfRangeException.ThrowIfEqual(
+           userId,
+           Guid.Empty);
 
-        if (string.IsNullOrWhiteSpace(tokenHash))
-            throw new InvalidOperationException(
-                "Token hash is required.");
-
-        if (expiresAtUtc <= DateTime.UtcNow)
-            throw new InvalidOperationException(
-                "Token expiration must be in the future.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(tokenHash);
 
         return new PasswordResetToken(
             userId,
@@ -58,8 +53,7 @@ public sealed class PasswordResetToken : Entity
     public void MarkAsUsed()
     {
         if (UsedAtUtc is not null)
-            throw new InvalidOperationException(
-                "Password reset token has already been used.");
+            throw new PasswordResetTokenAlreadyUsedException();
 
         UsedAtUtc = DateTime.UtcNow;
     }

@@ -1,5 +1,4 @@
 using Shared.Authentication;
-using Shared.Domain;
 using Shared.Domain.Users;
 
 namespace Api.Authorization;

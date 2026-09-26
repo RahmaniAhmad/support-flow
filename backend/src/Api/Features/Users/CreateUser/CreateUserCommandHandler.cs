@@ -5,7 +5,6 @@ using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Authentication;
-using Shared.Domain;
 using Shared.Domain.Users;
 
 namespace Api.Features.Users.CreateUser;

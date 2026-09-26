@@ -1,9 +1,7 @@
 using Infrastructure.Authentication;
-using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Shared.Authentication;
-using Shared.Domain;
 using Shared.Domain.Users;
 
 namespace Infrastructure.Persistence.Seeders;

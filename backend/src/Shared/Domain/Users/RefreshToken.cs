@@ -1,4 +1,5 @@
 using Shared.Domain.Base;
+using Shared.Domain.Users.Exceptions;
 
 namespace Shared.Domain.Users;
 
@@ -32,6 +33,12 @@ public sealed class RefreshToken : Entity
         string tokenHash,
         DateTime expiresAtUtc)
     {
+        ArgumentOutOfRangeException.ThrowIfEqual(
+            userId,
+            Guid.Empty);
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(tokenHash);
+
         return new RefreshToken
         {
             UserId = userId,
@@ -44,10 +51,7 @@ public sealed class RefreshToken : Entity
     public void Revoke()
     {
         if (RevokedAtUtc is not null)
-        {
-            throw new InvalidOperationException(
-                "Refresh token has already been revoked.");
-        }
+            throw new RefreshTokenAlreadyRevokedException();
 
         RevokedAtUtc = DateTime.UtcNow;
     }
