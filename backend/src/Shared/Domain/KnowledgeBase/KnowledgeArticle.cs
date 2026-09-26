@@ -23,27 +23,19 @@ public sealed class KnowledgeArticle : AggregateRoot
         string title,
         string content)
     {
-        if (companyId == Guid.Empty)
-            throw new ArgumentException(
-                "Company id cannot be empty.",
-                nameof(companyId));
+        ArgumentOutOfRangeException.ThrowIfEqual(
+               companyId,
+               Guid.Empty);
 
-        if (string.IsNullOrWhiteSpace(title))
-            throw new ArgumentException(
-                "Title is required.",
-                nameof(title));
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
 
-        if (string.IsNullOrWhiteSpace(content))
-            throw new ArgumentException(
-                "Content is required.",
-                nameof(content));
-
+        ArgumentException.ThrowIfNullOrWhiteSpace(content);
 
         var article = new KnowledgeArticle
         {
             CompanyId = companyId,
-            Title = title,
-            Content = content,
+            Title = title.Trim(),
+            Content = content.Trim(),
             CreatedAtUtc = DateTime.UtcNow
         };
 
@@ -62,19 +54,12 @@ public sealed class KnowledgeArticle : AggregateRoot
         string title,
         string content)
     {
-        if (string.IsNullOrWhiteSpace(title))
-            throw new ArgumentException(
-                "Title is required.",
-                nameof(title));
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
 
-        if (string.IsNullOrWhiteSpace(content))
-            throw new ArgumentException(
-                "Content is required.",
-                nameof(content));
+        ArgumentException.ThrowIfNullOrWhiteSpace(content);
 
-
-        Title = title;
-        Content = content;
+        Title = title.Trim();
+        Content = content.Trim();
         UpdatedAtUtc = DateTime.UtcNow;
 
 
