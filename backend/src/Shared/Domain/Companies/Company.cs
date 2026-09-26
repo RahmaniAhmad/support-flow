@@ -51,9 +51,7 @@ public sealed class Company : AggregateRoot
 
     private static void ValidateName(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new InvalidOperationException(
-                "Company name is required.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
     }
 
     private static string? Normalize(string? value)
