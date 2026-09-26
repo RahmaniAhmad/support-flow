@@ -50,6 +50,7 @@ public sealed class GlobalExceptionHandler
     {
         switch (exception)
         {
+            case ArgumentException:
             case ValidationException:
             case BadRequestException:
             case UnauthorizedException:
@@ -79,6 +80,13 @@ public sealed class GlobalExceptionHandler
     {
         return exception switch
         {
+            ArgumentException =>
+                CreateProblemDetails(
+                    httpContext,
+                    StatusCodes.Status400BadRequest,
+                    "Bad Request",
+                    "One or more arguments are invalid."),
+
             ValidationException validationException =>
                 CreateValidationProblemDetails(
                     httpContext,
@@ -95,7 +103,7 @@ public sealed class GlobalExceptionHandler
             TicketNotAssignedException =>
                 CreateProblemDetails(
                     httpContext,
-                    StatusCodes.Status400BadRequest,
+                    StatusCodes.Status409Conflict,
                     "Ticket Not Assigned",
                     TicketErrorMessages.TicketNotAssigned,
                     TicketErrorCodes.TicketNotAssigned),
@@ -147,6 +155,7 @@ public sealed class GlobalExceptionHandler
                     "Bad Request",
                     badRequestException.Message,
                     badRequestException.Code),
+
 
             _ =>
                 CreateProblemDetails(

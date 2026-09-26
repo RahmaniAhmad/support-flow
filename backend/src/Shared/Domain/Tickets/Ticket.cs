@@ -74,13 +74,7 @@ public sealed class Ticket : AggregateRoot
 
     public void AssignTicketNumber(long ticketNumber)
     {
-        if (ticketNumber <= 0)
-        {
-            throw new ArgumentOutOfRangeException(
-                nameof(ticketNumber),
-                ticketNumber,
-                "Ticket number must be greater than zero.");
-        }
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(ticketNumber);
 
         if (TicketNumber != 0)
         {
