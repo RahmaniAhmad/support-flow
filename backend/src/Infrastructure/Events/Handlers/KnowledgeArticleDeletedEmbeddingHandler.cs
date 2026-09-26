@@ -24,6 +24,7 @@ public sealed class KnowledgeArticleDeletedEmbeddingHandler
         await _vectorStore.DeleteAsync(
             notification.ArticleId,
             SourceType,
+            notification.CompanyId,
             cancellationToken);
     }
 }

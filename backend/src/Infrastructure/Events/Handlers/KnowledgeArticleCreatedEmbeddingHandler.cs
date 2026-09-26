@@ -40,7 +40,7 @@ public sealed class KnowledgeArticleCreatedEmbeddingHandler
                     text,
                     cancellationToken);
 
-            var document = new EmbeddingDocument(
+            var document = EmbeddingDocument.Create(
                 notification.ArticleId,
                 SourceType,
                 text,
