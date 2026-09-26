@@ -28,4 +28,13 @@ public static class TicketErrorCodes
 
     public const string CannotComment =
         "CANNOT_COMMENT";
+
+    public const string InvalidTicketTransition =
+   "INVALID_TICKET_TRANSITION";
+
+    public const string TicketNotAssigned =
+        "TICKET_NOT_ASSIGNED";
+
+    public const string NotAssignedAgent =
+        "NOT_ASSIGNED_AGENT";
 }

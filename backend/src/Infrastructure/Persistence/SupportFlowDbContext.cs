@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Shared.Domain;
 using Shared.Domain.AI;
 using Shared.Domain.Base;
 using Shared.Domain.Companies;

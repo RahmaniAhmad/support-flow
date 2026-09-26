@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Shared.Domain;
 using Shared.Domain.Companies;
+using Shared.Domain.Users;
 
 namespace Infrastructure.Persistence.Configurations;
 
@@ -23,6 +23,10 @@ public sealed class UserConfiguration
         builder.HasIndex(x => x.Email)
             .IsUnique();
 
+        builder.Property(x => x.PasswordHash)
+            .HasMaxLength(500)
+            .IsRequired();
+
         builder.Property(x => x.FirstName)
             .HasMaxLength(100);
 
@@ -35,24 +39,25 @@ public sealed class UserConfiguration
         builder.Property(x => x.IsActive)
             .IsRequired();
 
+        builder.Property(x => x.CreatedAtUtc)
+            .IsRequired();
+
         builder.Property(x => x.Role)
-            .HasConversion<string>();
+            .HasConversion<string>()
+            .IsRequired();
 
         builder.HasOne<Company>()
             .WithMany()
             .HasForeignKey(x => x.CompanyId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.Property(x => x.PasswordHash)
-            .HasMaxLength(500)
-            .IsRequired();
-
         builder.Navigation(x => x.RefreshTokens)
             .HasField("_refreshTokens")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Property(x => x.CreatedAtUtc)
-            .IsRequired();
+        builder.Navigation(x => x.PasswordResetTokens)
+            .HasField("_passwordResetTokens")
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
 
     }
 }

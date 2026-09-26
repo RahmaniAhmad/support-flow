@@ -28,4 +28,13 @@ public static class TicketErrorMessages
 
     public const string CannotComment =
         "You are not allowed to comment on this ticket.";
+
+    public const string InvalidTicketTransition =
+        "The ticket cannot be moved to the requested status.";
+
+    public const string TicketNotAssigned =
+        "The ticket must be assigned to an agent before this action can be performed.";
+
+    public const string NotAssignedAgent =
+        "Only the assigned agent can perform this action.";
 }

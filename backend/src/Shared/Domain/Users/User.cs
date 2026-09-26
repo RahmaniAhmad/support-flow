@@ -1,7 +1,7 @@
 using Shared.Domain.Base;
-using Shared.Domain.Users;
+using Shared.Domain.Users.Exceptions;
 
-namespace Shared.Domain;
+namespace Shared.Domain.Users;
 
 public sealed class User : AggregateRoot
 {
@@ -39,8 +39,11 @@ public sealed class User : AggregateRoot
            string passwordHash,
            UserRole role)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(email);
+        ArgumentException.ThrowIfNullOrWhiteSpace(passwordHash);
+
         ValidateCompany(role, companyId);
-        ValidateEmail(email);
+
         return new User
         {
             CompanyId = companyId,
@@ -57,11 +60,8 @@ public sealed class User : AggregateRoot
         string lastName,
         string? phone)
     {
-        if (string.IsNullOrWhiteSpace(firstName))
-            throw new InvalidOperationException("First name is required.");
-
-        if (string.IsNullOrWhiteSpace(lastName))
-            throw new InvalidOperationException("Last name is required.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(firstName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(lastName);
 
         FirstName = firstName.Trim();
         LastName = lastName.Trim();
@@ -75,10 +75,7 @@ public sealed class User : AggregateRoot
 
         IsActive = false;
 
-        foreach (var token in _refreshTokens)
-        {
-            token.Revoke();
-        }
+        RevokeActiveRefreshTokens();
     }
 
 
@@ -99,16 +96,16 @@ public sealed class User : AggregateRoot
             expiresAtUtc);
     }
 
-
     public RefreshToken RotateRefreshToken(
     RefreshToken currentToken,
     string newTokenHash,
     DateTime expiresAtUtc)
     {
+        ArgumentNullException.ThrowIfNull(currentToken);
+
         if (!_refreshTokens.Contains(currentToken))
         {
-            throw new InvalidOperationException(
-                "The refresh token does not belong to this user.");
+            throw new RefreshTokenNotOwnedByUserException();
         }
 
         currentToken.Revoke();
@@ -134,16 +131,11 @@ public sealed class User : AggregateRoot
 
     public void ChangePassword(string passwordHash)
     {
-        if (string.IsNullOrWhiteSpace(passwordHash))
-            throw new InvalidOperationException(
-                "Password hash is required.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(passwordHash);
 
         PasswordHash = passwordHash;
 
-        foreach (var token in _refreshTokens)
-        {
-            token.Revoke();
-        }
+        RevokeActiveRefreshTokens();
     }
 
     private static void ValidateCompany(
@@ -156,9 +148,13 @@ public sealed class User : AggregateRoot
 
         if (companyId is null)
         {
-            throw new InvalidOperationException(
-                "Company is required for this user role.");
+            throw new CompanyRequiredForUserRoleException(role);
+
         }
+
+        ArgumentOutOfRangeException.ThrowIfEqual(
+         companyId.Value,
+         Guid.Empty);
     }
 
     private RefreshToken CreateRefreshToken(
@@ -175,13 +171,14 @@ public sealed class User : AggregateRoot
         return token;
     }
 
-    private static void ValidateEmail(string email)
+    private void RevokeActiveRefreshTokens()
     {
-
-        if (string.IsNullOrWhiteSpace(email))
-            throw new InvalidOperationException("Email is required.");
-
-        if (!email.Contains('@'))
-            throw new InvalidOperationException("Invalid email.");
+        foreach (var token in _refreshTokens)
+        {
+            if (token.IsActive)
+            {
+                token.Revoke();
+            }
+        }
     }
 }

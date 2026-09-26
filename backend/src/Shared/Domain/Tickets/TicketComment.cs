@@ -16,8 +16,15 @@ public sealed class TicketComment : Entity
 
     public static TicketComment Create(Guid ticketId, Guid authorUserId, string content)
     {
-        if (string.IsNullOrWhiteSpace(content))
-            throw new ArgumentException("Comment content cannot be empty.", nameof(content));
+        ArgumentOutOfRangeException.ThrowIfEqual(
+               ticketId,
+               Guid.Empty);
+
+        ArgumentOutOfRangeException.ThrowIfEqual(
+            authorUserId,
+            Guid.Empty);
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(content);
 
         return new TicketComment
         {

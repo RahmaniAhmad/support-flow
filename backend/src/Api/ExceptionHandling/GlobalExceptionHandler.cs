@@ -1,7 +1,10 @@
+using Api.Errors.ErrorCodes;
+using Api.Errors.ErrorMessages;
 using Api.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Domain.Tickets.Exceptions;
 
 namespace Api.ExceptionHandling;
 
@@ -47,6 +50,7 @@ public sealed class GlobalExceptionHandler
     {
         switch (exception)
         {
+            case ArgumentException:
             case ValidationException:
             case BadRequestException:
             case UnauthorizedException:
@@ -76,10 +80,41 @@ public sealed class GlobalExceptionHandler
     {
         return exception switch
         {
+            ArgumentException =>
+                CreateProblemDetails(
+                    httpContext,
+                    StatusCodes.Status400BadRequest,
+                    "Bad Request",
+                    "One or more arguments are invalid."),
+
             ValidationException validationException =>
                 CreateValidationProblemDetails(
                     httpContext,
                     validationException),
+
+            InvalidTicketTransitionException =>
+                CreateProblemDetails(
+                    httpContext,
+                    StatusCodes.Status400BadRequest,
+                    "Invalid Ticket Transition",
+                    TicketErrorMessages.InvalidTicketTransition,
+                    TicketErrorCodes.InvalidTicketTransition),
+
+            TicketNotAssignedException =>
+                CreateProblemDetails(
+                    httpContext,
+                    StatusCodes.Status409Conflict,
+                    "Ticket Not Assigned",
+                    TicketErrorMessages.TicketNotAssigned,
+                    TicketErrorCodes.TicketNotAssigned),
+
+            NotAssignedAgentException =>
+                CreateProblemDetails(
+                    httpContext,
+                    StatusCodes.Status403Forbidden,
+                    "Forbidden",
+                    TicketErrorMessages.NotAssignedAgent,
+                    TicketErrorCodes.NotAssignedAgent),
 
             UnauthorizedException unauthorizedException =>
                 CreateProblemDetails(
@@ -120,6 +155,7 @@ public sealed class GlobalExceptionHandler
                     "Bad Request",
                     badRequestException.Message,
                     badRequestException.Code),
+
 
             _ =>
                 CreateProblemDetails(

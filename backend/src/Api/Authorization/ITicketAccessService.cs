@@ -1,5 +1,5 @@
-using Shared.Domain;
 using Shared.Domain.Tickets;
+using Shared.Domain.Users;
 
 namespace Api.Authorization;
 

@@ -16,10 +16,9 @@ public sealed class CompanyTicketCounter : Entity
 
     public static CompanyTicketCounter Create(Guid companyId)
     {
-        if (companyId == Guid.Empty)
-            throw new ArgumentException(
-                "Company id is required.",
-                nameof(companyId));
+        ArgumentOutOfRangeException.ThrowIfEqual(
+            companyId,
+            Guid.Empty);
 
 
         return new CompanyTicketCounter

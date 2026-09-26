@@ -12,6 +12,7 @@ public interface IVectorStore
     Task DeleteAsync(
         Guid sourceId,
         string sourceType,
+        Guid companyId,
         CancellationToken cancellationToken);
 
     Task<List<EmbeddingSearchResult>> SearchAsync(

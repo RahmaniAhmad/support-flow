@@ -19,7 +19,9 @@ import { useResolveTicket } from "../hooks/useResolveTicket";
 import { useCloseTicket } from "../hooks/useCloseTicket";
 import { useReopenTicket } from "../hooks/useReopenTicket";
 import { TicketAction, TicketActionKeys } from "../constants/ticketActions";
+
 import { EllipsisVertical } from "lucide-react";
+import { getApiErrorMessage } from "@/lib/api/errors";
 
 interface TicketActionsProps {
   ticket: TicketListItem;
@@ -58,16 +60,12 @@ export default function TicketActions({ ticket }: TicketActionsProps) {
       Modal.confirm({
         title,
         content,
-
         okText: "Confirm",
         cancelText: "Cancel",
-
         okButtonProps: {
           danger,
         },
-
         centered: true,
-
         onOk: action,
       });
     },
@@ -78,7 +76,6 @@ export default function TicketActions({ ticket }: TicketActionsProps) {
     handleConfirmAction(
       "Close ticket",
       "Are you sure you want to close this ticket? Closed tickets cannot receive new comments.",
-
       () =>
         new Promise<void>((resolve, reject) => {
           closeMutation.mutate(ticket.id, {
@@ -87,13 +84,15 @@ export default function TicketActions({ ticket }: TicketActionsProps) {
               resolve();
             },
 
-            onError: () => {
-              message.error("Failed to close ticket.");
-              reject();
+            onError: (error) => {
+              message.error(
+                getApiErrorMessage(error, "Failed to close ticket."),
+              );
+
+              reject(error);
             },
           });
         }),
-
       true,
     );
   }, [ticket.id, closeMutation, handleConfirmAction]);
@@ -102,7 +101,6 @@ export default function TicketActions({ ticket }: TicketActionsProps) {
     handleConfirmAction(
       "Reopen ticket",
       "Are you sure you want to reopen this ticket?",
-
       () =>
         new Promise<void>((resolve, reject) => {
           reopenMutation.mutate(ticket.id, {
@@ -111,9 +109,12 @@ export default function TicketActions({ ticket }: TicketActionsProps) {
               resolve();
             },
 
-            onError: () => {
-              message.error("Failed to reopen ticket.");
-              reject();
+            onError: (error) => {
+              message.error(
+                getApiErrorMessage(error, "Failed to reopen ticket."),
+              );
+
+              reject(error);
             },
           });
         }),
@@ -127,7 +128,10 @@ export default function TicketActions({ ticket }: TicketActionsProps) {
           startProgressMutation.mutate(ticket.id, {
             onSuccess: () => message.success("Ticket started."),
 
-            onError: () => message.error("Failed to start ticket."),
+            onError: (error) =>
+              message.error(
+                getApiErrorMessage(error, "Failed to start ticket."),
+              ),
           });
           break;
 
@@ -135,7 +139,10 @@ export default function TicketActions({ ticket }: TicketActionsProps) {
           moveToPendingMutation.mutate(ticket.id, {
             onSuccess: () => message.success("Ticket moved to pending."),
 
-            onError: () => message.error("Failed to move ticket to pending."),
+            onError: (error) =>
+              message.error(
+                getApiErrorMessage(error, "Failed to move ticket to pending."),
+              ),
           });
           break;
 
@@ -143,7 +150,10 @@ export default function TicketActions({ ticket }: TicketActionsProps) {
           resolveMutation.mutate(ticket.id, {
             onSuccess: () => message.success("Ticket resolved."),
 
-            onError: () => message.error("Failed to resolve ticket."),
+            onError: (error) =>
+              message.error(
+                getApiErrorMessage(error, "Failed to resolve ticket."),
+              ),
           });
           break;
 
