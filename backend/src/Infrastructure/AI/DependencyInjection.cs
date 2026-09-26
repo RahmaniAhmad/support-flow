@@ -1,3 +1,4 @@
+using Infrastructure.AI.Chat;
 using Infrastructure.AI.Embeddings;
 using Infrastructure.AI.VectorStore;
 using Microsoft.Extensions.Configuration;
@@ -16,13 +17,16 @@ public static class DependencyInjection
             configuration.GetSection(
             GeminiOptions.SectionName));
 
-        services.AddScoped<
+        services.AddSingleton<
             IEmbeddingService,
             GeminiEmbeddingService>();
+
+        services.AddSingleton<IChatCompletionService, GeminiChatService>();
 
         services.AddScoped<
             IVectorStore,
             PgVectorStore>();
+
 
         return services;
     }
