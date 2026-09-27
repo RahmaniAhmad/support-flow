@@ -87,6 +87,7 @@ public sealed class GetTicketSuggestedArticlesQueryHandler
                 .Select(x =>
                     new SuggestedArticleResponse(
                         x.SourceId,
+                        x.Title,
                         x.Content,
                         x.Distance))
                 .ToList();

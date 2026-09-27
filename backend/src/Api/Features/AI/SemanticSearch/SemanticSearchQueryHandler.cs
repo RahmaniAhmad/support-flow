@@ -51,6 +51,7 @@ public sealed class SemanticSearchQueryHandler
             .Select(x => new SemanticSearchResult(
                 x.SourceId,
                 x.SourceType,
+                x.Title,
                 x.Content,
                 x.Distance))
             .ToList();

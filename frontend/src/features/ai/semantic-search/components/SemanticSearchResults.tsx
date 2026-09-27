@@ -70,7 +70,7 @@ export default function SemanticSearchResults({ data, isLoading }: Props) {
             >
               <Card size="small" hoverable className="transition-shadow">
                 <div className="mb-2 flex items-start justify-between gap-3">
-                  <Typography.Text strong>Knowledge Article</Typography.Text>
+                  <Typography.Text strong>{result.title}</Typography.Text>
 
                   <Tag color="blue">{similarity.toFixed(0)}% relevant</Tag>
                 </div>

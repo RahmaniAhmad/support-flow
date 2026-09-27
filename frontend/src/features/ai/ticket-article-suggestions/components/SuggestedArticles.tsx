@@ -68,7 +68,7 @@ export default function SuggestedArticles({ ticketId }: Props) {
             >
               <Card size="small" hoverable>
                 <div className="mb-2 flex items-start justify-between gap-3">
-                  <Text strong>Knowledge Article</Text>
+                  <Text strong>{article.title}</Text>
 
                   <Tag color="blue">{similarity.toFixed(0)}% relevant</Tag>
                 </div>

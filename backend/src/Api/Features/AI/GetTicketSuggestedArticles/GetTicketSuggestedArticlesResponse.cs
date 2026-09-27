@@ -5,5 +5,6 @@ public sealed record GetTicketSuggestedArticlesResponse(
 
 public sealed record SuggestedArticleResponse(
     Guid ArticleId,
+    string Title,
     string Content,
     double Distance);
