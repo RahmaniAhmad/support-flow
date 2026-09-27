@@ -31,19 +31,20 @@ public sealed class KnowledgeArticleCreatedEmbeddingHandler
     {
         try
         {
-            var text = BuildEmbeddingText(
+            var embeddingText = BuildEmbeddingText(
                 notification.Title,
                 notification.Content);
 
             var vector =
                 await _embeddingService.GenerateAsync(
-                    text,
+                    embeddingText,
                     cancellationToken);
 
             var document = EmbeddingDocument.Create(
                 notification.ArticleId,
                 SourceType,
-                text,
+                notification.Title,
+                notification.Content,
                 vector,
                 notification.CompanyId);
 

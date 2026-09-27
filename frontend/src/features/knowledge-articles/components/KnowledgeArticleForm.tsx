@@ -80,7 +80,7 @@ export default function KnowledgeArticleForm({ article, articleId }: Props) {
           name="content"
           placeholder="Article content..."
           rows={12}
-          maxLength={KNOWLEDGE_ARTICLES_VALIDATION.TITLE_MAX_LENGTH}
+          maxLength={KNOWLEDGE_ARTICLES_VALIDATION.CONTENT_MAX_LENGTH}
         />
       </div>
 

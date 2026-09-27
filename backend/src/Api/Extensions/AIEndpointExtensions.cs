@@ -1,3 +1,4 @@
+using Api.Features.AI.Chat;
 using Api.Features.AI.GetTicketSuggestedArticles;
 using Api.Features.AI.SemanticSearch;
 
@@ -11,6 +12,8 @@ public static class AIEndpointExtensions
     {
         app.MapSemanticSearch();
         app.MapGetTicketSuggestedArticles();
+        app.MapChat();
+
         return app;
     }
 }

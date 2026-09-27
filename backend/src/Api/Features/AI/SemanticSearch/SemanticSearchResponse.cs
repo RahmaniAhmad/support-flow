@@ -6,5 +6,6 @@ public sealed record SemanticSearchResponse(
 public sealed record SemanticSearchResult(
     Guid ArticleId,
     string SourceType,
+    string Title,
     string Content,
     double Distance);
