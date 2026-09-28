@@ -3,6 +3,7 @@ using Shared.Domain.AI;
 using Shared.Domain.Base;
 using Shared.Domain.Companies;
 using Shared.Domain.KnowledgeBase;
+using Shared.Domain.Notifications;
 using Shared.Domain.Tickets;
 using Shared.Domain.Users;
 
@@ -32,6 +33,8 @@ public sealed class SupportFlowDbContext : DbContext
     public DbSet<EmbeddingDocument> EmbeddingDocuments => Set<EmbeddingDocument>();
     public DbSet<PasswordResetToken> PasswordResetTokens =>
         Set<PasswordResetToken>();
+
+    public DbSet<Notification> Notifications => Set<Notification>();
 
     protected override void OnModelCreating(
     ModelBuilder modelBuilder)
