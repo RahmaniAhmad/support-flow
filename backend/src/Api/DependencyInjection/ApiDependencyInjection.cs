@@ -1,8 +1,11 @@
 using Api.Authorization;
 using Api.DependencyInjection;
+using Api.Notifications;
 using FluentValidation;
 using Infrastructure.Pipeline;
 using MediatR;
+using Microsoft.AspNetCore.SignalR;
+using Shared.Notifications;
 
 namespace Api.DependencyInjection;
 
@@ -23,6 +26,11 @@ public static class ApiDependencyInjection
 
         services.AddCacheKeyProviders();
         services.AddApplicationAuthorization();
+
+        services.AddSignalR();
+
+        services.AddSingleton<IUserIdProvider, NotificationUserIdProvider>();
+        services.AddScoped<INotificationService, SignalRNotificationService>();
 
         return services;
     }
