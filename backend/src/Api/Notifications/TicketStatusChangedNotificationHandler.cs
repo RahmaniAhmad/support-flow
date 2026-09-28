@@ -8,14 +8,14 @@ using Shared.Notifications;
 
 namespace Api.Notifications;
 
-public sealed class TicketAssignedNotificationHandler
-    : INotificationHandler<TicketAssignedDomainEvent>
+public sealed class TicketStatusChangedNotificationHandler
+    : INotificationHandler<TicketStatusChangedDomainEvent>
 {
     private readonly SupportFlowDbContext _db;
     private readonly INotificationService _notificationService;
 
 
-    public TicketAssignedNotificationHandler(
+    public TicketStatusChangedNotificationHandler(
         SupportFlowDbContext db,
         INotificationService notificationService)
     {
@@ -25,7 +25,7 @@ public sealed class TicketAssignedNotificationHandler
 
 
     public async Task Handle(
-        TicketAssignedDomainEvent notification,
+        TicketStatusChangedDomainEvent notification,
         CancellationToken cancellationToken)
     {
         var ticket =
@@ -36,11 +36,11 @@ public sealed class TicketAssignedNotificationHandler
                     cancellationToken);
 
 
-        var assignedByUser =
+        var changedByUser =
             await _db.Users
                 .AsNoTracking()
                 .FirstAsync(
-                    x => x.Id == notification.AssignedByUserId,
+                    x => x.Id == notification.ChangedByUserId,
                     cancellationToken);
 
 
@@ -52,18 +52,21 @@ public sealed class TicketAssignedNotificationHandler
             ticket.CreatedByUserId);
 
 
-        // Admin assignment -> notify agent
-        if (assignedByUser.Role == UserRole.Admin ||
-            assignedByUser.Role == UserRole.SuperAdmin)
+        // Admin changes status -> agent should know
+        if (changedByUser.Role == UserRole.Admin ||
+            changedByUser.Role == UserRole.SuperAdmin)
         {
-            recipients.Add(
-                notification.AssignedToUserId);
+            if (ticket.AssignedToUserId.HasValue)
+            {
+                recipients.Add(
+                    ticket.AssignedToUserId.Value);
+            }
         }
 
 
-        // Do not notify the actor
+        // Remove the person who changed status
         recipients.Remove(
-            notification.AssignedByUserId);
+            notification.ChangedByUserId);
 
 
         foreach (var userId in recipients.Distinct())
@@ -73,9 +76,9 @@ public sealed class TicketAssignedNotificationHandler
                     userId,
                     notification.CompanyId,
                     notification.TicketId,
-                    NotificationType.TicketAssigned,
-                    "Ticket Assigned",
-                    $"Ticket #{ticket.TicketNumber} has been assigned to you.");
+                    NotificationType.TicketStatusChanged,
+                    "Ticket Status Changed",
+                    $"Ticket #{ticket.TicketNumber} changed from {notification.OldStatus} to {notification.NewStatus}.");
 
 
             _db.Notifications.Add(

@@ -102,6 +102,8 @@ public sealed class Ticket : AggregateRoot
         EnsureTransitionAllowed(
             TicketStatus.Assigned);
 
+        var oldStatus = Status;
+
         AssignedToUserId = assignedToUserId;
 
         ChangeStatus(TicketStatus.Assigned);
@@ -112,6 +114,14 @@ public sealed class Ticket : AggregateRoot
                 CompanyId,
                 assignedByUserId,
                 assignedToUserId));
+
+        AddDomainEvent(
+            new TicketStatusChangedDomainEvent(
+                Id,
+                CompanyId,
+                assignedByUserId,
+                oldStatus,
+                Status));
     }
 
     public void StartProgress(Guid startedByUserId)
@@ -123,7 +133,8 @@ public sealed class Ticket : AggregateRoot
             new TicketProgressStartedDomainEvent(
                 Id,
                 CompanyId,
-                startedByUserId));
+                startedByUserId),
+                startedByUserId);
     }
 
     public void MoveToPending(Guid movedToPendingByUserId)
@@ -135,7 +146,8 @@ public sealed class Ticket : AggregateRoot
             new TicketPendingDomainEvent(
                 Id,
                 CompanyId,
-                movedToPendingByUserId));
+                movedToPendingByUserId),
+                movedToPendingByUserId);
     }
 
     public void Resolve(Guid resolvedByUserId)
@@ -147,7 +159,8 @@ public sealed class Ticket : AggregateRoot
             new TicketResolvedDomainEvent(
                 Id,
                 CompanyId,
-                resolvedByUserId));
+                resolvedByUserId),
+                resolvedByUserId);
     }
 
     public void Close(Guid closedByUserId)
@@ -159,7 +172,8 @@ public sealed class Ticket : AggregateRoot
             new TicketClosedDomainEvent(
                 Id,
                 CompanyId,
-                closedByUserId));
+                closedByUserId),
+                closedByUserId);
     }
 
     public void Reopen(Guid reopenedByUserId)
@@ -171,7 +185,8 @@ public sealed class Ticket : AggregateRoot
             new TicketReopenedDomainEvent(
                 Id,
                 CompanyId,
-                reopenedByUserId));
+                reopenedByUserId),
+                reopenedByUserId);
     }
 
     public Guid AddComment(
@@ -239,13 +254,24 @@ public sealed class Ticket : AggregateRoot
 
     private void TransitionTo(
         TicketStatus newStatus,
-        IDomainEvent domainEvent)
+        IDomainEvent domainEvent,
+        Guid changedByUserId)
     {
         EnsureTransitionAllowed(newStatus);
+
+        var oldStatus = Status;
 
         ChangeStatus(newStatus);
 
         AddDomainEvent(domainEvent);
+
+        AddDomainEvent(
+            new TicketStatusChangedDomainEvent(
+                Id,
+                CompanyId,
+                changedByUserId,
+                oldStatus,
+                newStatus));
     }
 
     private void ChangeStatus(
