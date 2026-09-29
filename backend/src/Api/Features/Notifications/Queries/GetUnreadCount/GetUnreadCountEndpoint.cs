@@ -8,7 +8,7 @@ public static class GetUnreadCountEndpoint
         this IEndpointRouteBuilder app)
     {
         app.MapGet(
-            "/api/notifications/unread-count",
+            "/notifications/unread-count",
             GetUnreadCountAsync)
             .RequireAuthorization();
     }

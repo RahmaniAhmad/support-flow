@@ -8,7 +8,7 @@ public static class MarkAsReadEndpoint
         this IEndpointRouteBuilder app)
     {
         app.MapPut(
-            "/api/notifications/{id:guid}/read",
+            "/notifications/{id:guid}/read",
             MarkAsReadAsync)
             .RequireAuthorization();
     }

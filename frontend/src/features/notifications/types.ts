@@ -1,3 +1,6 @@
+import { PagedResponse } from "@/types/common";
+import { InfiniteData } from "@tanstack/react-query";
+
 export enum NotificationType {
   TicketAssigned = 1,
   TicketCommentAdded = 2,
@@ -15,3 +18,11 @@ export interface AppNotification {
   createdAtUtc: string;
   readAtUtc: string | null;
 }
+
+export interface UnreadCountResponse {
+  count: number;
+}
+
+export type NotificationInfiniteData = InfiniteData<
+  PagedResponse<AppNotification>
+>;

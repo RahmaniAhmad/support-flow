@@ -8,5 +8,5 @@ public sealed record GetNotificationsResponse(
     NotificationType Type,
     string Title,
     string Message,
-    bool IsRead,
+    DateTime? ReadAtUtc,
     DateTime CreatedAtUtc);

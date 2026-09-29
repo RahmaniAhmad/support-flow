@@ -8,7 +8,7 @@ public static class GetNotificationsEndpoint
         this IEndpointRouteBuilder app)
     {
         app.MapGet(
-            "/api/notifications",
+            "/notifications",
             GetNotificationsAsync)
             .RequireAuthorization();
     }
