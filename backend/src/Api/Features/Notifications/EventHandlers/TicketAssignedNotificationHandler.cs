@@ -6,7 +6,7 @@ using Shared.Domain.Tickets.Events;
 using Shared.Domain.Users;
 using Shared.Notifications;
 
-namespace Api.Notifications;
+namespace Api.Features.Notifications.EventHandlers;
 
 public sealed class TicketAssignedNotificationHandler
     : INotificationHandler<TicketAssignedDomainEvent>
@@ -44,12 +44,11 @@ public sealed class TicketAssignedNotificationHandler
                     cancellationToken);
 
 
-        var recipients = new List<Guid>();
-
-
-        // Customer always knows
-        recipients.Add(
-            ticket.CreatedByUserId);
+        var recipients = new List<Guid>
+        {
+            // Customer always knows
+            ticket.CreatedByUserId
+        };
 
 
         // Admin assignment -> notify agent

@@ -6,7 +6,7 @@ using Shared.Domain.Tickets.Events;
 using Shared.Domain.Users;
 using Shared.Notifications;
 
-namespace Api.Notifications;
+namespace Api.Features.Notifications.EventHandlers;
 
 public sealed class TicketStatusChangedNotificationHandler
     : INotificationHandler<TicketStatusChangedDomainEvent>

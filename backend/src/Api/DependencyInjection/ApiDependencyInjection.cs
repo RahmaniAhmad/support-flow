@@ -1,5 +1,4 @@
-using Api.Authorization;
-using Api.DependencyInjection;
+using Api.Features.Notifications.SignalR;
 using Api.Notifications;
 using FluentValidation;
 using Infrastructure.Pipeline;

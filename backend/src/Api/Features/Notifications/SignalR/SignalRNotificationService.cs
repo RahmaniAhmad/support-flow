@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.SignalR;
 using Shared.Domain.Notifications;
 using Shared.Notifications;
 
-namespace Api.Notifications;
+namespace Api.Features.Notifications.SignalR;
 
 public sealed class SignalRNotificationService
     : INotificationService
