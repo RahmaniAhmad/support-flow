@@ -1,9 +1,11 @@
+using Shared.Domain.Notifications;
+
 namespace Shared.Notifications;
 
 public interface INotificationService
 {
     Task SendAsync(
-        string subject,
-        string message,
+        Guid userId,
+        Notification notification,
         CancellationToken cancellationToken);
 }

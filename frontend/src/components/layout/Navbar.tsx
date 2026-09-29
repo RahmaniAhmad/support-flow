@@ -6,6 +6,7 @@ import Button from "../ui/Button";
 import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
 import { ChevronDown, LogOut, Menu, UserRound } from "lucide-react";
 import { useLogout } from "@/features/auth/hooks/useLogout";
+import { NotificationCenter } from "@/features/notifications/components";
 
 type Props = {
   onMenuClick: () => void;
@@ -74,17 +75,19 @@ export default function Navbar({ onMenuClick }: Props) {
 
         <h1 className="text-lg font-semibold sm:hidden">TMS</h1>
       </div>
-
-      <Dropdown
-        menu={{ items: menuItems }}
-        trigger={["click"]}
-        placement="bottomRight"
-      >
-        <Button type="text" className="flex items-center gap-2">
-          <Avatar size="small" icon={<UserRound />} />
-          <ChevronDown size={18} className="text-gray-500" />
-        </Button>
-      </Dropdown>
+      <div className="flex items-center">
+        <NotificationCenter />
+        <Dropdown
+          menu={{ items: menuItems }}
+          trigger={["click"]}
+          placement="bottomRight"
+        >
+          <Button type="text" className="flex items-center gap-2">
+            <Avatar size="small" icon={<UserRound />} />
+            <ChevronDown size={18} className="text-gray-500" />
+          </Button>
+        </Dropdown>
+      </div>
     </header>
   );
 }

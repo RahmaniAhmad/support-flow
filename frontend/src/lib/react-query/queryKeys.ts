@@ -77,4 +77,14 @@ export const queryKeys = {
 
     current: () => [...queryKeys.profile.all, "current"] as const,
   },
+  notifications: {
+    all: ["notifications"] as const,
+
+    lists: () => [...queryKeys.notifications.all, "list"] as const,
+
+    list: () => [...queryKeys.notifications.lists()] as const,
+
+    unreadCount: () =>
+      [...queryKeys.notifications.all, "unread-count"] as const,
+  },
 } as const;

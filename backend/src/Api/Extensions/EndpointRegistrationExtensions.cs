@@ -1,3 +1,5 @@
+using Api.Notifications;
+
 namespace Api.Extensions;
 
 public static class EndpointRegistrationExtensions
@@ -11,12 +13,13 @@ public static class EndpointRegistrationExtensions
 
         app.MapDashboardEndpoints();
 
-
         app.MapTicketEndpoints();
 
         app.MapKnowledgeBaseEndpoints();
 
         app.MapAIEndpoints();
+
+        app.MapNotificationEndpoints();
 
         return app;
     }
