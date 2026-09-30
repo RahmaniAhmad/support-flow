@@ -13,8 +13,11 @@ export function useInfiniteNotifications() {
 
     initialPageParam: 1,
 
-    getNextPageParam: (lastPage) => {
-      const loadedCount = lastPage.page * lastPage.pageSize;
+    getNextPageParam: (lastPage, allPages) => {
+      const loadedCount = allPages.reduce(
+        (total, page) => total + page.items.length,
+        0,
+      );
 
       if (loadedCount >= lastPage.totalCount) {
         return undefined;

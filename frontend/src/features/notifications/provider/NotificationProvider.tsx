@@ -90,6 +90,18 @@ export function NotificationProvider({ children }: Props) {
         queryClient.invalidateQueries({
           queryKey: queryKeys.tickets.lists(),
         });
+
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.dashboard.statistics(),
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.dashboard.statusDistribution(),
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.dashboard.activities(),
+        });
       }
 
       if (

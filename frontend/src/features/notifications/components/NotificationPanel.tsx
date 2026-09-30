@@ -14,8 +14,8 @@ export function NotificationPanel() {
     <div
       className="
         w-[calc(100vw)]
-        max-w-96
-        max-h-[80vh]
+        md:max-w-96
+        max-h-[90vh]
         overflow-hidden
         rounded-lg
         bg-white

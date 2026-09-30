@@ -28,8 +28,6 @@ export const queryKeys = {
     list: (filters?: TicketListFilters) =>
       [...queryKeys.tickets.lists(), filters] as const,
 
-    my: (filters?: TicketListFilters) => ["tickets", "my", filters] as const,
-
     details: () => [...queryKeys.tickets.all, "detail"] as const,
 
     detail: (id: string) => [...queryKeys.tickets.details(), id] as const,
