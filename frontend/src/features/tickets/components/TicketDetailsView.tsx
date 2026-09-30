@@ -5,6 +5,7 @@ import { Card, Tag, Typography } from "antd";
 import { statusColor } from "../utils/statusColor";
 import { TicketDetails } from "../types";
 import { formatDate } from "@/shared/utils/date";
+import { useTicket } from "../hooks/useTicket";
 
 const { Title, Paragraph } = Typography;
 
@@ -12,44 +13,61 @@ type Props = {
   ticket: TicketDetails;
 };
 
-export default function TicketDetailsView({ ticket }: Props) {
+export default function TicketDetailsView({ ticket: initialTicket }: Props) {
+  const { data: ticket } = useTicket(initialTicket.id);
+
+  const currentTicket = ticket ?? initialTicket;
+
   return (
     <div className="flex flex-col gap-4">
       <Card>
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <Title level={2} className="mb-2!">
-              {ticket.subject}
+              {currentTicket.subject}
             </Title>
 
             <div className="text-sm text-slate-500">
-              Ticket #{ticket.ticketNumber}
+              Ticket #{currentTicket.ticketNumber}
             </div>
           </div>
 
-          <Tag color={statusColor(ticket.status)}>{ticket.status}</Tag>
+          <Tag color={statusColor(currentTicket.status)}>
+            {currentTicket.status}
+          </Tag>
         </div>
       </Card>
 
       <Card title="Description">
-        <Paragraph className="mb-0!">{ticket.description}</Paragraph>
+        <Paragraph className="mb-0!">{currentTicket.description}</Paragraph>
       </Card>
 
       <Card title="Information">
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <InfoItem
             label="Created"
-            value={formatDate(ticket.createdAtUtc)}
+            value={formatDate(currentTicket.createdAtUtc)}
             nowrap
           />
 
-          <InfoItem label="Assignee" value={ticket.assigneeName ?? "-"} />
+          <InfoItem
+            label="Assignee"
+            value={currentTicket.assigneeName ?? "-"}
+          />
 
-          <InfoItem label="Created By" value={ticket.createdByName} breakText />
+          <InfoItem
+            label="Created By"
+            value={currentTicket.createdByName}
+            breakText
+          />
 
           <InfoItem
             label="Updated"
-            value={ticket.updatedAtUtc ? formatDate(ticket.updatedAtUtc) : "-"}
+            value={
+              currentTicket.updatedAtUtc
+                ? formatDate(currentTicket.updatedAtUtc)
+                : "-"
+            }
             nowrap
           />
         </div>

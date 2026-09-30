@@ -44,12 +44,11 @@ public sealed class TicketStatusChangedNotificationHandler
                     cancellationToken);
 
 
-        var recipients = new List<Guid>();
-
-
-        // Customer always knows
-        recipients.Add(
-            ticket.CreatedByUserId);
+        var recipients = new List<Guid>
+        {
+            // Customer always knows
+            ticket.CreatedByUserId
+        };
 
 
         // Admin changes status -> agent should know
