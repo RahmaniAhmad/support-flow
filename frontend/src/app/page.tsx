@@ -1,12 +1,15 @@
-import { cookies } from "next/headers";
+import { getCurrentUser } from "@/features/auth/server/getCurrentUser";
 import { redirect } from "next/navigation";
 
 export default async function HomePage() {
-  const token = (await cookies()).get("access-token");
-
-  if (token) {
-    redirect("/dashboard");
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    redirect("/login");
   }
 
-  redirect("/login");
+  if (currentUser.role === "Customer") {
+    redirect("/tickets");
+  }
+
+  redirect("/dashboard");
 }

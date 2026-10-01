@@ -126,11 +126,11 @@ export default function TicketList() {
         status={filters.status}
         view={filters.view}
         onSearch={(value) =>
-          setFilters({
-            ...filters,
+          setFilters((prev) => ({
+            ...prev,
             search: value,
             page: 1,
-          })
+          }))
         }
         onStatusChange={handleStatusChange}
         onViewChange={handleViewChange}
