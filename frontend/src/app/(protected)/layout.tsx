@@ -16,7 +16,7 @@ export default async function ProtectedLayout({
 
   return (
     <CurrentUserProvider currentUser={currentUser}>
-      <AppLayout>{children}</AppLayout>;
+      <AppLayout>{children}</AppLayout>
     </CurrentUserProvider>
   );
 }

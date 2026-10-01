@@ -37,7 +37,7 @@ export default function LoginForm() {
   function onSubmit(data: LoginFormData) {
     loginMutation.mutate(data, {
       onSuccess: () => {
-        router.push("/dashboard");
+        router.push("/");
       },
     });
   }
