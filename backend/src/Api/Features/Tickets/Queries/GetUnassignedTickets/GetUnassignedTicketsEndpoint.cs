@@ -1,0 +1,29 @@
+using Api.Authorization;
+using MediatR;
+using Shared.Authentication;
+using Shared.Domain.Users;
+
+namespace Api.Features.Tickets.Queries.GetUnassignedTickets;
+
+public static class GetUnassignedTicketsEndpoint
+{
+    public static IEndpointRouteBuilder MapGetUnassignedTickets(
+        this IEndpointRouteBuilder app)
+    {
+        app.MapGet(
+            "/tickets/unassigned",
+            async (
+                ICurrentUser currentUser,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var tickets = await sender.Send(new GetUnassignedTicketsQuery(), cancellationToken);
+
+                return Results.Ok(tickets);
+            })
+            .RequireAuthorization()
+            .RequirePermission(Permissions.TicketsUnassign);
+
+        return app;
+    }
+}

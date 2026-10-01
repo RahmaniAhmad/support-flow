@@ -1,16 +1,16 @@
-using Api.Features.Tickets.AddComment;
-using Api.Features.Tickets.AssignTicket;
-using Api.Features.Tickets.CloseTicket;
-using Api.Features.Tickets.CreateTicket;
-using Api.Features.Tickets.GetComments;
-using Api.Features.Tickets.GetTicket;
-using Api.Features.Tickets.GetTickets;
-using Api.Features.Tickets.GetTicketsByStatus;
-using Api.Features.Tickets.GetUnassignedTickets;
-using Api.Features.Tickets.MoveTicketToPending;
-using Api.Features.Tickets.ReopenTicket;
-using Api.Features.Tickets.ResolveTicket;
-using Api.Features.Tickets.StartProgress;
+using Api.Features.Tickets.Commands.AddComment;
+using Api.Features.Tickets.Commands.AssignTicket;
+using Api.Features.Tickets.Commands.CloseTicket;
+using Api.Features.Tickets.Commands.CreateTicket;
+using Api.Features.Tickets.Queries.GetComments;
+using Api.Features.Tickets.Queries.GetTicket;
+using Api.Features.Tickets.Queries.GetTickets;
+using Api.Features.Tickets.Queries.GetTicketsByStatus;
+using Api.Features.Tickets.Queries.GetUnassignedTickets;
+using Api.Features.Tickets.Commands.MoveTicketToPending;
+using Api.Features.Tickets.Commands.ReopenTicket;
+using Api.Features.Tickets.Commands.ResolveTicket;
+using Api.Features.Tickets.Commands.StartProgress;
 
 namespace Api.Extensions;
 
