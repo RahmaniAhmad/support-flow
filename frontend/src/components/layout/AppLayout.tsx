@@ -31,10 +31,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <Sidebar onClose={() => setSidebarOpen(false)} />
       </div>
 
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <Navbar onMenuClick={() => setSidebarOpen(true)} />
 
-        <main className="flex-1 bg-slate-50 p-4 md:p-6">{children}</main>
+        <main className="min-w-0 flex-1 bg-slate-50 p-4 md:p-6">
+          {children}
+        </main>
       </div>
     </div>
   );
