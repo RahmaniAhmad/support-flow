@@ -11,6 +11,7 @@ using Api.Features.Tickets.Commands.MoveTicketToPending;
 using Api.Features.Tickets.Commands.ReopenTicket;
 using Api.Features.Tickets.Commands.ResolveTicket;
 using Api.Features.Tickets.Commands.StartProgress;
+using Api.Features.TicketCategories;
 
 namespace Api.Extensions;
 
@@ -27,6 +28,9 @@ public static class TicketEndpointExtensions
         app.MapGetTicketsByStatus();
         app.MapGetComments();
 
+        //Ticket Category
+        app.MapTicketCategoryEndpoints();
+
         // Ticket
         app.MapCreateTicket();
         app.MapAssignTicket();
@@ -38,6 +42,7 @@ public static class TicketEndpointExtensions
 
         // Comment
         app.MapAddComment();
+
 
         return app;
     }

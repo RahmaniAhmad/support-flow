@@ -31,10 +31,13 @@ public sealed class SupportFlowDbContext : DbContext
     public DbSet<KnowledgeArticle> KnowledgeArticles => Set<KnowledgeArticle>();
 
     public DbSet<EmbeddingDocument> EmbeddingDocuments => Set<EmbeddingDocument>();
+
     public DbSet<PasswordResetToken> PasswordResetTokens =>
         Set<PasswordResetToken>();
 
     public DbSet<Notification> Notifications => Set<Notification>();
+
+    public DbSet<TicketCategory> TicketCategories => Set<TicketCategory>();
 
     protected override void OnModelCreating(
     ModelBuilder modelBuilder)

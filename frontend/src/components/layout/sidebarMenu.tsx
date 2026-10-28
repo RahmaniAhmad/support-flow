@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   LucideIcon,
   Search,
+  Tags,
   Users,
 } from "lucide-react";
 
@@ -38,6 +39,15 @@ export const MENU_ITEMS: readonly MenuItem[] = [
     icon: Headset,
     permission: AppPermissions.TicketsView,
     isActive: isDetailsRoute("/tickets"),
+  },
+  {
+    label: "Ticket Categories",
+    href: "/ticket-categories",
+    icon: Tags,
+    permission: AppPermissions.TicketCategoriesView,
+    isActive: (pathname) =>
+      pathname === "/ticket-categories" ||
+      pathname.startsWith("/ticket-categories/"),
   },
   {
     label: "Users",

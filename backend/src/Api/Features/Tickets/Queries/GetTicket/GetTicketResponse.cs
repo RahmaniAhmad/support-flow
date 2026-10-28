@@ -7,6 +7,8 @@ public sealed record GetTicketResponse(
      long TicketNumber,
      string Subject,
      string Description,
+     Guid? CategoryId,
+     string? CategoryName,
      TicketStatus Status,
      Guid? AssignedToUserId,
      string? AssigneeName,

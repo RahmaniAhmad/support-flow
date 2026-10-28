@@ -109,6 +109,13 @@ public sealed class GetTicketsQueryHandler
                 x.TicketNumber,
                 x.Subject,
                 x.Description,
+                x.CategoryId,
+                x.CategoryId != null
+                    ? _db.TicketCategories
+                        .Where(c => c.Id == x.CategoryId)
+                        .Select(c => c.Name)
+                        .FirstOrDefault()
+                    : null,
                 x.Status,
                 x.AssignedToUserId,
                 x.AssignedToUserId != null

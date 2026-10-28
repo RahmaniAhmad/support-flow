@@ -41,6 +41,11 @@ export function getTicketColumns(
       sorter: true,
     },
     {
+      title: "Category",
+      dataIndex: "categoryName",
+      render: (value: string | undefined) => value ?? "-",
+    },
+    {
       title: "Status",
       dataIndex: "status",
       sorter: true,

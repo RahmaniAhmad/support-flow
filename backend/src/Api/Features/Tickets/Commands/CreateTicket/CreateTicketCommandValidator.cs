@@ -14,5 +14,9 @@ public sealed class CreateTicketCommandValidator
         RuleFor(x => x.Description)
             .NotEmpty()
             .MaximumLength(4000);
+
+        RuleFor(x => x.CategoryId)
+            .Must(categoryId => categoryId != Guid.Empty)
+            .When(x => x.CategoryId.HasValue);
     }
 }

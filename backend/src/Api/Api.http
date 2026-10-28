@@ -1,6 +1,69 @@
 @Api_HostAddress = http://localhost:5003
+@TicketId = 00000000-0000-0000-0000-000000000001
+@CategoryId = 00000000-0000-0000-0000-000000000002
 
-GET {{Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### List categories
+GET {{Api_HostAddress}}/ticket-categories?page=1&pageSize=20&search=Billing
 
-###
+### List active categories for ticket creation
+GET {{Api_HostAddress}}/ticket-categories/active
+
+### Get a category
+GET {{Api_HostAddress}}/ticket-categories/{{CategoryId}}
+
+### Create a category
+POST {{Api_HostAddress}}/ticket-categories
+Content-Type: application/json
+
+{
+  "name": "Billing",
+  "description": "Invoices and payment issues"
+}
+
+### Update a category
+PUT {{Api_HostAddress}}/ticket-categories/{{CategoryId}}
+Content-Type: application/json
+
+{
+  "name": "Billing support",
+  "description": "Invoices, refunds, and payment issues"
+}
+
+### Activate a category
+PUT {{Api_HostAddress}}/ticket-categories/{{CategoryId}}/activate
+
+### Deactivate a category
+PUT {{Api_HostAddress}}/ticket-categories/{{CategoryId}}/deactivate
+
+### Create a ticket with a category
+POST {{Api_HostAddress}}/tickets
+Content-Type: application/json
+
+{
+  "subject": "Invoice question",
+  "description": "Please review invoice 123.",
+  "categoryId": "{{CategoryId}}"
+}
+
+### Create a ticket without a category
+POST {{Api_HostAddress}}/tickets
+Content-Type: application/json
+
+{
+  "subject": "General support request",
+  "description": "I need help with my account."
+}
+
+### Assign a category to a ticket
+PUT {{Api_HostAddress}}/tickets/{{TicketId}}/category
+Content-Type: application/json
+
+{
+  "categoryId": "{{CategoryId}}"
+}
+
+### List active categories for a ticket's company
+GET {{Api_HostAddress}}/tickets/{{TicketId}}/ticket-categories/active
+
+### Remove a ticket category
+DELETE {{Api_HostAddress}}/tickets/{{TicketId}}/category

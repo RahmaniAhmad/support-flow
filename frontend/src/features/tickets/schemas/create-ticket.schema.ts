@@ -16,6 +16,7 @@ export const createTicketSchema = z.object({
       TICKET_VALIDATION.DESCRIPTION_MAX_LENGTH,
       `Description must be ${TICKET_VALIDATION.DESCRIPTION_MAX_LENGTH} characters or fewer.`,
     ),
+  categoryId: z.string().uuid().optional(),
 });
 
 export type CreateTicketFormData = z.infer<typeof createTicketSchema>;

@@ -43,5 +43,25 @@ public sealed class TicketConfiguration
         builder.HasIndex(x => x.CompanyId);
 
         builder.HasIndex(x => x.AssignedToUserId);
+
+        builder.HasIndex(x => new
+        {
+            x.CompanyId,
+            x.CategoryId
+        });
+
+        builder.HasOne<TicketCategory>()
+            .WithMany()
+            .HasForeignKey(x => new
+            {
+                x.CompanyId,
+                x.CategoryId
+            })
+            .HasPrincipalKey(x => new
+            {
+                x.CompanyId,
+                x.Id
+            })
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

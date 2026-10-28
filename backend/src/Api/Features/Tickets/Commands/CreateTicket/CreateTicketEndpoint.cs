@@ -21,7 +21,10 @@ public static class CreateTicketEndpoint
                 CancellationToken cancellationToken) =>
             {
 
-                var command = new CreateTicketCommand(request.Subject, request.Description);
+                var command = new CreateTicketCommand(
+                    request.Subject,
+                    request.Description,
+                    request.CategoryId);
 
                 var ticketId = await sender.Send(command, cancellationToken);
 
@@ -35,4 +38,3 @@ public static class CreateTicketEndpoint
         return app;
     }
 }
-

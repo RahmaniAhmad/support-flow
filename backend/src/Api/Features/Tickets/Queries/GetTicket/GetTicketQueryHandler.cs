@@ -1,4 +1,5 @@
 using Api.Authorization;
+using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,13 @@ public sealed class GetTicketQueryHandler
            x.TicketNumber,
            x.Subject,
            x.Description,
+           x.CategoryId,
+           x.CategoryId != null
+               ? _db.TicketCategories
+                   .Where(c => c.Id == x.CategoryId)
+                   .Select(c => c.Name)
+                   .FirstOrDefault()
+               : null,
            x.Status,
            x.AssignedToUserId,
 
@@ -52,6 +60,8 @@ public sealed class GetTicketQueryHandler
        ))
        .FirstOrDefaultAsync(cancellationToken);
 
-        return ticket ?? throw new InvalidOperationException("Ticket not found");
+        return ticket ?? throw new NotFoundException(
+            "Ticket was not found.",
+            "TICKET_NOT_FOUND");
     }
 }

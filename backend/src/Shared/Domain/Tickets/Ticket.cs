@@ -7,6 +7,8 @@ namespace Shared.Domain.Tickets;
 
 public sealed class Ticket : AggregateRoot
 {
+    public Guid? CategoryId { get; private set; }
+
     public long TicketNumber { get; private set; }
 
     public Guid CompanyId { get; private set; }
@@ -37,7 +39,8 @@ public sealed class Ticket : AggregateRoot
         Guid companyId,
         Guid userId,
         string subject,
-        string description)
+        string description,
+        Guid? categoryId = null)
     {
         ArgumentOutOfRangeException.ThrowIfEqual(
             companyId,
@@ -46,6 +49,14 @@ public sealed class Ticket : AggregateRoot
         ArgumentOutOfRangeException.ThrowIfEqual(
             userId,
             Guid.Empty);
+
+        if (categoryId == Guid.Empty)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(categoryId),
+                categoryId,
+                "A category id must not be empty.");
+        }
 
         ArgumentException.ThrowIfNullOrWhiteSpace(
             subject);
@@ -57,6 +68,7 @@ public sealed class Ticket : AggregateRoot
         {
             CompanyId = companyId,
             CreatedByUserId = userId,
+            CategoryId = categoryId,
             Subject = subject.Trim(),
             Description = description.Trim(),
             Status = TicketStatus.Open,
@@ -70,6 +82,42 @@ public sealed class Ticket : AggregateRoot
                 ticket.Subject));
 
         return ticket;
+    }
+
+    public void AssignCategory(Guid categoryId)
+    {
+        ArgumentOutOfRangeException.ThrowIfEqual(
+            categoryId,
+            Guid.Empty);
+
+        if (CategoryId == categoryId)
+        {
+            return;
+        }
+
+        CategoryId = categoryId;
+        UpdatedAtUtc = DateTime.UtcNow;
+
+        AddDomainEvent(
+            new TicketCategoryChangedDomainEvent(
+                Id,
+                CompanyId));
+    }
+
+    public void RemoveCategory()
+    {
+        if (CategoryId is null)
+        {
+            return;
+        }
+
+        CategoryId = null;
+        UpdatedAtUtc = DateTime.UtcNow;
+
+        AddDomainEvent(
+            new TicketCategoryChangedDomainEvent(
+                Id,
+                CompanyId));
     }
 
     public void AssignTicketNumber(long ticketNumber)

@@ -49,6 +49,8 @@ public static class RolePermissions
                Permissions.TicketsReopen,
                Permissions.TicketsClose,
                Permissions.TicketsComment,
+               Permissions.TicketCategoriesView,
+               Permissions.TicketCategoriesManage,
                Permissions.UsersView,
                Permissions.UsersCreate,
                Permissions.UsersUpdate,

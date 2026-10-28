@@ -32,6 +32,13 @@ public sealed class GetUnassignedTicketsQueryHandler
                 x.Id,
                 x.Subject,
                 x.Description,
+                x.CategoryId,
+                x.CategoryId != null
+                    ? _db.TicketCategories
+                        .Where(c => c.Id == x.CategoryId)
+                        .Select(c => c.Name)
+                        .FirstOrDefault()
+                    : null,
                 x.Status,
                 x.AssignedToUserId,
                 x.CreatedAtUtc))
