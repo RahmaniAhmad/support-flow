@@ -32,6 +32,23 @@ export const queryKeys = {
 
     detail: (id: string) => [...queryKeys.tickets.details(), id] as const,
   },
+  ticketCategories: {
+    all: ["ticket-categories"] as const,
+
+    lists: () => [...queryKeys.ticketCategories.all, "list"] as const,
+
+    list: (filters?: unknown) =>
+      [...queryKeys.ticketCategories.lists(), filters] as const,
+
+    active: () => [...queryKeys.ticketCategories.all, "active"] as const,
+
+    activeForTicket: (ticketId: string) =>
+      [
+        ...queryKeys.ticketCategories.all,
+        "active-for-ticket",
+        ticketId,
+      ] as const,
+  },
 
   ticketComments: {
     all: ["ticket-comments"] as const,
