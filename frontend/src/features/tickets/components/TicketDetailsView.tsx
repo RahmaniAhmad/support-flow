@@ -1,11 +1,19 @@
 "use client";
 
-import { Card, Tag, Typography } from "antd";
+import { Alert, Button, Card, Select, Tag, Typography } from "antd";
 
 import { statusColor } from "../utils/statusColor";
 import { TicketDetails } from "../types";
 import { formatDate } from "@/shared/utils/date";
 import { useTicket } from "../hooks/useTicket";
+import { AppPermissions } from "@/features/auth/Permissions";
+import { hasPermission } from "@/features/auth/authorization";
+import { useCurrentUser } from "@/features/auth/providers/CurrentUserProvider";
+import {
+  useActiveTicketCategoriesForTicket,
+  useAssignTicketCategory,
+  useRemoveTicketCategory,
+} from "@/features/ticket-categories/hooks/useTicketCategories";
 
 const { Title, Paragraph } = Typography;
 
@@ -15,8 +23,33 @@ type Props = {
 
 export default function TicketDetailsView({ ticket: initialTicket }: Props) {
   const { data: ticket } = useTicket(initialTicket.id);
+  const currentUser = useCurrentUser();
 
   const currentTicket = ticket ?? initialTicket;
+  const canAssignCategory = hasPermission(
+    currentUser,
+    AppPermissions.TicketsAssign,
+  );
+  const { data: categories = [] } = useActiveTicketCategoriesForTicket(
+    currentTicket.id,
+    canAssignCategory,
+  );
+  const assignCategory = useAssignTicketCategory();
+  const removeCategory = useRemoveTicketCategory();
+  const categoryOptions = categories.map((category) => ({
+    label: category.name,
+    value: category.id,
+  }));
+  if (
+    currentTicket.categoryId &&
+    currentTicket.categoryName &&
+    !categoryOptions.some((option) => option.value === currentTicket.categoryId)
+  ) {
+    categoryOptions.push({
+      label: currentTicket.categoryName,
+      value: currentTicket.categoryId,
+    });
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -55,6 +88,39 @@ export default function TicketDetailsView({ ticket: initialTicket }: Props) {
             value={currentTicket.assigneeName ?? "-"}
           />
 
+          <div>
+            <div className="mb-1 text-sm text-slate-500">Category</div>
+            {canAssignCategory ? (
+              <div className="flex flex-wrap gap-2">
+                <Select
+                  className="min-w-48"
+                  placeholder="No category"
+                  value={currentTicket.categoryId}
+                  options={categoryOptions}
+                  loading={assignCategory.isPending}
+                  onChange={(categoryId: string) =>
+                    assignCategory.mutate({
+                      ticketId: currentTicket.id,
+                      categoryId,
+                    })
+                  }
+                />
+                {currentTicket.categoryId && (
+                  <Button
+                    loading={removeCategory.isPending}
+                    onClick={() => removeCategory.mutate(currentTicket.id)}
+                  >
+                    Remove
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div className="font-medium text-slate-800">
+                {currentTicket.categoryName ?? "-"}
+              </div>
+            )}
+          </div>
+
           <InfoItem
             label="Created By"
             value={currentTicket.createdByName}
@@ -72,6 +138,13 @@ export default function TicketDetailsView({ ticket: initialTicket }: Props) {
           />
         </div>
       </Card>
+      {(assignCategory.error || removeCategory.error) && (
+        <Alert
+          type="error"
+          showIcon
+          message="Unable to update the ticket category."
+        />
+      )}
     </div>
   );
 }

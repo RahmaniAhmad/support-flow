@@ -6,6 +6,8 @@ export interface TicketListItem {
   id: string;
   ticketNumber: number;
   subject: string;
+  categoryId?: string | null;
+  categoryName?: string | null;
   status: TicketStatus;
   priority: TicketPriority;
   companyName?: string;
@@ -29,6 +31,8 @@ export interface TicketDetails {
 
   subject: string;
   description: string;
+  categoryId?: string | null;
+  categoryName?: string | null;
 
   status: TicketStatus;
   priority: TicketPriority;
@@ -79,4 +83,5 @@ export interface TicketListFilters {
 export interface CreateTicketRequest {
   subject: string;
   description: string;
+  categoryId?: string;
 }
