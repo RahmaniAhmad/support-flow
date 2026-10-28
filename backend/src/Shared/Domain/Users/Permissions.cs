@@ -18,6 +18,10 @@ public static class Permissions
     public const string TicketsClose = "tickets:close";
     public const string TicketsComment = "tickets:comment";
 
+    // Ticket Categories
+    public const string TicketCategoriesView = "ticket-categories:view";
+    public const string TicketCategoriesManage = "ticket-categories:manage";
+
 
     // Users
     public const string UsersView = "users:view";

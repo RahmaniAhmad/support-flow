@@ -35,6 +35,23 @@ public sealed class CreateTicketCommandHandler
                        CommonErrorMessages.CompanyContextRequired,
                        CommonErrorCodes.CompanyContextRequired);
 
+        if (request.CategoryId is Guid categoryId)
+        {
+            var categoryIsAvailable = await _db.TicketCategories
+                .AnyAsync(
+                    x => x.Id == categoryId
+                        && x.CompanyId == companyId
+                        && x.IsActive,
+                    cancellationToken);
+
+            if (!categoryIsAvailable)
+            {
+                throw new BadRequestException(
+                    "The selected ticket category is unavailable.",
+                    "TICKET_CATEGORY_UNAVAILABLE");
+            }
+        }
+
         var counter = await _db.CompanyTicketCounters
           .FirstOrDefaultAsync(
               x => x.CompanyId == companyId,
@@ -54,7 +71,8 @@ public sealed class CreateTicketCommandHandler
             companyId,
             _currentUser.UserId,
             request.Subject,
-            request.Description);
+            request.Description,
+            request.CategoryId);
 
 
         ticket.AssignTicketNumber(ticketNumber);

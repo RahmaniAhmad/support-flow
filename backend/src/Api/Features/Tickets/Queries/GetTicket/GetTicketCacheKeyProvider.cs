@@ -25,4 +25,13 @@ public sealed class GetTicketCacheKeyProvider
     }
 
     public TimeSpan? Expiration => CacheExpiration.Ticket;
+
+    public string GetGroup(GetTicketQuery request)
+    {
+        var companyId = _currentUser.CompanyId
+            ?? throw new InvalidOperationException(
+                "Company id is required.");
+
+        return $"tickets:company:{companyId}";
+    }
 }
