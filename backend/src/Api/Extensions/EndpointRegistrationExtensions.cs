@@ -1,4 +1,11 @@
-using Api.Notifications;
+using Api.Features.AI;
+using Api.Features.Authentication;
+using Api.Features.Dashboard;
+using Api.Features.KnowledgeBase;
+using Api.Features.Notifications;
+using Api.Features.TicketCategories;
+using Api.Features.Tickets;
+using Api.Features.Users;
 
 namespace Api.Extensions;
 
@@ -12,6 +19,8 @@ public static class EndpointRegistrationExtensions
         app.MapUserEndpoints();
 
         app.MapDashboardEndpoints();
+
+        app.MapTicketCategoryEndpoints();
 
         app.MapTicketEndpoints();
 
