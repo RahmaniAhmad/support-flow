@@ -1,6 +1,4 @@
 using Api.Authorization;
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -37,8 +35,8 @@ public sealed class AddCommentCommandHandler
         if (ticket is null)
         {
             throw new NotFoundException(
-                TicketErrorMessages.TicketNotFound,
-                TicketErrorCodes.TicketNotFound);
+                TicketErrors.NotFoundMessage,
+                TicketErrors.NotFoundCode);
         }
 
         var commentId = ticket.AddComment(

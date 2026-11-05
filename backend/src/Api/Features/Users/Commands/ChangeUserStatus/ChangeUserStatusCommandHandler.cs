@@ -1,6 +1,4 @@
 using Api.Authorization;
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -34,15 +32,15 @@ public sealed class ChangeUserStatusCommandHandler
         if (user is null)
         {
             throw new NotFoundException(
-                UserErrorMessages.UserNotFound,
-                UserErrorCodes.UserNotFound);
+                UserErrors.NotFoundMessage,
+                UserErrors.NotFoundCode);
         }
 
         if (!_accessService.CanChangeStatus(user))
         {
             throw new ForbiddenException(
-                UserErrorMessages.CannotChangeStatus,
-                UserErrorCodes.CannotChangeStatus);
+                UserErrors.CannotChangeStatusMessage,
+                UserErrors.CannotChangeStatusCode);
         }
 
         if (request.IsActive)

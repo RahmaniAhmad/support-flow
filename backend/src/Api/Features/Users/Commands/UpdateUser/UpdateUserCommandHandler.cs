@@ -1,5 +1,3 @@
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -30,8 +28,8 @@ public sealed class UpdateUserCommandHandler
         if (user is null)
         {
             throw new NotFoundException(
-                UserErrorMessages.UserNotFound,
-                UserErrorCodes.UserNotFound);
+                UserErrors.NotFoundMessage,
+                UserErrors.NotFoundCode);
         }
 
         user.UpdateProfile(

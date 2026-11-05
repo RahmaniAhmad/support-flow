@@ -1,5 +1,3 @@
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -34,8 +32,8 @@ public class RegisterCompanyCommandHandler
         if (emailExists)
         {
             throw new ConflictException(
-                AuthenticationErrorMessages.EmailAlreadyRegistered,
-                AuthenticationErrorCodes.EmailAlreadyRegistered);
+                AuthenticationErrors.EmailAlreadyRegisteredMessage,
+                AuthenticationErrors.EmailAlreadyRegisteredCode);
         }
 
         var company = Company.Create(request.CompanyName);

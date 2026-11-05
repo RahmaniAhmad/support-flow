@@ -1,6 +1,4 @@
 using Api.Authorization;
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -36,8 +34,8 @@ public sealed class AssignTicketCommandHandler
         if (ticket is null)
         {
             throw new NotFoundException(
-                TicketErrorMessages.TicketNotFound,
-                TicketErrorCodes.TicketNotFound);
+                TicketErrors.NotFoundMessage,
+                TicketErrors.NotFoundCode);
         }
 
         var assignedUser = await _db.Users
@@ -52,8 +50,8 @@ public sealed class AssignTicketCommandHandler
         if (assignedUser is null)
         {
             throw new NotFoundException(
-                TicketErrorMessages.AssignedUserNotFound,
-                TicketErrorCodes.AssignedUserNotFound);
+                TicketErrors.AssignedUserNotFoundMessage,
+                TicketErrors.AssignedUserNotFoundCode);
         }
 
         if (!_accessService.CanAssignTicketTo(
@@ -61,8 +59,8 @@ public sealed class AssignTicketCommandHandler
               assignedUser))
         {
             throw new ForbiddenException(
-                TicketErrorMessages.CannotAssignTicket,
-                TicketErrorCodes.CannotAssignTicket);
+                TicketErrors.CannotAssignTicketMessage,
+                TicketErrors.CannotAssignTicketCode);
         }
 
         ticket.AssignTo(_currentUser.UserId, request.AssignedToUserId);

@@ -1,6 +1,4 @@
 using Api.Authorization;
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -36,15 +34,15 @@ public sealed class ResolveTicketCommandHandler
         if (ticket is null)
         {
             throw new NotFoundException(
-                TicketErrorMessages.TicketNotFound,
-                TicketErrorCodes.TicketNotFound);
+                TicketErrors.NotFoundMessage,
+                TicketErrors.NotFoundCode);
         }
 
         if (!_accessService.CanResolveTicket(ticket))
         {
             throw new ForbiddenException(
-                TicketErrorMessages.CannotResolveTicket,
-                TicketErrorCodes.CannotResolveTicket);
+                TicketErrors.CannotResolveTicketMessage,
+                TicketErrors.CannotResolveTicketCode);
         }
 
         ticket.Resolve(_currentUser.UserId);

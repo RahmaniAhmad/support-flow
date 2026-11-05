@@ -5,8 +5,6 @@ using MediatR;
 using Infrastructure.Authentication;
 using Microsoft.Extensions.Options;
 using Api.Exceptions;
-using Api.Errors.ErrorMessages;
-using Api.Errors.ErrorCodes;
 
 namespace Api.Features.Authentication.Login;
 
@@ -44,8 +42,8 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, LoginRes
              user.PasswordHash))
         {
             throw new UnauthorizedException(
-                AuthenticationErrorMessages.InvalidCredentials,
-                AuthenticationErrorCodes.InvalidCredentials);
+                AuthenticationErrors.InvalidCredentialsMessage,
+                AuthenticationErrors.InvalidCredentialsCode);
         }
 
 
