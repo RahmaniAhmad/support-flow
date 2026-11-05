@@ -58,27 +58,6 @@ export default function CreateTicketForm() {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div>
-        <FormLabel>Subject</FormLabel>
-        <FormInput
-          control={control}
-          name="subject"
-          placeholder="Unable to log in"
-          maxLength={TICKET_VALIDATION.SUBJECT_MAX_LENGTH}
-        />
-      </div>
-
-      <div>
-        <FormLabel>Description</FormLabel>
-        <FormTextArea
-          control={control}
-          name="description"
-          placeholder="Describe your issue..."
-          rows={8}
-          maxLength={TICKET_VALIDATION.DESCRIPTION_MAX_LENGTH}
-        />
-      </div>
-
-      <div>
         <FormLabel>Category</FormLabel>
         <FormSelect
           control={control}
@@ -99,6 +78,27 @@ export default function CreateTicketForm() {
           message="Unable to load ticket categories. You can still create this ticket without a category."
         />
       )}
+
+      <div>
+        <FormLabel>Subject</FormLabel>
+        <FormInput
+          control={control}
+          name="subject"
+          placeholder="Unable to log in"
+          maxLength={TICKET_VALIDATION.SUBJECT_MAX_LENGTH}
+        />
+      </div>
+
+      <div>
+        <FormLabel>Description</FormLabel>
+        <FormTextArea
+          control={control}
+          name="description"
+          placeholder="Describe your issue..."
+          rows={8}
+          maxLength={TICKET_VALIDATION.DESCRIPTION_MAX_LENGTH}
+        />
+      </div>
 
       {mutation.error && <FormError error={mutation.error} />}
 

@@ -1,5 +1,6 @@
 using Api.Features.Tickets.Commands.AddComment;
 using Api.Features.Tickets.Commands.AssignTicket;
+using Api.Features.Tickets.Commands.AssignTicketCategory;
 using Api.Features.Tickets.Commands.CloseTicket;
 using Api.Features.Tickets.Commands.CreateTicket;
 using Api.Features.Tickets.Queries.GetComments;
@@ -9,6 +10,7 @@ using Api.Features.Tickets.Queries.GetTicketsByStatus;
 using Api.Features.Tickets.Queries.GetUnassignedTickets;
 using Api.Features.Tickets.Commands.MoveTicketToPending;
 using Api.Features.Tickets.Commands.ReopenTicket;
+using Api.Features.Tickets.Commands.RemoveTicketCategory;
 using Api.Features.Tickets.Commands.ResolveTicket;
 using Api.Features.Tickets.Commands.StartProgress;
 using Api.Features.TicketCategories;
@@ -34,6 +36,8 @@ public static class TicketEndpointExtensions
         // Ticket
         app.MapCreateTicket();
         app.MapAssignTicket();
+        app.MapAssignTicketCategory();
+        app.MapRemoveTicketCategory();
         app.MapStartProgress();
         app.MapMoveTicketToPending();
         app.MapResolveTicket();

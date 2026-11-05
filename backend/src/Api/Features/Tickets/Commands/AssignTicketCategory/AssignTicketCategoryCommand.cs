@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Api.Features.TicketCategories.Commands.AssignTicketCategory;
+namespace Api.Features.Tickets.Commands.AssignTicketCategory;
 
 public sealed record AssignTicketCategoryCommand(
     Guid TicketId,

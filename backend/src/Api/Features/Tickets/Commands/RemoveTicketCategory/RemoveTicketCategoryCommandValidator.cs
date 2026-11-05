@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Api.Features.TicketCategories.Commands.RemoveTicketCategory;
+namespace Api.Features.Tickets.Commands.RemoveTicketCategory;
 
 public sealed class RemoveTicketCategoryCommandValidator
     : AbstractValidator<RemoveTicketCategoryCommand>
