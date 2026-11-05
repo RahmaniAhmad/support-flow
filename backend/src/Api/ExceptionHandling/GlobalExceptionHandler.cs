@@ -1,6 +1,5 @@
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
 using Api.Exceptions;
+using Api.Features.Tickets;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -97,24 +96,24 @@ public sealed class GlobalExceptionHandler
                     httpContext,
                     StatusCodes.Status400BadRequest,
                     "Invalid Ticket Transition",
-                    TicketErrorMessages.InvalidTicketTransition,
-                    TicketErrorCodes.InvalidTicketTransition),
+                    TicketErrors.InvalidTicketTransitionMessage,
+                    TicketErrors.InvalidTicketTransitionCode),
 
             TicketNotAssignedException =>
                 CreateProblemDetails(
                     httpContext,
                     StatusCodes.Status409Conflict,
                     "Ticket Not Assigned",
-                    TicketErrorMessages.TicketNotAssigned,
-                    TicketErrorCodes.TicketNotAssigned),
+                    TicketErrors.NotAssignedMessage,
+                    TicketErrors.NotAssignedCode),
 
             NotAssignedAgentException =>
                 CreateProblemDetails(
                     httpContext,
                     StatusCodes.Status403Forbidden,
                     "Forbidden",
-                    TicketErrorMessages.NotAssignedAgent,
-                    TicketErrorCodes.NotAssignedAgent),
+                    TicketErrors.NotAssignedAgentMessage,
+                    TicketErrors.NotAssignedAgentCode),
 
             UnauthorizedException unauthorizedException =>
                 CreateProblemDetails(

@@ -1,6 +1,4 @@
 using Api.Authorization;
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -37,15 +35,15 @@ public sealed class CloseTicketCommandHandler
         if (ticket is null)
         {
             throw new NotFoundException(
-                TicketErrorMessages.TicketNotFound,
-                TicketErrorCodes.TicketNotFound);
+                TicketErrors.NotFoundMessage,
+                TicketErrors.NotFoundCode);
         }
 
         if (!_accessService.CanCloseTicket(ticket))
         {
             throw new ForbiddenException(
-                TicketErrorMessages.CannotCloseTicket,
-                TicketErrorCodes.CannotCloseTicket);
+                TicketErrors.CannotCloseTicketMessage,
+                TicketErrors.CannotCloseTicketCode);
         }
 
 

@@ -1,3 +1,4 @@
+using Api.Errors;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -25,7 +26,10 @@ public sealed class DeactivateTicketCategoryCommandHandler
         CancellationToken cancellationToken)
     {
         var companyId = _currentUser.CompanyId
-            ?? throw TicketCategoryErrors.MissingCompanyContext();
+            ?? throw new ForbiddenException(
+                       CommonErrors.CompanyContextRequiredMessage,
+                       CommonErrors.CompanyContextRequiredCode);
+
         var category = await _db.TicketCategories.FirstOrDefaultAsync(
             x => x.Id == request.CategoryId && x.CompanyId == companyId,
             cancellationToken)

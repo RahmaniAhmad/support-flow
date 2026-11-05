@@ -1,5 +1,3 @@
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -41,8 +39,8 @@ public sealed class ResetPasswordCommandHandler
                  !resetToken.IsValid(DateTime.UtcNow))
         {
             throw new BadRequestException(
-                AuthenticationErrorMessages.InvalidPasswordResetToken,
-                AuthenticationErrorCodes.InvalidPasswordResetToken);
+                AuthenticationErrors.InvalidPasswordResetTokenMessage,
+                AuthenticationErrors.InvalidPasswordResetTokenCode);
         }
 
         var user = await _db.Users
@@ -53,8 +51,8 @@ public sealed class ResetPasswordCommandHandler
         if (user is null || !user.IsActive)
         {
             throw new BadRequestException(
-                AuthenticationErrorMessages.PasswordResetUnavailable,
-                AuthenticationErrorCodes.PasswordResetUnavailable);
+                AuthenticationErrors.PasswordResetUnavailableMessage,
+                AuthenticationErrors.PasswordResetUnavailableCode);
         }
 
         var passwordHash = _passwordHasher.Hash(

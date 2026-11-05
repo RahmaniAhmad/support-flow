@@ -1,5 +1,4 @@
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
+using Api.Errors;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -28,8 +27,8 @@ public sealed class CreateArticleCommandHandler
     {
         var companyId = _currentUser.CompanyId
            ?? throw new ForbiddenException(
-            CommonErrorMessages.CompanyContextRequired,
-            CommonErrorCodes.CompanyContextRequired);
+            CommonErrors.CompanyContextRequiredMessage,
+            CommonErrors.CompanyContextRequiredCode);
 
         var article = KnowledgeArticle.Create(
              companyId,

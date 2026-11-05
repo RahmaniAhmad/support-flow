@@ -1,5 +1,4 @@
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
+using Api.Errors;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -44,8 +43,8 @@ public sealed class CreateUserCommandHandler
         if (exists)
         {
             throw new ConflictException(
-               UserErrorMessages.EmailAlreadyExists,
-               UserErrorCodes.EmailAlreadyExists);
+               UserErrors.EmailAlreadyExistsMessage,
+               UserErrors.EmailAlreadyExistsCode);
         }
 
 
@@ -56,8 +55,8 @@ public sealed class CreateUserCommandHandler
         {
             companyId = _currentUser.CompanyId
             ?? throw new ForbiddenException(
-                CommonErrorMessages.CompanyContextRequired,
-                CommonErrorCodes.CompanyContextRequired);
+                CommonErrors.CompanyContextRequiredMessage,
+                CommonErrors.CompanyContextRequiredCode);
         }
 
 
@@ -97,8 +96,8 @@ public sealed class CreateUserCommandHandler
             if (role == UserRole.SuperAdmin)
             {
                 throw new ForbiddenException(
-                   UserErrorMessages.CannotCreateSuperAdmin,
-                   UserErrorCodes.CannotCreateSuperAdmin);
+                   UserErrors.CannotCreateSuperAdminMessage,
+                   UserErrors.CannotCreateSuperAdminCode);
             }
 
             return;
@@ -111,8 +110,8 @@ public sealed class CreateUserCommandHandler
                 role != UserRole.Customer)
             {
                 throw new ForbiddenException(
-                 UserErrorMessages.AdminCannotCreateThisRole,
-                 UserErrorCodes.AdminCannotCreateThisRole);
+                 UserErrors.AdminCannotCreateThisRoleMessage,
+                 UserErrors.AdminCannotCreateThisRoleCode);
             }
 
             return;
@@ -120,7 +119,7 @@ public sealed class CreateUserCommandHandler
 
 
         throw new ForbiddenException(
-            UserErrorMessages.CannotCreateUsers,
-            UserErrorCodes.CannotCreateUsers);
+            UserErrors.CannotCreateUsersMessage,
+            UserErrors.CannotCreateUsersCode);
     }
 }

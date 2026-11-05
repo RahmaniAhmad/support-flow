@@ -1,5 +1,4 @@
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
+using Api.Errors;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -32,8 +31,8 @@ public sealed class CreateTicketCommandHandler
     {
         var companyId = _currentUser.CompanyId
                    ?? throw new BadRequestException(
-                       CommonErrorMessages.CompanyContextRequired,
-                       CommonErrorCodes.CompanyContextRequired);
+                       CommonErrors.CompanyContextRequiredMessage,
+                       CommonErrors.CompanyContextRequiredCode);
 
         if (request.CategoryId is Guid categoryId)
         {

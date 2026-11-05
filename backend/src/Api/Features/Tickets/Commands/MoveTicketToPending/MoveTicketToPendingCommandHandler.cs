@@ -1,6 +1,4 @@
 using Api.Authorization;
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -39,15 +37,15 @@ public sealed class MoveTicketToPendingCommandHandler
         if (ticket is null)
         {
             throw new NotFoundException(
-                TicketErrorMessages.TicketNotFound,
-                TicketErrorCodes.TicketNotFound);
+                TicketErrors.NotFoundMessage,
+                TicketErrors.NotFoundCode);
         }
 
         if (!_accessService.CanMoveToPending(ticket))
         {
             throw new ForbiddenException(
-                TicketErrorMessages.CannotMoveToPending,
-                TicketErrorCodes.CannotMoveToPending);
+                TicketErrors.CannotMoveToPendingMessage,
+                TicketErrors.CannotMoveToPendingCode);
         }
 
         ticket.MoveToPending(_currentUser.UserId);

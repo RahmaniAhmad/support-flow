@@ -1,6 +1,4 @@
 using Api.Authorization;
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -36,15 +34,15 @@ public sealed class ReopenTicketCommandHandler
         if (ticket is null)
         {
             throw new NotFoundException(
-                TicketErrorMessages.TicketNotFound,
-                TicketErrorCodes.TicketNotFound);
+                TicketErrors.NotFoundMessage,
+                TicketErrors.NotFoundCode);
         }
 
         if (!_accessService.CanReopenTicket(ticket))
         {
             throw new ForbiddenException(
-                TicketErrorMessages.CannotReopenTicket,
-                TicketErrorCodes.CannotReopenTicket);
+                TicketErrors.CannotReopenTicketMessage,
+                TicketErrors.CannotReopenTicketCode);
         }
 
         ticket.Reopen(_currentUser.UserId);

@@ -1,6 +1,4 @@
 using Api.Authorization;
-using Api.Errors.ErrorCodes;
-using Api.Errors.ErrorMessages;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -40,15 +38,15 @@ public sealed class ResetUserPasswordCommandHandler
         if (user is null)
         {
             throw new NotFoundException(
-                    UserErrorMessages.UserNotFound,
-                    UserErrorCodes.UserNotFound);
+                    UserErrors.NotFoundMessage,
+                    UserErrors.NotFoundCode);
         }
 
         if (!_accessService.CanResetPassword(user))
         {
             throw new ForbiddenException(
-              UserErrorMessages.CannotResetPassword,
-              UserErrorCodes.CannotResetPassword);
+              UserErrors.CannotResetPasswordMessage,
+              UserErrors.CannotResetPasswordCode);
         }
 
         var passwordHash =

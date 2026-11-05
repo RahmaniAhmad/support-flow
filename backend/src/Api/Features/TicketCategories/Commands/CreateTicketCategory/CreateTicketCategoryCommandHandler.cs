@@ -1,3 +1,4 @@
+using Api.Errors;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
@@ -26,7 +27,10 @@ public sealed class CreateTicketCategoryCommandHandler
         CancellationToken cancellationToken)
     {
         var companyId = _currentUser.CompanyId
-            ?? throw TicketCategoryErrors.MissingCompanyContext();
+            ?? throw new ForbiddenException(
+                       CommonErrors.CompanyContextRequiredMessage,
+                       CommonErrors.CompanyContextRequiredCode);
+
         var normalizedName = request.Name.Trim().ToLowerInvariant();
 
         var nameExists = await _db.TicketCategories.AnyAsync(
@@ -52,7 +56,7 @@ public sealed class CreateTicketCategoryCommandHandler
             await _db.SaveChangesAsync(cancellationToken);
         }
         catch (DbUpdateException exception)
-            when (TicketCategoryErrors.IsDuplicateNameViolation(exception))
+            when (exception.IsDuplicateNameViolation())
         {
             throw new ConflictException(
                 TicketCategoryErrors.DuplicateMessage,
