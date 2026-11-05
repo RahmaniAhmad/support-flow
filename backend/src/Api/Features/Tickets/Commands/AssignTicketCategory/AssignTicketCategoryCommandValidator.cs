@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Api.Features.TicketCategories.Commands.AssignTicketCategory;
+namespace Api.Features.Tickets.Commands.AssignTicketCategory;
 
 public sealed class AssignTicketCategoryCommandValidator
     : AbstractValidator<AssignTicketCategoryCommand>

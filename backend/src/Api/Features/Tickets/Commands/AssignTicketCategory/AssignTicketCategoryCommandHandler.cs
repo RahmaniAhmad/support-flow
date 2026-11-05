@@ -1,18 +1,19 @@
 using Api.Authorization;
 using Api.Exceptions;
+using Api.Features.TicketCategories;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Api.Features.TicketCategories.Commands.RemoveTicketCategory;
+namespace Api.Features.Tickets.Commands.AssignTicketCategory;
 
-public sealed class RemoveTicketCategoryCommandHandler
-    : IRequestHandler<RemoveTicketCategoryCommand>
+public sealed class AssignTicketCategoryCommandHandler
+    : IRequestHandler<AssignTicketCategoryCommand>
 {
     private readonly SupportFlowDbContext _db;
     private readonly ITicketAccessService _ticketAccessService;
 
-    public RemoveTicketCategoryCommandHandler(
+    public AssignTicketCategoryCommandHandler(
         SupportFlowDbContext db,
         ITicketAccessService ticketAccessService)
     {
@@ -21,7 +22,7 @@ public sealed class RemoveTicketCategoryCommandHandler
     }
 
     public async Task Handle(
-        RemoveTicketCategoryCommand request,
+        AssignTicketCategoryCommand request,
         CancellationToken cancellationToken)
     {
         var ticket = await _ticketAccessService
@@ -33,7 +34,17 @@ public sealed class RemoveTicketCategoryCommandHandler
                 "Ticket was not found.",
                 "TICKET_NOT_FOUND");
 
-        ticket.RemoveCategory();
+        var category = await _db.TicketCategories
+            .FirstOrDefaultAsync(
+                x => x.Id == request.CategoryId
+                    && x.CompanyId == ticket.CompanyId
+                    && x.IsActive,
+                cancellationToken)
+            ?? throw new NotFoundException(
+                TicketCategoryErrors.NotFoundMessage,
+                TicketCategoryErrors.NotFoundCode);
+
+        ticket.AssignCategory(category.Id);
         await _db.SaveChangesAsync(cancellationToken);
     }
 }
