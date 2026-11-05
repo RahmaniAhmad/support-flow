@@ -1,10 +1,10 @@
-using Api.Features.TicketCategories;
 using Api.Exceptions;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Authentication;
 using Shared.Contracts;
+using Api.Errors;
 
 namespace Api.Features.TicketCategories.Queries.GetTicketCategories;
 
@@ -27,7 +27,9 @@ public sealed class GetTicketCategoriesQueryHandler
         CancellationToken cancellationToken)
     {
         var companyId = _currentUser.CompanyId
-            ?? throw TicketCategoryErrors.MissingCompanyContext();
+            ?? throw new ForbiddenException(
+                CommonErrors.CompanyContextRequiredMessage,
+                CommonErrors.CompanyContextRequiredCode);
 
         var query = _db.TicketCategories
             .AsNoTracking()
