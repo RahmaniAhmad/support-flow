@@ -23,6 +23,8 @@ public sealed class Ticket : AggregateRoot
 
     public TicketStatus Status { get; private set; }
 
+    public TicketPriority Priority { get; private set; } = TicketPriority.Normal;
+
     public DateTime CreatedAtUtc { get; private set; }
 
     public DateTime? UpdatedAtUtc { get; private set; }
@@ -72,6 +74,7 @@ public sealed class Ticket : AggregateRoot
             Subject = subject.Trim(),
             Description = description.Trim(),
             Status = TicketStatus.Open,
+            Priority = TicketPriority.Normal,
             CreatedAtUtc = DateTime.UtcNow
         };
 
@@ -82,6 +85,41 @@ public sealed class Ticket : AggregateRoot
                 ticket.Subject));
 
         return ticket;
+    }
+
+    public void ChangePriority(
+        TicketPriority newPriority,
+        Guid changedByUserId)
+    {
+        if (!Enum.IsDefined(newPriority))
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(newPriority),
+                newPriority,
+                "The ticket priority is invalid.");
+        }
+
+        ValidateUserId(changedByUserId);
+
+        if (Priority == newPriority)
+        {
+            return;
+        }
+
+        var previousPriority = Priority;
+        var changedAtUtc = DateTime.UtcNow;
+
+        Priority = newPriority;
+        UpdatedAtUtc = changedAtUtc;
+
+        AddDomainEvent(
+            new TicketPriorityChangedDomainEvent(
+                Id,
+                CompanyId,
+                changedByUserId,
+                previousPriority,
+                newPriority,
+                changedAtUtc));
     }
 
     public void AssignCategory(Guid categoryId)

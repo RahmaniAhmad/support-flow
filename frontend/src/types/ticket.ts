@@ -7,4 +7,4 @@ export type TicketStatus =
   | "Reopened"
   | "Closed";
 
-export type TicketPriority = "Low" | "Medium" | "High" | "Critical";
+export type TicketPriority = "Critical" | "High" | "Normal" | "Low";

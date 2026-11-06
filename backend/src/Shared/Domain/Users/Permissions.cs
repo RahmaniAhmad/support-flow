@@ -9,6 +9,7 @@ public static class Permissions
     // Tickets
     public const string TicketsView = "tickets:view";
     public const string TicketsCreate = "tickets:create";
+    public const string TicketsManagePriority = "tickets:manage_priority";
     public const string TicketsAssign = "tickets:assign";
     public const string TicketsUnassign = "tickets:unassign";
     public const string TicketsStartProgress = "tickets:start_progress";

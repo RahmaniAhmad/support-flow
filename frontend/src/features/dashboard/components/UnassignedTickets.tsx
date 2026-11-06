@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { ArrowRight, Inbox, UserRoundX } from "lucide-react";
+import { Tag } from "antd";
 
 import { useUnassignedTickets } from "../hooks/useUnassignedTickets";
 import { WidgetSkeleton } from "@/components/ui/skeleton";
+import { priorityColor } from "@/features/tickets/utils/priorityColor";
 
 function formatDate(date: string) {
   return new Intl.DateTimeFormat("en", {
@@ -75,6 +77,9 @@ export default function UnassignedTickets() {
                     </span>
 
                     <span className="truncate text-sm">{ticket.subject}</span>
+                    <Tag color={priorityColor(ticket.priority)}>
+                      {ticket.priority}
+                    </Tag>
                   </div>
 
                   <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">

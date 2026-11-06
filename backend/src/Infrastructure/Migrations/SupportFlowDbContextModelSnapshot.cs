@@ -210,6 +210,12 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("character varying(4000)");
 
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("Normal");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");

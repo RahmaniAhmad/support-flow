@@ -13,6 +13,7 @@ public static class RolePermissions
 
                Permissions.TicketsView,
                Permissions.TicketsCreate,
+               Permissions.TicketsManagePriority,
                Permissions.TicketsAssign,
                Permissions.TicketsStartProgress,
                Permissions.TicketsMoveToPending,
@@ -42,6 +43,7 @@ public static class RolePermissions
 
                Permissions.TicketsView,
                Permissions.TicketsCreate,
+               Permissions.TicketsManagePriority,
                Permissions.TicketsAssign,
                Permissions.TicketsStartProgress,
                Permissions.TicketsMoveToPending,
@@ -72,6 +74,7 @@ public static class RolePermissions
 
                Permissions.TicketsView,
                Permissions.TicketsCreate,
+               Permissions.TicketsManagePriority,
                Permissions.TicketsAssign,
                Permissions.TicketsStartProgress,
                Permissions.TicketsMoveToPending,

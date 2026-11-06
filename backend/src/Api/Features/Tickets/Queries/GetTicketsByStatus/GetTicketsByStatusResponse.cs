@@ -9,5 +9,6 @@ public sealed record GetTicketsByStatusResponse(
     Guid? CategoryId,
     string? CategoryName,
     TicketStatus Status,
+    TicketPriority Priority,
     Guid? AssignedToUserId,
     DateTime CreatedAtUtc);

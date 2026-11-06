@@ -37,6 +37,11 @@ public sealed class TicketConfiguration
         builder.Property(x => x.Status)
             .HasConversion<string>();
 
+        builder.Property(x => x.Priority)
+            .HasConversion<string>()
+            .HasDefaultValue(TicketPriority.Normal)
+            .IsRequired();
+
         builder.Property(x => x.CreatedAtUtc)
             .IsRequired();
 

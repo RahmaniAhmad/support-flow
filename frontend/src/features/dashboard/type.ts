@@ -1,3 +1,5 @@
+import { TicketPriority } from "@/types/ticket";
+
 export interface DashboardStatisticsRespons {
   totalTickets: number;
   openTickets: number;
@@ -33,5 +35,6 @@ export interface UnassignedTicketRespons {
   ticketNumber: number;
   subject: string;
   createdBy: string;
+  priority: TicketPriority;
   createdAtUtc: string;
 }
