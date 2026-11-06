@@ -14,6 +14,9 @@ import {
   useAssignTicketCategory,
   useRemoveTicketCategory,
 } from "@/features/ticket-categories/hooks/useTicketCategories";
+import { TicketPriority } from "@/types/ticket";
+import { priorityColor } from "../utils/priorityColor";
+import { useChangeTicketPriority } from "../hooks/useChangeTicketPriority";
 
 const { Title, Paragraph } = Typography;
 
@@ -30,12 +33,17 @@ export default function TicketDetailsView({ ticket: initialTicket }: Props) {
     currentUser,
     AppPermissions.TicketsAssign,
   );
+  const canManagePriority = hasPermission(
+    currentUser,
+    AppPermissions.TicketsManagePriority,
+  );
   const { data: categories = [] } = useActiveTicketCategoriesForTicket(
     currentTicket.id,
     canAssignCategory,
   );
   const assignCategory = useAssignTicketCategory();
   const removeCategory = useRemoveTicketCategory();
+  const changePriority = useChangeTicketPriority();
   const categoryOptions = categories.map((category) => ({
     label: category.name,
     value: category.id,
@@ -87,6 +95,33 @@ export default function TicketDetailsView({ ticket: initialTicket }: Props) {
             label="Assignee"
             value={currentTicket.assigneeName ?? "-"}
           />
+
+          <div>
+            <div className="mb-1 text-sm text-slate-500">Priority</div>
+            {canManagePriority ? (
+              <Select<TicketPriority>
+                className="min-w-36"
+                value={currentTicket.priority}
+                loading={changePriority.isPending}
+                options={(["Critical", "High", "Normal", "Low"] as const).map(
+                  (priority) => ({
+                    label: <Tag color={priorityColor(priority)}>{priority}</Tag>,
+                    value: priority,
+                  }),
+                )}
+                onChange={(priority) =>
+                  changePriority.mutate({
+                    ticketId: currentTicket.id,
+                    priority,
+                  })
+                }
+              />
+            ) : (
+              <Tag color={priorityColor(currentTicket.priority)}>
+                {currentTicket.priority}
+              </Tag>
+            )}
+          </div>
 
           <div>
             <div className="mb-1 text-sm text-slate-500">Category</div>
@@ -143,6 +178,13 @@ export default function TicketDetailsView({ ticket: initialTicket }: Props) {
           type="error"
           showIcon
           message="Unable to update the ticket category."
+        />
+      )}
+      {changePriority.error && (
+        <Alert
+          type="error"
+          showIcon
+          message="Unable to update the ticket priority."
         />
       )}
     </div>

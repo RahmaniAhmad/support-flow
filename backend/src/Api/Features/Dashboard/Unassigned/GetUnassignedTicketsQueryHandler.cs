@@ -42,6 +42,7 @@ public sealed class GetUnassignedTicketsQueryHandler
                     .Where(u => u.Id == x.CreatedByUserId)
                     .Select(u => u.FirstName + " " + u.LastName)
                     .First(),
+                x.Priority,
                 x.CreatedAtUtc))
             .ToListAsync(cancellationToken);
     }

@@ -5,6 +5,7 @@ export const AppPermissions = {
   // Tickets
   TicketsView: "tickets:view",
   TicketsCreate: "tickets:create",
+  TicketsManagePriority: "tickets:manage_priority",
   TicketsAssign: "tickets:assign",
   TicketsUnassign: "tickets:unassign",
   TicketsStartProgress: "tickets:start_progress",

@@ -10,6 +10,7 @@ public sealed record GetTicketsResponse(
     Guid? CategoryId,
     string? CategoryName,
     TicketStatus Status,
+    TicketPriority Priority,
     Guid? AssignedToUserId,
     string? AssigneeName,
     string CompanyName,

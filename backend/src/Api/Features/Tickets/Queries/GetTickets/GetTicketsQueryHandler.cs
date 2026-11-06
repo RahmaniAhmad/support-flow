@@ -117,6 +117,7 @@ public sealed class GetTicketsQueryHandler
                         .FirstOrDefault()
                     : null,
                 x.Status,
+                x.Priority,
                 x.AssignedToUserId,
                 x.AssignedToUserId != null
                 ? _db.Users

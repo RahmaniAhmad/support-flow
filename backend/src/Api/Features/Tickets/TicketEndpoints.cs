@@ -3,6 +3,7 @@ using Api.Features.Tickets.Commands.AddComment;
 using Api.Features.Tickets.Commands.AssignTicket;
 using Api.Features.Tickets.Commands.AssignTicketCategory;
 using Api.Features.Tickets.Commands.CloseTicket;
+using Api.Features.Tickets.Commands.ChangeTicketPriority;
 using Api.Features.Tickets.Commands.CreateTicket;
 using Api.Features.Tickets.Commands.MoveTicketToPending;
 using Api.Features.Tickets.Commands.RemoveTicketCategory;
@@ -31,6 +32,7 @@ public static class TicketEndpoints
         endpoints.MapAddComment();
         endpoints.MapCreateTicket();
         endpoints.MapAssignTicket();
+        endpoints.MapChangeTicketPriority();
         endpoints.MapAssignTicketCategory();
         endpoints.MapRemoveTicketCategory();
         endpoints.MapStartProgress();

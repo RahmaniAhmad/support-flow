@@ -2,6 +2,8 @@ import { ColumnsType } from "antd/es/table";
 import { TicketListItem } from "../types";
 import TicketActions from "./TicketActions";
 import { CurrentUser } from "@/types/user";
+import { Tag } from "antd";
+import { priorityColor } from "../utils/priorityColor";
 
 export function getTicketColumns(
   currentUser: CurrentUser,
@@ -49,6 +51,13 @@ export function getTicketColumns(
       title: "Status",
       dataIndex: "status",
       sorter: true,
+    },
+    {
+      title: "Priority",
+      dataIndex: "priority",
+      render: (priority: TicketListItem["priority"]) => (
+        <Tag color={priorityColor(priority)}>{priority}</Tag>
+      ),
     },
     {
       title: "Assignee",

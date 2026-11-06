@@ -5,6 +5,7 @@ import {
   TicketListFilters,
   TicketListResponse,
 } from "./types";
+import { TicketPriority } from "@/types/ticket";
 
 export async function getTickets(filters?: TicketListFilters) {
   const { status, ...rest } = filters ?? {};
@@ -57,4 +58,14 @@ export async function moveTicketToPending(ticketId: string) {
   const { data } = await api.post(`/tickets/${ticketId}/move-to-pending`);
 
   return data;
+}
+
+export async function changeTicketPriority({
+  ticketId,
+  priority,
+}: {
+  ticketId: string;
+  priority: TicketPriority;
+}) {
+  await api.put(`/tickets/${ticketId}/priority`, { priority });
 }

@@ -40,6 +40,7 @@ public sealed class GetUnassignedTicketsQueryHandler
                         .FirstOrDefault()
                     : null,
                 x.Status,
+                x.Priority,
                 x.AssignedToUserId,
                 x.CreatedAtUtc))
             .ToListAsync(cancellationToken);

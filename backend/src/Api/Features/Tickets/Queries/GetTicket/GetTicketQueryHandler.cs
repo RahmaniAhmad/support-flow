@@ -41,6 +41,7 @@ public sealed class GetTicketQueryHandler
                    .FirstOrDefault()
                : null,
            x.Status,
+           x.Priority,
            x.AssignedToUserId,
 
            x.AssignedToUserId != null
