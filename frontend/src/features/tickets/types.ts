@@ -85,3 +85,7 @@ export interface CreateTicketRequest {
   description: string;
   categoryId?: string;
 }
+
+export interface CreateTicketResponse {
+  id: string;
+}

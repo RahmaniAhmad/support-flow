@@ -1,4 +1,5 @@
 using Api.Features.Notifications.SignalR;
+using Api.Features.Tickets.Attachments;
 using Api.Notifications;
 using FluentValidation;
 using Infrastructure.Pipeline;
@@ -12,12 +13,15 @@ public static class ApiDependencyInjection
 {
     public static IServiceCollection AddApi(this IServiceCollection services)
     {
+        services.AddHttpContextAccessor();
+
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
         });
         services.AddValidatorsFromAssembly(
                   typeof(Program).Assembly);
+        services.AddScoped<TicketAttachmentProcessor>();
 
         services.AddScoped(
                   typeof(IPipelineBehavior<,>),

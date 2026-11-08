@@ -1,6 +1,6 @@
-# VSA Tickets - GitHub Copilot Instructions
+# SupportFlow - GitHub Copilot Instructions
 
-You are working on **VSA Tickets**, a ticket management system.
+You are working on **SupportFlow**, a ticket management system.
 
 Always follow the existing architecture, coding patterns, naming conventions, and business rules described below.
 
@@ -252,28 +252,6 @@ features
 │ ├── TicketList.tsx
 │ ├── TicketFilters.tsx
 │ ├── TicketActions.tsx
-│ └── TicketTableColumns.tsx
-│
-├── hooks
-│ └── useTickets.ts
-│
-├── api
-│ └── tickets.ts
-│
-└── types.ts
-
-# Frontend Architecture
-
-Use feature-based organization.
-
-Example:
-
-features
-└── tickets
-├── components
-│ ├── TicketList.tsx
-│ ├── TicketFilters.tsx
-│ ├── TicketActions.tsx
 │ ├── TicketTable.tsx
 │ └── TicketTableColumns.tsx
 │
@@ -429,3 +407,61 @@ Bypassing authorization.
 Creating separate pages when a filter is enough.
 Mixing API calls with UI components.
 Ignoring existing project conventions.
+
+# File Storage
+
+The project uses Azure Blob Storage for file storage.
+
+Development environment:
+
+- Azurite runs through Docker Compose.
+- Blob Storage is exposed on port 10000.
+- Use the existing Azure Storage configuration.
+- Keep storage configuration outside business logic.
+
+Architecture rules:
+
+- Storage operations belong in Infrastructure.
+- Define storage contracts in the appropriate shared abstraction layer.
+- Do not expose Azure SDK types to API handlers or domain entities.
+- Use dependency injection.
+- Support asynchronous operations and CancellationToken.
+- Keep storage providers replaceable.
+- Never expose private Blob Storage URLs.
+- Do not store physical files inside wwwroot.
+- Store file metadata in PostgreSQL and file content in Blob Storage.
+
+Security:
+
+- Validate file size, extension, MIME type, and file content where applicable.
+- Never trust client-provided filenames or paths.
+- Use unique, unpredictable storage filenames.
+- Enforce company isolation and resource-level authorization.
+- All file downloads must go through authorized API endpoints.
+
+When implementing file-related features, reuse existing storage abstractions and configuration instead of creating duplicate implementations.
+
+# Multi-Tenancy
+
+SupportFlow is a multi-tenant application.
+
+Always enforce CompanyId isolation when accessing company-owned resources.
+
+Never rely exclusively on frontend filtering or authorization.
+
+Use existing current-user and resource-access services.
+
+SuperAdmin access must follow existing platform-level authorization rules.
+
+# Feature Implementation Rules
+
+When implementing a new feature:
+
+1. Inspect existing backend and frontend implementations.
+2. Identify reusable entities, services, components, and patterns.
+3. Follow existing CQRS and feature-based architecture.
+4. Implement backend, frontend, validation, authorization, and tests where applicable.
+5. Add EF Core migrations when database changes are required.
+6. Update relevant cache groups using existing cache invalidation mechanisms.
+7. Build and test affected projects.
+8. Avoid unrelated modifications and unnecessary dependencies.

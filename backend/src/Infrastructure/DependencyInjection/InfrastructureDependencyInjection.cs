@@ -4,8 +4,10 @@ using Infrastructure.Caching;
 using Infrastructure.Configuration;
 using Infrastructure.Domain;
 using Infrastructure.Persistence.Seeders;
+using Infrastructure.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Contracts.Storage;
 
 namespace Infrastructure.DependencyInjection;
 
@@ -26,6 +28,7 @@ public static class DependencyInjection
         services.AddDomain();
 
         services.AddAI(configuration);
+        services.AddSingleton<IAttachmentStorage, AzureBlobAttachmentStorage>();
 
         services.AddMediatR(cfg =>
              {
