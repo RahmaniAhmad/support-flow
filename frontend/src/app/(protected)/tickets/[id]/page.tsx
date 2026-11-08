@@ -6,6 +6,7 @@ import SuggestedArticles from "@/features/ai/ticket-article-suggestions/componen
 import { AppPermissions } from "@/features/auth/Permissions";
 import { requirePermission } from "@/features/auth/server/requirePermission";
 import TicketComments from "@/features/tickets/comments/components/TicketComments";
+import TicketAttachments from "@/features/tickets/attachments/components/TicketAttachments";
 import TicketDetailsView from "@/features/tickets/components/TicketDetailsView";
 import { getTicket } from "@/features/tickets/server/getTicket";
 import { notFound } from "next/navigation";
@@ -46,6 +47,8 @@ export default async function TicketDetailsPage({ params }: Props) {
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="space-y-4">
           <TicketDetailsView ticket={ticket} />
+
+          <TicketAttachments ticketId={id} />
 
           <TicketComments ticketId={id} />
         </div>

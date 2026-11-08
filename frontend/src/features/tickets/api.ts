@@ -1,5 +1,6 @@
 import api from "@/lib/api/axios";
 import {
+  CreateTicketResponse,
   CreateTicketRequest,
   TicketDetails,
   TicketListFilters,
@@ -26,8 +27,27 @@ export async function getTicket(id: string) {
   return data;
 }
 
-export async function createTicket(request: CreateTicketRequest) {
-  const { data } = await api.post<TicketDetails>("/tickets", request);
+export async function createTicket({
+  request,
+  attachments,
+}: {
+  request: CreateTicketRequest;
+  attachments: File[];
+}): Promise<CreateTicketResponse> {
+  if (attachments.length === 0) {
+    const { data } = await api.post<CreateTicketResponse>("/tickets", request);
+    return data;
+  }
+
+  const formData = new FormData();
+  formData.append("subject", request.subject);
+  formData.append("description", request.description);
+  if (request.categoryId) {
+    formData.append("categoryId", request.categoryId);
+  }
+  attachments.forEach((file) => formData.append("attachments", file));
+
+  const { data } = await api.post<CreateTicketResponse>("/tickets", formData);
 
   return data;
 }

@@ -14,6 +14,7 @@ export const AppPermissions = {
   TicketsReopen: "tickets:reopen",
   TicketsClose: "tickets:close",
   TicketsComment: "tickets:comment",
+  TicketsManageAttachments: "tickets:manage_attachments",
 
   // Ticket Categories
   TicketCategoriesView: "ticket-categories:view",

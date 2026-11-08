@@ -242,6 +242,17 @@ docker compose up -d
 
 This starts the infrastructure required by the application, including PostgreSQL and other configured services.
 
+Azurite's private Blob Storage emulator is available on `localhost:10000`.
+The local API launch profiles set `ConnectionStrings__BlobStorage` to
+`UseDevelopmentStorage=true`. When running the API in a container attached to
+the Compose network, set `ASPNETCORE_ENVIRONMENT=Docker` to load
+`backend/src/Api/appsettings.Docker.json`; its database, Redis, and Blob Storage
+endpoints use the Compose service names.
+
+Ticket attachments are limited to five files per ticket and 10 MB per file.
+Downloads are streamed through the authenticated API; the private container is
+never exposed to clients.
+
 ### Backend
 
 Navigate to the backend API:

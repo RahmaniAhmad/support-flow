@@ -10,6 +10,7 @@ using Api.Features.Tickets.Commands.RemoveTicketCategory;
 using Api.Features.Tickets.Commands.ReopenTicket;
 using Api.Features.Tickets.Commands.ResolveTicket;
 using Api.Features.Tickets.Commands.StartProgress;
+using Api.Features.Tickets.Attachments;
 using Api.Features.Tickets.Queries.GetComments;
 using Api.Features.Tickets.Queries.GetTicket;
 using Api.Features.Tickets.Queries.GetTickets;
@@ -40,6 +41,7 @@ public static class TicketEndpoints
         endpoints.MapResolveTicket();
         endpoints.MapCloseTicket();
         endpoints.MapReopenTicket();
+        endpoints.MapGroup("/api").MapTicketAttachmentEndpoints();
 
         return endpoints;
     }

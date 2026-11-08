@@ -3,6 +3,7 @@ using Api.Features.Tickets;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Contracts.Storage;
 using Shared.Domain.Tickets.Exceptions;
 
 namespace Api.ExceptionHandling;
@@ -60,6 +61,15 @@ public sealed class GlobalExceptionHandler
                     "Request failed with {ExceptionType}. " +
                     "TraceId: {TraceId}",
                     exception.GetType().Name,
+                    httpContext.TraceIdentifier);
+                break;
+
+            case AttachmentStorageException storageException:
+                _logger.LogError(
+                    "Attachment storage {Operation} failed. Status: {Status}; Error code: {ErrorCode}; TraceId: {TraceId}",
+                    storageException.Operation,
+                    storageException.Status,
+                    storageException.StorageErrorCode,
                     httpContext.TraceIdentifier);
                 break;
 
@@ -146,6 +156,14 @@ public sealed class GlobalExceptionHandler
                     "Conflict",
                     conflictException.Message,
                     conflictException.Code),
+
+            AttachmentStorageException =>
+                CreateProblemDetails(
+                    httpContext,
+                    StatusCodes.Status503ServiceUnavailable,
+                    "Attachment Storage Unavailable",
+                    "Attachment storage is temporarily unavailable. Please try again.",
+                    "ATTACHMENT_STORAGE_UNAVAILABLE"),
 
             BadRequestException badRequestException =>
                 CreateProblemDetails(

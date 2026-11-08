@@ -17,6 +17,13 @@ let refreshPromise: Promise<void> | null = null;
 api.interceptors.request.use((config) => {
   const csrfToken = Cookies.get(CSRF_COOKIE);
 
+  if (
+    typeof FormData !== "undefined" &&
+    config.data instanceof FormData
+  ) {
+    config.headers.delete("Content-Type");
+  }
+
   if (csrfToken) {
     config.headers[CSRF_HEADER] = csrfToken;
   }

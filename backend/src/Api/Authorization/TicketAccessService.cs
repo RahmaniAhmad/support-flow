@@ -36,6 +36,8 @@ public sealed class TicketAccessService : ITicketAccessService
 
 
             UserRole.Customer =>
+                IsSameCompany(ticket)
+                &&
                 ticket.CreatedByUserId == _currentUser.UserId,
 
 
@@ -141,6 +143,8 @@ public sealed class TicketAccessService : ITicketAccessService
                 IsAssignedAgent(ticket),
 
             UserRole.Customer =>
+                IsSameCompany(ticket)
+                &&
                 ticket.CreatedByUserId == _currentUser.UserId,
 
             _ => false
@@ -162,6 +166,8 @@ public sealed class TicketAccessService : ITicketAccessService
                 IsAssignedAgent(ticket),
 
             UserRole.Customer =>
+                IsSameCompany(ticket)
+                &&
                 ticket.CreatedByUserId == _currentUser.UserId,
 
             _ => false
@@ -183,6 +189,8 @@ public sealed class TicketAccessService : ITicketAccessService
                 IsAssignedAgent(ticket),
 
             UserRole.Customer =>
+                IsSameCompany(ticket)
+                &&
                 ticket.CreatedByUserId == _currentUser.UserId,
 
             _ => false
@@ -216,6 +224,8 @@ public sealed class TicketAccessService : ITicketAccessService
 
             UserRole.Customer =>
                 tickets.Where(x =>
+                    x.CompanyId == _currentUser.CompanyId
+                    &&
                     x.CreatedByUserId == _currentUser.UserId),
 
 

@@ -56,6 +56,12 @@ export const queryKeys = {
     list: (ticketId: string) =>
       [...queryKeys.ticketComments.all, ticketId] as const,
   },
+  ticketAttachments: {
+    all: ["ticket-attachments"] as const,
+
+    list: (ticketId: string) =>
+      [...queryKeys.ticketAttachments.all, ticketId] as const,
+  },
 
   ticketAssignment: {
     all: ["ticket-assignment"] as const,

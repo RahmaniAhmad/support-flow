@@ -9,7 +9,7 @@ using Shared.Domain.Users;
 
 namespace Infrastructure.Persistence;
 
-public sealed class SupportFlowDbContext : DbContext
+public class SupportFlowDbContext : DbContext
 {
     private readonly IDomainEventDispatcher _dispatcher;
     public SupportFlowDbContext(
@@ -27,6 +27,8 @@ public sealed class SupportFlowDbContext : DbContext
     public DbSet<Ticket> Tickets => Set<Ticket>();
 
     public DbSet<TicketComment> TicketComments => Set<TicketComment>();
+
+    public DbSet<Attachment> Attachments => Set<Attachment>();
 
     public DbSet<KnowledgeArticle> KnowledgeArticles => Set<KnowledgeArticle>();
 
