@@ -5,14 +5,11 @@ import PageHeader from "@/components/ui/page/PageHeader";
 import PageTitle from "@/components/ui/page/PageTitle";
 
 import DashboardStats from "@/features/dashboard/components/DashboardStats";
-
 import TicketTrendChart from "@/features/dashboard/components/TicketTrendChart";
-
-import AgentPerformance from "@/features/dashboard/components/AgentPerformance";
-
-import RecentActivities from "@/features/dashboard/components/RecentActivities";
 import TicketStatusChart from "@/features/dashboard/components/TicketStatusChart";
+import AgentPerformance from "@/features/dashboard/components/AgentPerformance";
 import UnassignedTickets from "@/features/dashboard/components/UnassignedTickets";
+import RecentActivities from "@/features/dashboard/components/RecentActivities";
 
 export default function DashboardPage() {
   return (
@@ -22,22 +19,31 @@ export default function DashboardPage() {
       </PageHeader>
 
       <div className="space-y-6">
+        {/* Overview */}
         <DashboardStats />
 
-        <div className="grid gap-6 xl:grid-cols-3">
-          <div className="xl:col-span-2">
+        {/* Analytics */}
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+          <div className="min-w-0 xl:col-span-2">
             <TicketTrendChart />
           </div>
 
-          <TicketStatusChart />
+          <div className="min-w-0">
+            <TicketStatusChart />
+          </div>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-2">
-          <AgentPerformance />
-          <UnassignedTickets />
-        </div>
+        {/* Support Operations */}
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+          <div className="min-w-0 xl:col-span-2">
+            <UnassignedTickets />
+          </div>
 
-        <RecentActivities />
+          <div className="flex min-w-0 flex-col gap-6">
+            <AgentPerformance />
+            <RecentActivities />
+          </div>
+        </div>
       </div>
     </PageContent>
   );

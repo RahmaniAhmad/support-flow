@@ -2,7 +2,6 @@
 
 import QueryProvider from "./QueryProvider";
 import MessageProvider from "./MessageProvider";
-import { NotificationProvider } from "@/features/notifications/provider/NotificationProvider";
 
 export default function AppProviders({
   children,
@@ -11,9 +10,7 @@ export default function AppProviders({
 }) {
   return (
     <QueryProvider>
-      <MessageProvider>
-        <NotificationProvider>{children}</NotificationProvider>
-      </MessageProvider>
+      <MessageProvider>{children}</MessageProvider>
     </QueryProvider>
   );
 }

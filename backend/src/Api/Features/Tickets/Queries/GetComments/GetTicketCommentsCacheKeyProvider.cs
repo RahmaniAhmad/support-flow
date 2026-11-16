@@ -17,17 +17,15 @@ public sealed class GetTicketCommentsCacheKeyProvider
 
     public string GetKey(
         GetTicketCommentsQuery request)
-        => $"tickets:comments:{request.TicketId}";
+        => $"tickets:comments:user:{_currentUser.UserId}:company:{_currentUser.CompanyId?.ToString() ?? "all"}:role:{_currentUser.Role}:{request.TicketId}";
 
 
     public string GetGroup(
         GetTicketCommentsQuery request)
     {
-        var companyId = _currentUser.CompanyId
-            ?? throw new InvalidOperationException(
-                "Company id is required.");
-
-        return $"tickets:company:{companyId}:ticket:{request.TicketId}";
+        return _currentUser.CompanyId is Guid companyId
+            ? $"tickets:company:{companyId}:ticket:{request.TicketId}"
+            : $"tickets:all:ticket:{request.TicketId}";
     }
 
 

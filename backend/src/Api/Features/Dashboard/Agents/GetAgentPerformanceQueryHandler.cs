@@ -1,3 +1,4 @@
+using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +15,15 @@ public sealed class GetAgentPerformanceQueryHandler
 {
 
     private readonly SupportFlowDbContext _db;
+    private readonly ITicketAccessService _ticketAccess;
 
 
     public GetAgentPerformanceQueryHandler(
-        SupportFlowDbContext db)
+        SupportFlowDbContext db,
+        ITicketAccessService ticketAccess)
     {
         _db = db;
+        _ticketAccess = ticketAccess;
     }
 
 
@@ -29,35 +33,36 @@ public sealed class GetAgentPerformanceQueryHandler
         CancellationToken cancellationToken)
     {
 
+        var tickets = _ticketAccess
+            .ApplyTicketAccessFilter(_db.Tickets.AsNoTracking());
+
+        if (request.CompanyId.HasValue)
+        {
+            tickets = tickets.Where(x =>
+                x.CompanyId == request.CompanyId.Value);
+        }
+
         var query =
-            from user in _db.Users
-
-            where user.Role == UserRole.Agent
-
-            where !request.CompanyId.HasValue ||
-                  user.CompanyId == request.CompanyId.Value
-
-            join ticket in _db.Tickets
-                on user.Id equals ticket.AssignedToUserId
-                into tickets
-
-
-            select new
+            from ticket in tickets
+            join user in _db.Users.AsNoTracking()
+                on ticket.AssignedToUserId equals (Guid?)user.Id
+            where user.Role == UserRole.Agent &&
+                  user.CompanyId == ticket.CompanyId
+            group ticket by new
             {
                 user.Id,
-
-                Name =
-                    user.FirstName + " " +
-                    user.LastName,
-
-
-                AssignedTickets =
-                    tickets.Count(),
-
-
-                ResolvedTickets =
-                    tickets.Count(x =>
-                        x.Status == TicketStatus.Resolved)
+                user.FirstName,
+                user.LastName
+            }
+            into assignedTickets
+            select new
+            {
+                Id = assignedTickets.Key.Id,
+                Name = assignedTickets.Key.FirstName + " " +
+                       assignedTickets.Key.LastName,
+                AssignedTickets = assignedTickets.Count(),
+                ResolvedTickets = assignedTickets.Count(x =>
+                    x.Status == TicketStatus.Resolved)
             };
 
 

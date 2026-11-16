@@ -1,3 +1,4 @@
+using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,19 +11,22 @@ public sealed class GetUnassignedTicketsQueryHandler
         IReadOnlyList<UnassignedTicketResponse>>
 {
     private readonly SupportFlowDbContext _db;
+    private readonly ITicketAccessService _ticketAccess;
 
     public GetUnassignedTicketsQueryHandler(
-        SupportFlowDbContext db)
+        SupportFlowDbContext db,
+        ITicketAccessService ticketAccess)
     {
         _db = db;
+        _ticketAccess = ticketAccess;
     }
 
     public async Task<IReadOnlyList<UnassignedTicketResponse>> Handle(
         GetUnassignedTicketsQuery request,
         CancellationToken cancellationToken)
     {
-        var query = _db.Tickets
-            .AsNoTracking()
+        var query = _ticketAccess
+            .ApplyTicketAccessFilter(_db.Tickets.AsNoTracking())
             .Where(x => x.AssignedToUserId == null);
 
         if (request.CompanyId.HasValue)
@@ -33,7 +37,7 @@ public sealed class GetUnassignedTicketsQueryHandler
 
         return await query
             .OrderByDescending(x => x.CreatedAtUtc)
-            .Take(request.Limit)
+            .Take(Math.Clamp(request.Limit, 1, 20))
             .Select(x => new UnassignedTicketResponse(
                 x.Id,
                 x.TicketNumber,

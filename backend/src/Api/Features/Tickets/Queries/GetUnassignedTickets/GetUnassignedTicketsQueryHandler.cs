@@ -1,7 +1,7 @@
+using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Shared.Authentication;
 
 namespace Api.Features.Tickets.Queries.GetUnassignedTickets;
 
@@ -9,23 +9,23 @@ public sealed class GetUnassignedTicketsQueryHandler
     : IRequestHandler<GetUnassignedTicketsQuery, List<GetUnassignedTicketsResponse>>
 {
     private readonly SupportFlowDbContext _db;
-    private readonly ICurrentUser _currentUser;
+    private readonly ITicketAccessService _ticketAccess;
 
     public GetUnassignedTicketsQueryHandler(
         SupportFlowDbContext db,
-        ICurrentUser currentUser)
+        ITicketAccessService ticketAccess)
     {
         _db = db;
-        _currentUser = currentUser;
+        _ticketAccess = ticketAccess;
     }
 
     public async Task<List<GetUnassignedTicketsResponse>> Handle(
         GetUnassignedTicketsQuery request,
         CancellationToken cancellationToken)
     {
-        return await _db.Tickets
+        return await _ticketAccess
+            .ApplyTicketAccessFilter(_db.Tickets.AsNoTracking())
             .Where(x =>
-                x.CompanyId == _currentUser.CompanyId &&
                 x.AssignedToUserId == null)
             .OrderByDescending(x => x.CreatedAtUtc)
             .Select(x => new GetUnassignedTicketsResponse(

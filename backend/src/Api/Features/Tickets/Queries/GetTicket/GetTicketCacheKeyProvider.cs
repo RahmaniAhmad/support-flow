@@ -16,22 +16,14 @@ public sealed class GetTicketCacheKeyProvider
 
     public string GetKey(
         GetTicketQuery request)
-    {
-        var companyId = _currentUser.CompanyId
-            ?? throw new InvalidOperationException(
-                "Company id is required.");
-
-        return $"tickets:company:{companyId}:ticket:{request.TicketId}";
-    }
+        => $"tickets:user:{_currentUser.UserId}:company:{_currentUser.CompanyId?.ToString() ?? "all"}:role:{_currentUser.Role}:ticket:{request.TicketId}";
 
     public TimeSpan? Expiration => CacheExpiration.Ticket;
 
     public string GetGroup(GetTicketQuery request)
     {
-        var companyId = _currentUser.CompanyId
-            ?? throw new InvalidOperationException(
-                "Company id is required.");
-
-        return $"tickets:company:{companyId}";
+        return _currentUser.CompanyId is Guid companyId
+            ? $"tickets:company:{companyId}"
+            : "tickets:all";
     }
 }

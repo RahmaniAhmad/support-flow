@@ -1,3 +1,4 @@
+using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,12 +14,14 @@ public sealed class GetTicketTrendQueryHandler
 {
 
     private readonly SupportFlowDbContext _db;
-
+    private readonly ITicketAccessService _ticketAccess;
 
     public GetTicketTrendQueryHandler(
-        SupportFlowDbContext db)
+        SupportFlowDbContext db,
+        ITicketAccessService ticketAccess)
     {
         _db = db;
+        _ticketAccess = ticketAccess;
     }
 
 
@@ -28,7 +31,8 @@ public sealed class GetTicketTrendQueryHandler
         CancellationToken cancellationToken)
     {
 
-        var query = _db.Tickets.AsQueryable();
+        var query = _ticketAccess
+            .ApplyTicketAccessFilter(_db.Tickets.AsNoTracking());
 
 
 
