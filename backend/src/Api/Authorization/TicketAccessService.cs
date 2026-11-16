@@ -84,12 +84,17 @@ public sealed class TicketAccessService : ITicketAccessService
 
     public bool CanAssignTicketTo(Ticket ticket, User assignedUser)
     {
+        if (assignedUser.CompanyId != ticket.CompanyId)
+        {
+            return false;
+        }
+
         return _currentUser.Role switch
         {
             UserRole.SuperAdmin =>
-            assignedUser.Role == UserRole.Admin
-            ||
-            assignedUser.Role == UserRole.Agent,
+                assignedUser.Role == UserRole.Admin
+                ||
+                assignedUser.Role == UserRole.Agent,
 
             UserRole.Admin =>
                 IsSameCompany(ticket)

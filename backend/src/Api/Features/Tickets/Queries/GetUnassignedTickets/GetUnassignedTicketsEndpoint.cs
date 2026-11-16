@@ -1,6 +1,5 @@
 using Api.Authorization;
 using MediatR;
-using Shared.Authentication;
 using Shared.Domain.Users;
 
 namespace Api.Features.Tickets.Queries.GetUnassignedTickets;
@@ -13,7 +12,6 @@ public static class GetUnassignedTicketsEndpoint
         app.MapGet(
             "/tickets/unassigned",
             async (
-                ICurrentUser currentUser,
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {

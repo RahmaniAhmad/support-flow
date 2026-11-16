@@ -36,6 +36,11 @@ export async function getAgentPerformance() {
 export async function getRecentActivities() {
   const response = await api.get<RecentActivityRespons[]>(
     "/dashboard/activities",
+    {
+      params: {
+        limit: 5,
+      },
+    },
   );
 
   return response.data;

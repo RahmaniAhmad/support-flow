@@ -39,6 +39,13 @@ public sealed class AddCommentCommandHandler
                 TicketErrors.NotFoundCode);
         }
 
+        if (!_accessService.CanComment(ticket))
+        {
+            throw new ForbiddenException(
+                "You are not allowed to comment on this ticket.",
+                "TICKET_COMMENT_FORBIDDEN");
+        }
+
         var commentId = ticket.AddComment(
             _currentUser.UserId,
             request.Content);

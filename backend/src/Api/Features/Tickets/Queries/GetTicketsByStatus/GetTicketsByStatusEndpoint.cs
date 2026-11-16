@@ -1,5 +1,4 @@
 using MediatR;
-using Shared.Authentication;
 using Shared.Domain.Tickets;
 
 namespace Api.Features.Tickets.Queries.GetTicketsByStatus;
@@ -13,7 +12,6 @@ public static class GetTicketsByStatusEndpoint
             "/tickets/status/{status}",
             async (
                 TicketStatus status,
-                ICurrentUser currentUser,
                 ISender sender,
                 CancellationToken cancellationToken) =>
             {

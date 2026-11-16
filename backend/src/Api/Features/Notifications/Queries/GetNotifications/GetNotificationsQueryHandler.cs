@@ -1,3 +1,4 @@
+using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,14 +14,17 @@ public sealed class GetNotificationsQueryHandler
 {
     private readonly SupportFlowDbContext _db;
     private readonly ICurrentUser _currentUser;
+    private readonly ITicketAccessService _ticketAccess;
 
 
     public GetNotificationsQueryHandler(
         SupportFlowDbContext db,
-        ICurrentUser currentUser)
+        ICurrentUser currentUser,
+        ITicketAccessService ticketAccess)
     {
         _db = db;
         _currentUser = currentUser;
+        _ticketAccess = ticketAccess;
     }
 
 
@@ -28,10 +32,15 @@ public sealed class GetNotificationsQueryHandler
         GetNotificationsQuery request,
         CancellationToken cancellationToken)
     {
+        var accessibleTicketIds = _ticketAccess
+            .ApplyTicketAccessFilter(_db.Tickets.AsNoTracking())
+            .Select(x => x.Id);
+
         var query = _db.Notifications
         .AsNoTracking()
         .Where(x =>
-            x.UserId == _currentUser.UserId);
+            x.UserId == _currentUser.UserId &&
+            accessibleTicketIds.Contains(x.TicketId));
 
         var totalCount =
                 await query.CountAsync(

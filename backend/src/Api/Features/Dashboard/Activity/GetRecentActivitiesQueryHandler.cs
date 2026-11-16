@@ -1,3 +1,4 @@
+using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,12 +14,15 @@ public sealed class GetRecentActivitiesQueryHandler
 {
 
     private readonly SupportFlowDbContext _db;
+    private readonly ITicketAccessService _ticketAccess;
 
 
     public GetRecentActivitiesQueryHandler(
-        SupportFlowDbContext db)
+        SupportFlowDbContext db,
+        ITicketAccessService ticketAccess)
     {
         _db = db;
+        _ticketAccess = ticketAccess;
     }
 
 
@@ -29,8 +33,8 @@ public sealed class GetRecentActivitiesQueryHandler
     {
 
 
-        var query = _db.Tickets
-            .AsQueryable();
+        var query = _ticketAccess
+            .ApplyTicketAccessFilter(_db.Tickets.AsNoTracking());
 
 
 
@@ -48,7 +52,7 @@ public sealed class GetRecentActivitiesQueryHandler
             .OrderByDescending(x =>
                 x.CreatedAtUtc)
 
-            .Take(request.Limit)
+            .Take(Math.Clamp(request.Limit, 1, 20))
 
             .Select(x =>
                 new RecentActivityResponse(

@@ -1,7 +1,8 @@
+using Api.Authorization;
+using Api.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.AI;
-using Shared.Authentication;
 using Infrastructure.Persistence;
 
 
@@ -17,19 +18,19 @@ public sealed class GetTicketSuggestedArticlesQueryHandler
     private readonly SupportFlowDbContext _db;
     private readonly IEmbeddingService _embeddingService;
     private readonly IVectorStore _vectorStore;
-    private readonly ICurrentUser _currentUser;
+    private readonly ITicketAccessService _ticketAccess;
 
 
     public GetTicketSuggestedArticlesQueryHandler(
         SupportFlowDbContext db,
         IEmbeddingService embeddingService,
         IVectorStore vectorStore,
-        ICurrentUser currentUser)
+        ITicketAccessService ticketAccess)
     {
         _db = db;
         _embeddingService = embeddingService;
         _vectorStore = vectorStore;
-        _currentUser = currentUser;
+        _ticketAccess = ticketAccess;
     }
 
 
@@ -39,18 +40,18 @@ public sealed class GetTicketSuggestedArticlesQueryHandler
     {
 
         var ticket =
-            await _db.Tickets
-                .AsNoTracking()
+            await _ticketAccess
+                .ApplyTicketAccessFilter(_db.Tickets.AsNoTracking())
                 .FirstOrDefaultAsync(
-                    x =>
-                        x.Id == request.TicketId &&
-                        x.CompanyId == _currentUser.CompanyId,
+                    x => x.Id == request.TicketId,
                     cancellationToken);
 
 
         if (ticket is null)
         {
-            throw new InvalidOperationException("Ticket not found");
+            throw new NotFoundException(
+                "Ticket was not found.",
+                "TICKET_NOT_FOUND");
         }
 
 
@@ -76,7 +77,7 @@ public sealed class GetTicketSuggestedArticlesQueryHandler
         var documents =
             await _vectorStore.SearchAsync(
                 vector,
-                _currentUser.CompanyId!.Value,
+                ticket.CompanyId,
                 5,
                 cancellationToken);
 

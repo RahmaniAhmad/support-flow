@@ -32,6 +32,9 @@ public static class MeEndpoint
                 return Results.Ok(
                     new
                     {
+                        Id = user.FindFirstValue(
+                            ClaimTypes.NameIdentifier),
+
                         UserId = user.FindFirstValue(
                             ClaimTypes.NameIdentifier),
 

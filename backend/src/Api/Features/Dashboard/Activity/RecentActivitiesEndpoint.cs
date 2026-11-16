@@ -18,6 +18,7 @@ public static class RecentActivitiesEndpoint
         app.MapGet(
             "/dashboard/activities",
             async (
+                int? limit,
                 ISender sender,
                 ICurrentUser currentUser,
                 CancellationToken cancellationToken) =>
@@ -27,7 +28,8 @@ public static class RecentActivitiesEndpoint
                 var result =
                     await sender.Send(
                         new GetRecentActivitiesQuery(
-                            currentUser.CompanyId),
+                            currentUser.CompanyId,
+                            Math.Clamp(limit ?? 5, 1, 20)),
                         cancellationToken);
 
 

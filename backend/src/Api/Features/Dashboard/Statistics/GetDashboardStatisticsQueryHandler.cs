@@ -1,3 +1,4 @@
+using Api.Authorization;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +14,14 @@ public sealed class GetDashboardStatisticsQueryHandler
 {
 
     private readonly SupportFlowDbContext _db;
+    private readonly ITicketAccessService _ticketAccess;
 
     public GetDashboardStatisticsQueryHandler(
-        SupportFlowDbContext db)
+        SupportFlowDbContext db,
+        ITicketAccessService ticketAccess)
     {
         _db = db;
+        _ticketAccess = ticketAccess;
     }
 
     public async Task<DashboardStatisticsResponse> Handle(
@@ -25,7 +29,8 @@ public sealed class GetDashboardStatisticsQueryHandler
         CancellationToken cancellationToken)
     {
 
-        var query = _db.Tickets.AsQueryable();
+        var query = _ticketAccess
+            .ApplyTicketAccessFilter(_db.Tickets.AsNoTracking());
 
 
         if (request.CompanyId.HasValue)
