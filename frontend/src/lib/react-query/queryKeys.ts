@@ -26,7 +26,16 @@ export const queryKeys = {
     lists: () => [...queryKeys.tickets.all, "list"] as const,
 
     list: (filters?: TicketListFilters) =>
-      [...queryKeys.tickets.lists(), filters] as const,
+      [
+        ...queryKeys.tickets.lists(),
+        filters?.page,
+        filters?.pageSize,
+        filters?.search,
+        filters?.status,
+        filters?.view,
+        filters?.sortBy,
+        filters?.sortDirection,
+      ] as const,
 
     details: () => [...queryKeys.tickets.all, "detail"] as const,
 

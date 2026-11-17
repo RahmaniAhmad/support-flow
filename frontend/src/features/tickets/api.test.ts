@@ -1,18 +1,51 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import api from "@/lib/api/axios";
-import { createTicket } from "./api";
+import { createTicket, getTickets } from "./api";
 
 vi.mock("@/lib/api/axios", () => ({
   default: {
+    get: vi.fn(),
     post: vi.fn(),
   },
 }));
 
-describe("createTicket", () => {
+describe("ticket API", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(api.get).mockResolvedValue({
+      data: {
+        items: [],
+        page: 2,
+        pageSize: 5,
+        totalCount: 0,
+      },
+    });
     vi.mocked(api.post).mockResolvedValue({
       data: { id: "ticket-1" },
+    });
+  });
+
+  it("sends ticket list pagination, filters, and sorting to the API", async () => {
+    await getTickets({
+      page: 2,
+      pageSize: 5,
+      search: "invoice",
+      status: "Open",
+      view: "AssignedToMe",
+      sortBy: "Subject",
+      sortDirection: "asc",
+    });
+
+    expect(api.get).toHaveBeenCalledWith("/tickets", {
+      params: {
+        page: 2,
+        pageSize: 5,
+        search: "invoice",
+        status: "Open",
+        view: "AssignedToMe",
+        sortBy: "Subject",
+        sortDirection: "asc",
+      },
     });
   });
 

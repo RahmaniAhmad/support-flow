@@ -66,6 +66,50 @@ public sealed class TicketAuthorizationIsolationTests
     }
 
     [Fact]
+    public async Task Ticket_list_sorts_before_pagination_and_returns_filtered_total()
+    {
+        await using var db = CreateDbContext();
+        var company = Company.Create("Company");
+        var creator = CreateUser(company.Id, UserRole.Customer, "creator");
+        var tickets = new[]
+        {
+            CreateTicket(company.Id, creator.Id, "Charlie"),
+            CreateTicket(company.Id, creator.Id, "Alpha"),
+            CreateTicket(company.Id, creator.Id, "Bravo")
+        };
+        db.Companies.Add(company);
+        db.Users.Add(creator);
+        db.Tickets.AddRange(tickets);
+        await db.SaveChangesAsync();
+
+        var currentUser = new TestCurrentUser(creator.Id, company.Id, UserRole.Customer);
+        var handler = new GetTicketsQueryHandler(
+            db,
+            currentUser,
+            new TicketAccessService(currentUser));
+
+        var firstPage = await handler.Handle(
+            new GetTicketsQuery(Page: 1, PageSize: 1, SortBy: "Subject",
+                SortDirection: Shared.Contracts.Sorting.SortDirection.Asc),
+            CancellationToken.None);
+        var secondPage = await handler.Handle(
+            new GetTicketsQuery(Page: 2, PageSize: 1, SortBy: "Subject",
+                SortDirection: Shared.Contracts.Sorting.SortDirection.Asc),
+            CancellationToken.None);
+        var largerPage = await handler.Handle(
+            new GetTicketsQuery(Page: 1, PageSize: 2, SortBy: "Subject",
+                SortDirection: Shared.Contracts.Sorting.SortDirection.Asc),
+            CancellationToken.None);
+
+        Assert.Equal(3, firstPage.TotalCount);
+        Assert.Equal(3, secondPage.TotalCount);
+        Assert.Equal("Alpha", Assert.Single(firstPage.Items).Subject);
+        Assert.Equal("Bravo", Assert.Single(secondPage.Items).Subject);
+        Assert.Equal(2, largerPage.Items.Count);
+        Assert.Equal(2, largerPage.PageSize);
+    }
+
+    [Fact]
     public async Task Agent_cannot_retrieve_or_modify_another_agents_ticket_by_id()
     {
         await using var db = CreateDbContext();

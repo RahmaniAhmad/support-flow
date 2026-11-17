@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import CreateTicketButton from "./CreateTicketButton";
 import TicketFilters from "./TicketFilters";
@@ -54,9 +54,25 @@ export default function TicketList() {
     sortDirection: "desc",
   });
 
-  const { data, isLoading } = useTickets(filters);
+  const { data, isFetching } = useTickets(filters);
 
-  const columns = useMemo(() => getTicketColumns(currentUser), [currentUser]);
+  const columns = useMemo(
+    () =>
+      getTicketColumns(
+        currentUser,
+        filters.sortBy,
+        filters.sortDirection,
+      ),
+    [currentUser, filters.sortBy, filters.sortDirection],
+  );
+
+  const handleSearch = useCallback((value: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      search: value,
+      page: 1,
+    }));
+  }, []);
 
   const handleStatusChange = (value?: TicketFilter) => {
     setFilters((prev) => ({
@@ -125,13 +141,7 @@ export default function TicketList() {
         search={filters.search}
         status={filters.status}
         view={filters.view}
-        onSearch={(value) =>
-          setFilters((prev) => ({
-            ...prev,
-            search: value,
-            page: 1,
-          }))
-        }
+        onSearch={handleSearch}
         onStatusChange={handleStatusChange}
         onViewChange={handleViewChange}
       />
@@ -139,17 +149,24 @@ export default function TicketList() {
       <TicketTable
         columns={columns}
         data={data?.items ?? []}
-        loading={isLoading}
+        loading={isFetching}
         pagination={{
-          current: data?.page,
-          pageSize: data?.pageSize,
-          total: data?.totalCount,
+          current: filters.page,
+          pageSize: filters.pageSize,
+          total: data?.totalCount ?? 0,
         }}
-        onPaginationChange={(page, pageSize) =>
+        onTableChange={(page, pageSize, sortBy, sortDirection) =>
           setFilters((prev) => ({
             ...prev,
-            page,
+            page:
+              sortBy !== prev.sortBy || sortDirection !== prev.sortDirection
+                ? 1
+                : pageSize !== prev.pageSize
+                  ? 1
+                  : page,
             pageSize,
+            sortBy,
+            sortDirection,
           }))
         }
       />
