@@ -25,12 +25,16 @@ export default function TicketFilters({
   const [searchValue, setSearchValue] = useState(search);
 
   useEffect(() => {
+    if (searchValue === search) {
+      return;
+    }
+
     const timer = setTimeout(() => {
       onSearch(searchValue);
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [searchValue, onSearch]);
+  }, [searchValue, search, onSearch]);
 
   return (
     <div

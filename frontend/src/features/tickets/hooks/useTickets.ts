@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/react-query/queryKeys";
 
@@ -9,5 +9,6 @@ export function useTickets(filters?: TicketListFilters) {
   return useQuery({
     queryKey: queryKeys.tickets.list(filters),
     queryFn: () => getTickets(filters),
+    placeholderData: keepPreviousData,
   });
 }

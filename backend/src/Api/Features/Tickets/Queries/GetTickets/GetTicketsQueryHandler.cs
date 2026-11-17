@@ -88,16 +88,20 @@ public sealed class GetTicketsQueryHandler
         query = request.SortBy?.ToLowerInvariant() switch
         {
             "subject" => request.SortDirection == SortDirection.Desc
-                ? query.OrderByDescending(x => x.Subject)
-                : query.OrderBy(x => x.Subject),
+                ? query.OrderByDescending(x => x.Subject).ThenBy(x => x.Id)
+                : query.OrderBy(x => x.Subject).ThenBy(x => x.Id),
 
             "status" => request.SortDirection == SortDirection.Desc
-                ? query.OrderByDescending(x => x.Status)
-                : query.OrderBy(x => x.Status),
+                ? query.OrderByDescending(x => x.Status).ThenBy(x => x.Id)
+                : query.OrderBy(x => x.Status).ThenBy(x => x.Id),
+
+            "createdatutc" => request.SortDirection == SortDirection.Desc
+                ? query.OrderByDescending(x => x.CreatedAtUtc).ThenBy(x => x.Id)
+                : query.OrderBy(x => x.CreatedAtUtc).ThenBy(x => x.Id),
 
             _ => request.SortDirection == SortDirection.Desc
-                ? query.OrderByDescending(x => x.CreatedAtUtc)
-                : query.OrderBy(x => x.CreatedAtUtc)
+                ? query.OrderByDescending(x => x.CreatedAtUtc).ThenBy(x => x.Id)
+                : query.OrderBy(x => x.CreatedAtUtc).ThenBy(x => x.Id)
         };
 
         var totalCount = await query.CountAsync(cancellationToken);

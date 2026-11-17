@@ -13,7 +13,7 @@ export interface TicketListItem {
   companyName?: string;
   assignedToUserId?: string;
   assigneeName?: string;
-  createdName?: string;
+  createdBy?: string;
   createdAtUtc: string;
 }
 
@@ -70,13 +70,15 @@ export type TicketStatusParam =
 
 export type TicketFilter = TicketStatus | "Unassigned";
 
+export type TicketSortBy = "Subject" | "Status" | "CreatedAtUtc";
+
 export interface TicketListFilters {
   page?: number;
   pageSize?: number;
   search?: string;
   status?: TicketFilter;
   view: TicketView;
-  sortBy?: string;
+  sortBy?: TicketSortBy;
   sortDirection?: SortDirection;
 }
 

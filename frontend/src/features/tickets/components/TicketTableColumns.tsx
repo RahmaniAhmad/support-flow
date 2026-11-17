@@ -4,11 +4,16 @@ import TicketActions from "./TicketActions";
 import { CurrentUser } from "@/types/user";
 import { Tag } from "antd";
 import { priorityColor } from "../utils/priorityColor";
+import type { SortDirection } from "@/types/common";
+import type { TicketSortBy } from "../types";
 
 export function getTicketColumns(
   currentUser: CurrentUser,
+  sortBy: TicketSortBy = "CreatedAtUtc",
+  sortDirection: SortDirection = "desc",
 ): ColumnsType<TicketListItem> {
   const columns: ColumnsType<TicketListItem> = [];
+  const activeSortOrder = sortDirection === "asc" ? "ascend" : "descend";
 
   columns.push({
     title: "Ticket",
@@ -24,7 +29,7 @@ export function getTicketColumns(
       },
       {
         title: "Created By",
-        dataIndex: "createdName",
+        dataIndex: "createdBy",
       },
     );
   }
@@ -32,7 +37,7 @@ export function getTicketColumns(
   if (currentUser.role === "Admin" || currentUser.role === "Agent") {
     columns.push({
       title: "Created By",
-      dataIndex: "createdName",
+      dataIndex: "createdBy",
     });
   }
 
@@ -41,6 +46,7 @@ export function getTicketColumns(
       title: "Subject",
       dataIndex: "subject",
       sorter: true,
+      sortOrder: sortBy === "Subject" ? activeSortOrder : null,
     },
     {
       title: "Category",
@@ -51,6 +57,7 @@ export function getTicketColumns(
       title: "Status",
       dataIndex: "status",
       sorter: true,
+      sortOrder: sortBy === "Status" ? activeSortOrder : null,
     },
     {
       title: "Priority",
@@ -69,6 +76,7 @@ export function getTicketColumns(
       dataIndex: "createdAtUtc",
       render: (value) => new Date(value).toLocaleString(),
       sorter: true,
+      sortOrder: sortBy === "CreatedAtUtc" ? activeSortOrder : null,
       responsive: ["md"],
     },
     {
